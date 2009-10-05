@@ -1,0 +1,32 @@
+Forban is a p2p application for link-local and local area network.
+
+Forban works independently from Internet and use only the local 
+area capabilities to announce, discover, search or share files. 
+Forban relies on HTTP and he is opportunistic.
+
+The name took his origins from the old French word : 
+http://fr.wiktionary.org/wiki/forban 
+
+Forban is free software licensed under 
+the GNU Affero General Public License version 3.
+http://www.fsf.org/licensing/licenses/agpl-3.0.html
+
+
+== message format used for announce/discovery ==
+
+ASCII encoded message using UDP on port 12555 with
+the following format: 
+
+forban;name;<nameoftheforban>;uuid;<identityoftheforban>;hmac;<hmacifapskisset>
+
+Based on the source IP and the destination port used,
+an URL is build to get to default forban service.
+
+base URL:
+http://<ip>:<destport>/
+search URL:
+http://<ip>:<destport>/q/<yoursearch>
+store URL where the forban stored his loot:
+http://<ip>:<destport>/s/
+
+
