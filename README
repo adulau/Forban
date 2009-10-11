@@ -29,4 +29,8 @@ http://<ip>:<destport>/q/<yoursearch>
 store URL where the forban stored his loot:
 http://<ip>:<destport>/s/
 
+=== message format - notes about HMAC ===
+
+The HMAC value is currently useless as the URL is built on
+on the source address of the packet. TBU
 
