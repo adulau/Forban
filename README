@@ -7,6 +7,9 @@ Forban relies on HTTP and he is opportunistic.
 The name took his origins from the old French word : 
 http://fr.wiktionary.org/wiki/forban 
 
+Forban name can be also a playword in English
+for banning an unwanted software or services on Internet.
+
 Forban is free software licensed under 
 the GNU Affero General Public License version 3.
 http://www.fsf.org/licensing/licenses/agpl-3.0.html
@@ -20,7 +23,10 @@ the following format:
 forban;name;<nameoftheforban>;uuid;<identityoftheforban>;hmac;<hmacifapskisset>
 
 Based on the source IP and the destination port used,
-an URL is build to get to default forban service.
+a HTTP URL is build to get to default forban service.
+
+The UDP port 12555 is there for announcing forban services.
+The TCP port 12555 is the HTTP server running for forban services.
 
 base URL:
 http://<ip>:<destport>/
