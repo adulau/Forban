@@ -13,7 +13,7 @@ class MyUDPHandler(SocketServer.BaseRequestHandler):
             myloot = loot.loot()
             myloot.add(data, self.client_address[0])
         else:
-            print "debug : not forban message"
+            print "debug : not a forban message"
 
 class UDPServer(SocketServer.UDPServer):
     if socket.has_ipv6:
