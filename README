@@ -32,8 +32,10 @@ base URL:
 http://<ip>:<destport>/
 search URL:
 http://<ip>:<destport>/q/<yoursearch>
-store URL where the forban stored his loot:
-http://<ip>:<destport>/s/
+store URL where Forban stored his loot and how to get a file:
+http://<ip>:<destport>/s/?g=<filenamefromindex>
+index URL where Forban stored his index:
+http://<ip>:<destport>/s/?g=forban/index
 
 === message format - notes about HMAC ===
 

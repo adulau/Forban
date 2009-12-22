@@ -1,3 +1,6 @@
 [global]
 name = adulau shared forban
 path = /home/adulau/git/forban/
+version = 0.0.1
+[forban]
+share = /home/adulau/git/forban/var/share/
