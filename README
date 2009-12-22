@@ -24,6 +24,9 @@ the following format:
 
 forban;name;<nameoftheforban>;uuid;<identityoftheforban>;hmac;<hmacifapskisset>
 
+The messages are flooded in broadcast (IPv4) and using
+ff02::1 (IPv6) at a regular interval.
+
 Based on the source IP and the destination port used,
 a HTTP URL is build to get to default forban service.
 
