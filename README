@@ -17,6 +17,8 @@ http://www.fsf.org/licensing/licenses/agpl-3.0.html
 
 == message format used for announce/discovery ==
 
+=== announce message ===
+
 ASCII encoded message using UDP on port 12555 with
 the following format: 
 
@@ -24,6 +26,8 @@ forban;name;<nameoftheforban>;uuid;<identityoftheforban>;hmac;<hmacifapskisset>
 
 Based on the source IP and the destination port used,
 a HTTP URL is build to get to default forban service.
+
+=== HTTP services for Forban ===
 
 The UDP port 12555 is there for announcing forban services.
 The TCP port 12555 is the HTTP server running for forban services.
