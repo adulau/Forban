@@ -18,6 +18,47 @@ class loot:
         if not os.path.isdir(self.lootpath):
             os.mkdir(self.lootpath)
 
+    def getname (self, uuid):
+
+        pathname = self.lootpath+"/"+uuid+"/name"
+
+        if os.path.exists(pathname):
+            f = open (pathname);
+            rname = f.read();
+            f.close();
+            return rname
+        else:
+            return None
+
+    def getipv4 (self, uuid):
+
+        pathsourcev4 = self.lootpath+"/"+uuid+"/sourcev4"
+
+        if os.path.exists(pathsourcev4):
+            f = open (pathsourcev4);
+            rname = f.read();
+            f.close();
+            return rname
+        else:
+            return None
+
+    def whoami (self):
+        
+        lfid = fid.manage()
+        return lfid.get()
+
+    def getipv6 (self, uuid):
+
+        pathsourcev6 = self.lootpath+"/"+uuid+"/sourcev6"
+
+        if os.path.exists(pathsourcev6):
+            f = open (pathsourcev6);
+            rname = f.read();
+            f.close();
+            return rname
+        else:
+            return None
+ 
     def _exist (self, uuid):
 
         aloot = self.lootpath+uuid+"/"
