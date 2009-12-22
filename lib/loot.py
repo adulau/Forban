@@ -3,6 +3,11 @@ import os.path
 import re
 import datetime
 import time
+import sys
+
+# forban internal junk
+sys.path.append('.')
+import fid
 
 class loot:
 
@@ -51,8 +56,17 @@ class loot:
     def setname (self, lname):
         
         f = open(self.lootpath+self.luuid+"/"+"name", "w")
-        f.write(lname);
+        f.write(lname)
         f.close()
+
+        # self is added for the same forban doing the announce
+        # and the discovery
+
+        myid = fid.manage()
+        if myid.get() == self.luuid:
+            f = open (self.lootpath+self.luuid+"/"+"self", "w")
+            f.write("")
+            f.close()
 
     def setsource (self, sourcev4 = None , sourcev6 = None):
         
