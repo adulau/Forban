@@ -42,3 +42,7 @@ http://<ip>:<destport>/s/?g=forban/index
 The HMAC value is currently useless as the URL is built on
 on the source address of the packet. TBU
 
+=== software required ===
+
+* Python (tested with 2.5 and 2.6)
+* CherryPy (version 3 and up)
