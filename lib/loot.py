@@ -54,12 +54,17 @@ class loot:
 
         pathlastseen = self.lootpath+"/"+uuid+"/last"
 
-        if os.path.exists(pathlastseen):
-            f = open (pathlastseen)
-            rlastseen = f.read()
-            f.close()
-            return rlastseen
+        if self.exist(uuid):
+
+            if os.path.exists(pathlastseen):
+                f = open (pathlastseen)
+                rlastseen = f.read()
+                f.close()
+                return rlastseen
+            else:
+                return None
         else:
+
             return None
 
     def lastannounced (self, uuid, timeago=300):
