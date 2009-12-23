@@ -89,7 +89,7 @@ class loot:
         else:
             return None
  
-    def _exist (self, uuid):
+    def exist (self, uuid):
 
         aloot = self.lootpath+uuid+"/"
         if os.path.isdir(aloot):
@@ -104,7 +104,7 @@ class loot:
         self.luuid = mess[4]
         self.lsource = sip
 
-        if not self._exist(self.luuid):
+        if not self.exist(self.luuid):
             os.mkdir(self.lootpath+self.luuid)
 
         self.setfirstseen()
@@ -171,7 +171,7 @@ class loot:
 def loottest():
         
         myloot = loot()
-        if not myloot._exist("1234"):
+        if not myloot.exist("1234"):
             print "not existing -> ok"
         myloot.add("forban;name;notset;uuid;cb001bf2-1497-443c-9675-74de7027ecf9;hmac;59753cbda00f8c605aff6c4ceacd3f12caedddea","127.0.0.1");
 
