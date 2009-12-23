@@ -1,11 +1,16 @@
 import os
 import re
 
+import fetch
+import loot
+
 class manage:
 
-    def __init__ (self, sharedir="../var/share/", location="../var/share/forban/index"):
+    def __init__ (self, sharedir="../var/share/",
+    location="../var/share/forban/index", forbanglobal = "../"):
         self.location = location
         self.sharedir = sharedir
+        self.lootdir = forbanglobal + "/var/loot/";
 
     def build (self):
         self.index = ""
@@ -17,9 +22,18 @@ class manage:
         f.write(self.index)
         f.close()
 
+    def cache (self, uuid):
+        cachepath = self.lootdir + uuid + "/cache"
+        if not os.path.exists(cachepath):
+            os.mkdir(cachepath)
+        lloot = loot.loot()
+        for url in lloot.getindexurl(uuid):
+            fetch.urlget(url, cachepath+"/forban/index")
+        
 def test ():
     testindex = manage()
     testindex.build()
+    testindex.cache("cb001bf2-1497-443c-9675-74de7027ecf9")
 
 if __name__ == "__main__":
 

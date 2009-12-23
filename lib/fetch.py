@@ -1,0 +1,34 @@
+import os
+import urllib2
+
+def urlget(url, localfile="testurlget"):
+    httpreq = urllib2.Request(url)
+    httpreq.add_header('User-Agent','Forban +http://www.gitorious.org/forban/')
+    r = urllib2.urlopen(httpreq)
+    
+    (lpath, lfile) = os.path.split(localfile);
+    
+    if not os.path.isdir(lpath) and not (lpath ==''):
+        os.makedirs(lpath)
+
+    # as url fetch is part of the Forban protocol interface
+    # the Content-Disposition MUST be present even if it's
+    # not used right now. The interface is used as file transfert
+    # so the Content-Disposition is a requirement for any other
+    # HTTP clients
+    
+    if r.info().has_key('Content-Disposition'):
+        f = open (localfile, "w")
+        f.write(r.read())
+        f.close()
+        return True
+    else:
+        return False
+
+
+def managetest():
+    urlget("http://192.168.154.199:12555/s/?g=forban/index")
+
+if __name__ == "__main__":
+    managetest()
+

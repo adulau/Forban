@@ -44,7 +44,10 @@ class Root:
         html += htmlnav
         html += "<table>"
         discoveredloot = loot.loot()
+        allindex = index.manage()
         for name in discoveredloot.listall():
+            if discoveredloot.exist(name):
+                allindex.cache(name)
             if discoveredloot.lastannounced(name):
                 html += "<tr>"
                 rname = discoveredloot.getname(name)
