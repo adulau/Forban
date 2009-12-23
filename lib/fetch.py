@@ -4,8 +4,16 @@ import urllib2
 def urlget(url, localfile="testurlget"):
     httpreq = urllib2.Request(url)
     httpreq.add_header('User-Agent','Forban +http://www.gitorious.org/forban/')
-    r = urllib2.urlopen(httpreq)
     
+    try:
+        r = urllib2.urlopen(httpreq)
+    except urllib2.HTTPError, e:
+        return False
+    except urllib2.URLError, e:
+        return False
+    else:
+        pass
+
     (lpath, lfile) = os.path.split(localfile);
     
     if not os.path.isdir(lpath) and not (lpath ==''):
