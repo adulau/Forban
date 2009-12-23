@@ -96,6 +96,20 @@ class loot:
             return True
         else:
             return False
+    
+    def getindexurl (self, uuid):
+        iurl = []
+
+        if self.exist(uuid):
+            ipv4 = self.getipv4(uuid)
+            if ipv4 is not None:
+                iurl.append("http://"+ipv4+":12555/s?g=forban/index")
+            ipv6 = self.getipv6(uuid)
+            if ipv6 is not None:
+                iurl.append("http://["+ipv6+"]:12555/s?g=forban/index")
+            return iurl
+        else:
+            return False
 
     def add (self, dmessage, sip):
         
@@ -173,7 +187,8 @@ def loottest():
         myloot = loot()
         if not myloot.exist("1234"):
             print "not existing -> ok"
-        myloot.add("forban;name;notset;uuid;cb001bf2-1497-443c-9675-74de7027ecf9;hmac;59753cbda00f8c605aff6c4ceacd3f12caedddea","127.0.0.1");
+        myloot.add("forban;name;notset;uuid;cb001bf2-1497-443c-9675-74de7027ecf9;hmac;59753cbda00f8c605aff6c4ceacd3f12caedddea","127.0.0.1")
+        print myloot.getindexurl("cb001bf2-1497-443c-9675-74de7027ecf9")
 
 if __name__ == "__main__":
     
