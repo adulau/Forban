@@ -71,6 +71,8 @@ class Root:
                     html += """<td>%s secs ago</td>""" % lastseen
                 else:
                     html += "<td>never seen</td>"
+                missingfiles = allindex.howfar(name)
+                html += "<td>Missing %s files from this loot</td>" % len(missingfiles)
 
                 if name == discoveredloot.whoami():
                     html += "<td><i>yourself</i></td>"

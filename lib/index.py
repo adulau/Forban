@@ -1,5 +1,8 @@
 import os
 import re
+import difflib
+import re
+import sys
 
 import fetch
 import loot
@@ -29,11 +32,33 @@ class manage:
         lloot = loot.loot()
         for url in lloot.getindexurl(uuid):
             fetch.urlget(url, cachepath+"/forban/index")
-        
+
+    def howfar (self, uuid):
+        cachepath = self.lootdir + uuid + "/cache/forban/index"
+        # how can I compare my cache to the other, if the other
+        # cache is missing...
+        if not os.path.exists(cachepath):
+            return False
+        f1 = open(self.location,"r")
+        f1v = f1.read()
+        f1.close()
+        f2 = open(cachepath,"r")
+        f2v = f2.read()
+        f2.close()
+        mydiff = '\n'.join(list(difflib.unified_diff(f1v.splitlines(),f2v.splitlines(), lineterm="")))
+        lmodified = []
+        for l in mydiff.splitlines():
+            if re.search("(^\+)",l) and not re.search("^\+\+",l) and not re.search("forban",l):
+               missingfile = l.rsplit(",",1)[0]
+               missingfile = re.sub("^(\+)","",missingfile)
+               lmodified.append(missingfile)
+        return lmodified
+
 def test ():
     testindex = manage()
     testindex.build()
     testindex.cache("cb001bf2-1497-443c-9675-74de7027ecf9")
+    print testindex.howfar("e2f05993-eba1-4b94-8e56-d2157d1ce552")
 
 if __name__ == "__main__":
 
