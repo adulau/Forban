@@ -22,7 +22,8 @@ class loot:
         lloot =  []
         for root, dirs, files in os.walk(self.lootpath, topdown=True):
             for name in dirs:
-                lloot.append(name)
+                if "cache" not in os.path.join(root,name):
+                    lloot.append(name)
         return lloot
 
     def getname (self, uuid):
