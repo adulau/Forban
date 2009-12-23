@@ -23,8 +23,8 @@ class loot:
         pathname = self.lootpath+"/"+uuid+"/name"
 
         if os.path.exists(pathname):
-            f = open (pathname);
-            rname = f.read();
+            f = open (pathname)
+            rname = f.read()
             f.close();
             return rname
         else:
@@ -35,12 +35,35 @@ class loot:
         pathsourcev4 = self.lootpath+"/"+uuid+"/sourcev4"
 
         if os.path.exists(pathsourcev4):
-            f = open (pathsourcev4);
-            rname = f.read();
-            f.close();
+            f = open (pathsourcev4)
+            rname = f.read()
+            f.close()
             return rname
         else:
             return None
+
+    def getlastseen (self, uuid):
+
+        pathlastseen = self.lootpath+"/"+uuid+"/last"
+
+        if os.path.exists(pathlastseen):
+            f = open (pathlastseen)
+            rlastseen = f.read()
+            f.close()
+            return rlastseen
+        else:
+            return None
+
+    def lastannounced (self, uuid, timeago=300):
+
+        lastseen = float(self.getlastseen(uuid))
+        t = datetime.datetime.now()
+        now = time.mktime(t.timetuple())
+        gap = now-lastseen
+        if gap < timeago:
+            return gap
+        else:
+            return False
 
     def whoami (self):
         
@@ -52,9 +75,9 @@ class loot:
         pathsourcev6 = self.lootpath+"/"+uuid+"/sourcev6"
 
         if os.path.exists(pathsourcev6):
-            f = open (pathsourcev6);
-            rname = f.read();
-            f.close();
+            f = open (pathsourcev6)
+            rname = f.read()
+            f.close()
             return rname
         else:
             return None
