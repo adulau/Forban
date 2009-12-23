@@ -44,35 +44,34 @@ class Root:
         html += htmlnav
         html += "<table>"
         discoveredloot = loot.loot()
-        for root, dirs, files in os.walk(forbandiscoveredloots, topdown=True):
-            for name in dirs:
-                if discoveredloot.lastannounced(name):
-                    html += "<tr>"
-                    rname = discoveredloot.getname(name)
-                    sourcev4 = discoveredloot.getipv4(name)
-                    if sourcev4 is not None:
-                        html += """<td><a href="http://%s:12555/">v4</a></td> """ % sourcev4
-                    else:
-                        html += """<td></td>"""
-                    sourcev6 = discoveredloot.getipv6(name)
-                
-                    if sourcev6 is not None:
-                        html += """<td><a href="http://[%s]:12555/">v6</a></td> """ % sourcev6
-                    else:
-                        html += """<td></td>"""
+        for name in discoveredloot.listall():
+            if discoveredloot.lastannounced(name):
+                html += "<tr>"
+                rname = discoveredloot.getname(name)
+                sourcev4 = discoveredloot.getipv4(name)
+                if sourcev4 is not None:
+                    html += """<td><a href="http://%s:12555/">v4</a></td> """ % sourcev4
+                else:
+                    html += """<td></td>"""
+                sourcev6 = discoveredloot.getipv6(name)
+            
+                if sourcev6 is not None:
+                    html += """<td><a href="http://[%s]:12555/">v6</a></td> """ % sourcev6
+                else:
+                    html += """<td></td>"""
 
-                    html += "<td>"+rname+"</td>"
+                html += "<td>"+rname+"</td>"
 
-                    lastseen = discoveredloot.lastannounced(name)
+                lastseen = discoveredloot.lastannounced(name)
 
-                    if lastseen is not None:
-                        html += """<td>%s secs ago</td>""" % lastseen
-                    else:
-                        html += "<td>never seen</td>"
+                if lastseen is not None:
+                    html += """<td>%s secs ago</td>""" % lastseen
+                else:
+                    html += "<td>never seen</td>"
 
-                    if name == discoveredloot.whoami():
-                        html += "<td><i>yourself</i></td>"
-                    html += "</tr>"
+                if name == discoveredloot.whoami():
+                    html += "<td><i>yourself</i></td>"
+                html += "</tr>"
 
         html += "</table>"
         html += """</div></body></html>"""

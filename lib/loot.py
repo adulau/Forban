@@ -18,6 +18,13 @@ class loot:
         if not os.path.isdir(self.lootpath):
             os.mkdir(self.lootpath)
 
+    def listall (self):
+        lloot =  []
+        for root, dirs, files in os.walk(self.lootpath, topdown=True):
+            for name in dirs:
+                lloot.append(name)
+        return lloot
+
     def getname (self, uuid):
 
         pathname = self.lootpath+"/"+uuid+"/name"
