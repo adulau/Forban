@@ -33,6 +33,17 @@ class manage:
         for url in lloot.getindexurl(uuid):
             fetch.urlget(url, cachepath+"/forban/index")
 
+    def search (self, query):
+        queryresult = []
+        pmatch = re.compile(query, re.I)
+        f = open(self.location, "r")
+        for cacheline in f.readlines():
+            if pmatch.search(cacheline):
+                queryresult.append(cacheline)
+        f.close()
+
+        return queryresult
+
     def howfar (self, uuid):
         cachepath = self.lootdir + uuid + "/cache/forban/index"
         # how can I compare my cache to the other, if the other
@@ -58,7 +69,8 @@ def test ():
     testindex = manage()
     testindex.build()
     testindex.cache("cb001bf2-1497-443c-9675-74de7027ecf9")
-    print testindex.howfar("e2f05993-eba1-4b94-8e56-d2157d1ce552")
+    #print testindex.howfar("e2f05993-eba1-4b94-8e56-d2157d1ce552")
+    testindex.search("PdF");
 
 if __name__ == "__main__":
 
