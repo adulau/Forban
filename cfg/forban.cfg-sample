@@ -2,5 +2,19 @@
 name = adulau shared forban
 path = /home/adulau/git/forban/
 version = 0.0.1
+
+# available mode :
+#
+# opportunistic (default): every new files discovered are duplicated
+#  in your loot. a filter can be set to restrict the files to a specific
+#  type or pattern in the file name.
+#
+# shared : you can propose files from your loot but your Forban is
+# not trying to update his loot from the other discovered loots.
+#
+
+mode = opportunistic
 [forban]
 share = /home/adulau/git/forban/var/share/
+[opportunistic]
+filter =
