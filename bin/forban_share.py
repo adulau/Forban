@@ -21,13 +21,16 @@ import mimetypes
 
 cherrypy.config.update({ 'server.socket_port': 12555 , 'server.socket_host': '::', 'tools.static.root':forbanshareroot})
 
-forbanpath = { '/css/style.css': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/css/x.css'}}
+forbanpath = { '/css/style.css': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/css/x.css'},
+               '/img/forban-small.png': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/img/forban-small.png'}
+             }
 
 htmlheader = """<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
 lang="en"> <head> <link rel="stylesheet" type="text/css" href="/css/style.css"
 /> </head>"""
 
-htmlnav = """ <body><div id="nav"><ul><li><span class="home"><i>%s</i></span></li><li><a
+htmlnav = """ <body><div id="nav"><img src="img/forban-small.png" alt="forban
+logo : a small island where a binary is going to and coming from" /><br /><ul><li><span class="home"><i>%s</i></span></li><li><a
 href="http://www.gitorious.org/forban/">Forban (source code)</a></li></ul></div>
 """ % forbanname
 

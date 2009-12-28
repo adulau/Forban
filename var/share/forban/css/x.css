@@ -153,7 +153,7 @@ hr {
 #heading, #nav ul, #nav li {
   background: #EEEEEE;
   color: inherit;
-  border-bottom: 1px solid black;
+  border-bottom: 0px solid black;
 }
 
 #heading h1 {
@@ -165,7 +165,7 @@ hr {
 #nav ul {
   display: block;
   margin: 0 3em 0 0;
-  border-right: 1px solid #000000;
+  border-right: 0px solid #000000;
 }
 
 #nav li {
@@ -173,7 +173,7 @@ hr {
   padding: 0.4em 1em 0.2em 1em;
   display: block;
   float: left;
-  border-left: 1px solid #000000;
+  border-left: 0px solid #000000;
 }
 
 pre {
