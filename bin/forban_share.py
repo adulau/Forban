@@ -29,7 +29,9 @@ htmlheader = """<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
 lang="en"> <head> <link rel="stylesheet" type="text/css" href="/css/style.css"
 /> </head>"""
 
-htmlnav = """ <body><div id="nav"><img src="img/forban-small.png" alt="forban
+htmlfooter =  """</div></body></html>"""
+
+htmlnav = """ <body><div id="nav"><img src="/img/forban-small.png" alt="forban
 logo : a small island where a binary is going to and coming from" /><br /><ul><li><span class="home"><i>%s</i></span></li><li><a
 href="http://www.gitorious.org/forban/">Forban (source code)</a></li></ul></div>
 """ % forbanname
@@ -40,13 +42,14 @@ def mime_type(filename):
 class Root:
     def index(self, directory=forbanshareroot):
         html = htmlheader
-        html += """<div class="left inner">
+        html += """<br/> <br/> <div class="left inner">
         <h2>Discovered link-local Forban available with their loot in the last 3
         minutes</h2>
         """
         html += htmlnav
         html += "<table>"
         discoveredloot = loot.loot()
+        mysourcev4 = discoveredloot.getipv4(discoveredloot.whoami())
         allindex = index.manage()
         for name in discoveredloot.listall():
             if discoveredloot.exist(name):
@@ -75,23 +78,42 @@ class Root:
                 else:
                     html += "<td>never seen</td>"
                 missingfiles = allindex.howfar(name)
-                html += "<td>Missing %s files from this loot</td>" % len(missingfiles)
-
+                html += "<td>Missing %s files from this loot" % len(missingfiles)
+                html += """ <a href="http://%s:12555/v/%s">[view]</a></td> """ % (mysourcev4,name)
                 if name == discoveredloot.whoami():
                     html += "<td><i>yourself</i></td>"
                 html += "</tr>"
 
         html += "</table>"
-        html += """</div></body></html>"""
+        html += htmlfooter
         return html
     
     def q(self, querystring):
         print querystring
         return querystring
 
+    def v(self, uuid):
+        mindex = index.manage()
+        dloot = loot.loot()
+        missingfiles = mindex.howfar(uuid)
+        html = htmlheader
+        html += """<br/> <br/> <div class="left inner"> <h2>Missing files on your loot from %s </h2>""" % dloot.getname(uuid)
+        html += htmlnav
+        html += "<table>"
+        for filemissed in missingfiles:
+            html += "<tr>"
+            sourcev4 = dloot.getipv4(uuid)
+            html += """<td>%s</td><td><a href="http://%s:12555/s/?g=%s">v4</a></td> """ % (filemissed,sourcev4,filemissed)
+            html += "</tr>"
+
+        html += "</table>"
+        html += htmlfooter
+
+        return html
+
     index.exposed = True
     q.exposed = True
-
+    v.exposed = True
 
 class Download:
     def index(self, g):
