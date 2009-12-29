@@ -56,7 +56,11 @@ class manage:
         f2 = open(cachepath,"r")
         f2v = f2.read()
         f2.close()
-        mydiff = '\n'.join(list(difflib.unified_diff(f1v.splitlines(),f2v.splitlines(), lineterm="")))
+        f1vs = f1v.splitlines()
+        f1vs.sort()
+        f2vs = f2v.splitlines()
+        f2vs.sort()
+        mydiff = '\n'.join(list(difflib.unified_diff(f1vs,f2vs, lineterm="")))
         lmodified = []
         for l in mydiff.splitlines():
             if re.search("(^\+)",l) and not re.search("^\+\+",l) and not re.search("forban",l):
@@ -67,10 +71,10 @@ class manage:
 
 def test ():
     testindex = manage()
-    testindex.build()
-    testindex.cache("cb001bf2-1497-443c-9675-74de7027ecf9")
-    #print testindex.howfar("e2f05993-eba1-4b94-8e56-d2157d1ce552")
-    testindex.search("PdF");
+    #testindex.build()
+    #testindex.cache("cb001bf2-1497-443c-9675-74de7027ecf9")
+    print testindex.howfar("e2f05993-eba1-4b94-8e56-d2157d1ce552")
+    #testindex.search("PdF");
 
 if __name__ == "__main__":
 
