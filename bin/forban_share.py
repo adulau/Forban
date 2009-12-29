@@ -132,12 +132,6 @@ class Download:
 
 if __name__ == '__main__':
     
-    # rebuild forban index
-    print "Forban rebuild index"
-
-    forbanindex = index.manage()
-    forbanindex.build()
-
     root = Root()
     root.s = Download()
     cherrypy.quickstart(root, config=forbanpath)
