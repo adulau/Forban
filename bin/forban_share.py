@@ -2,6 +2,7 @@ import glob
 import os.path
 import sys
 import string
+import base64
 import ConfigParser
 config = ConfigParser.RawConfigParser()
 config.read("../cfg/forban.cfg")
@@ -103,7 +104,8 @@ class Root:
         for filemissed in missingfiles:
             html += "<tr>"
             sourcev4 = dloot.getipv4(uuid)
-            html += """<td>%s</td><td><a href="http://%s:12555/s/?g=%s">v4</a></td> """ % (filemissed,sourcev4,filemissed)
+            html += """<td>%s</td><td><a
+            href="http://%s:12555/s/?g=%s&f=b64">v4</a></td> """ % (filemissed,sourcev4,base64.b64encode(filemissed))
             html += "</tr>"
 
         html += "</table>"
@@ -116,7 +118,10 @@ class Root:
     v.exposed = True
 
 class Download:
-    def index(self, g):
+    def index(self, g=None, f=None):
+        if f is not None:
+            g = base64.b64decode(g)
+            print g
         gs = string.replace(g, "..", "")
         gs = forbanshareroot + gs
         mimetypeguessed = mime_type(gs)
