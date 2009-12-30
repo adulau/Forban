@@ -12,7 +12,7 @@ forbanpath = config.get('global','path')
 def service_start(servicename = None):
     if servicename is not None:
         service = servicename+".py"
-        proc =  subprocess.Popen(["/usr/bin/python",service])
+        proc =  subprocess.Popen(["python",service])
         return proc.pid
     return False
 
