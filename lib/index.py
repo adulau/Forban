@@ -33,10 +33,15 @@ class manage:
         for url in lloot.getindexurl(uuid):
             fetch.urlget(url, cachepath+"/forban/index")
 
-    def search (self, query):
+    def search (self, query, uuid=None):
         queryresult = []
         pmatch = re.compile(query, re.I)
-        f = open(self.location, "r")
+        if uuid is None:
+            location = self.location
+        else:
+            location = self.lootdir + uuid + "/cache/forban/index"
+
+        f = open(location, "r")
         for cacheline in f.readlines():
             if pmatch.search(cacheline):
                 queryresult.append(cacheline)
@@ -73,8 +78,8 @@ def test ():
     testindex = manage()
     #testindex.build()
     #testindex.cache("cb001bf2-1497-443c-9675-74de7027ecf9")
-    print testindex.howfar("e2f05993-eba1-4b94-8e56-d2157d1ce552")
-    #testindex.search("PdF");
+    #print testindex.howfar("e2f05993-eba1-4b94-8e56-d2157d1ce552")
+    print testindex.search("^((?!forban).)*$","e2f05993-eba1-4b94-8e56-d2157d1ce552");
 
 if __name__ == "__main__":
 
