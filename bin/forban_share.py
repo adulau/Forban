@@ -80,7 +80,8 @@ class Root:
                     html += "<td>never seen</td>"
                 missingfiles = allindex.howfar(name)
                 html += "<td>Missing %s files from this loot" % len(missingfiles)
-                html += """ <a href="http://%s:12555/v/%s">[view]</a></td> """ % (mysourcev4,name)
+                html += """ <a href="http://%s:12555/v/%s">[view missing]</a> """ % (mysourcev4,name)
+                html += """ <a href="http://%s:12555/l/%s">[view index]</a> """ % (mysourcev4,name)
                 if name == discoveredloot.whoami():
                     html += "<td><i>yourself</i></td>"
                 html += "</tr>"
@@ -110,12 +111,34 @@ class Root:
 
         html += "</table>"
         html += htmlfooter
+        return html
 
+    def l(self, uuid):
+        mindex = index.manage()
+        dloot = loot.loot()
+        html = htmlheader
+
+        html += """<br/> <br/> <div class="left inner"> <h2>Files available in loot %s </h2>""" % dloot.getname(uuid)
+        html += htmlnav
+        html += "<table>"
+
+
+        for fileinindex in mindex.search("^((?!forban).)*$", uuid):
+            filei = fileinindex.rsplit(",",1)[0]
+            html += "<tr>"
+            sourcev4 = dloot.getipv4(uuid)
+            html += """<td>%s</td><td><a
+            href="http://%s:12555/s/?g=%s&f=b64">v4</a></td> """ % (filei,sourcev4,base64.b64encode(filei))
+            html += "</tr>"
+
+        html += "</table>"
+        html += htmlfooter
         return html
 
     index.exposed = True
     q.exposed = True
     v.exposed = True
+    l.exposed = True
 
 class Download:
     def index(self, g=None, f=None):
