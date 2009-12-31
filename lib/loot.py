@@ -136,7 +136,14 @@ class loot:
                 self.lsourcev4 = re.sub("^::ffff:","",self.lsource)
                 self.lsourcev6 = None
             else:
-                self.lsourcev6 = self.lsource.split("%")[0]
+                # IPv6 link-local regularly uses the interface source
+                # to deduce where to send the request when multiple
+                # interface with IPv6 link-local are enable.
+                #self.lsourcev6 = self.lsource.split("%")[0]
+                # we now keep the source interface too.
+                # but in such case web url are only accessible to
+                # the local machine or machine matching same interface name.
+                self.lsourcev6 = self.lsource
                 self.lsourcev4 = None
         else:
             self.lsourcev4 = self.lsource
