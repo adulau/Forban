@@ -32,8 +32,8 @@ lang="en"> <head> <link rel="stylesheet" type="text/css" href="/css/style.css"
 
 htmlfooter =  """</div></body></html>"""
 
-htmlnav = """ <body><div id="nav"><img src="/img/forban-small.png" alt="forban
-logo : a small island where a binary is going to and coming from" /><br /><ul><li><span class="home"><i>%s</i></span></li><li><a
+htmlnav = """ <body><div id="nav"><a href="/"><img src="/img/forban-small.png" alt="forban
+logo : a small island where a binary is going to and coming from" /></a><br /><ul><li><span class="home"><i>%s</i></span></li><li><a
 href="http://www.gitorious.org/forban/">Forban (source code)</a></li></ul></div>
 """ % forbanname
 
