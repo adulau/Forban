@@ -25,8 +25,10 @@ print "applied regexp filter: %s" % ofilter
 refilter = re.compile(ofilter, re.I)
 discoveredloot = loot.loot()
 allindex = index.manage()
+allindex.build()
 
 while(1):
+
     for uuid in discoveredloot.listall():
         # fetch the index of all discovered loots
         # allowing to compare local loot to announced loot
@@ -34,7 +36,7 @@ while(1):
             allindex.cache(uuid)
 
         missingfiles = allindex.howfar(uuid)
-        if not missingfiles:
+        if not missingfiles or (discoveredloot.whoami() == uuid):
             print "missing no files with %s (%s)" % (discoveredloot.getname(uuid),uuid)
         else:
             for missedfile in missingfiles:
@@ -44,7 +46,7 @@ while(1):
                     localfile = forbanshareroot + "/" + missedfile
                     print "fetching %s to be saved in %s" % (url,localfile)
                     fetch.urlget(url,localfile)
-
+                allindex.build()
 
     time.sleep(100)
 
