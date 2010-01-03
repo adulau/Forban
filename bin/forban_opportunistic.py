@@ -5,6 +5,7 @@ import string
 import base64
 import time
 import ConfigParser
+import re
 config = ConfigParser.RawConfigParser()
 config.read("../cfg/forban.cfg")
 forbanpath = config.get('global','path')
@@ -19,7 +20,9 @@ if not config.get("global","mode") == "opportunistic":
     print "not configured in opportunistic mode"
     exit(1)
 
-
+ofilter = config.get('opportunistic','filter')
+print "applied regexp filter: %s" % ofilter
+refilter = re.compile(ofilter, re.I)
 discoveredloot = loot.loot()
 allindex = index.manage()
 
@@ -35,11 +38,12 @@ while(1):
             print "missing no files with %s (%s)" % (discoveredloot.getname(uuid),uuid)
         else:
             for missedfile in missingfiles:
-                sourcev4 = discoveredloot.getipv4(uuid)
-                url =  """http://%s:12555/s/?g=%s&f=b64""" % (sourcev4, base64.b64encode(missedfile))
-                localfile = forbanshareroot + "/" + missedfile
-                print "fetching %s to be saved in %s" % (url,localfile)
-                fetch.urlget(url,localfile)
+                if re.search(refilter, missedfile):
+                    sourcev4 = discoveredloot.getipv4(uuid)
+                    url =  """http://%s:12555/s/?g=%s&f=b64""" % (sourcev4, base64.b64encode(missedfile))
+                    localfile = forbanshareroot + "/" + missedfile
+                    print "fetching %s to be saved in %s" % (url,localfile)
+                    fetch.urlget(url,localfile)
 
 
     time.sleep(100)
