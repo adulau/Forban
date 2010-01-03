@@ -3,6 +3,7 @@ import urllib2
 
 def urlheadinfo(url):
     request = urllib2.Request(url)
+    request.add_header('User-Agent','Forban +http://www.gitorious.org/forban/')
     request.get_method = lambda: "HEAD"
 
     try:
@@ -16,7 +17,7 @@ def urlheadinfo(url):
 
     return (httphead.headers["last-modified"],httphead.headers["content-length"])
 
-def urlget(url, localfile="testurlget", cache=False):
+def urlget(url, localfile="testurlget"):
     httpreq = urllib2.Request(url)
     httpreq.add_header('User-Agent','Forban +http://www.gitorious.org/forban/')
     
