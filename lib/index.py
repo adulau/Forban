@@ -21,9 +21,12 @@ class manage:
             for name in files:
                 self.index = self.index + os.path.join(root.split(self.sharedir)[1],name)+","+str(os.path.getsize(os.path.join(root,name)))+"\n"
         
-        f = open (self.location,"w")
+        pid = os.getpid()
+        workingloc = self.location+"."+str(pid)
+        f = open (workingloc,"w")
         f.write(self.index)
         f.close()
+        os.rename(workingloc, self.location)
 
     def cache (self, uuid):
         cachepath = self.lootdir + uuid + "/cache"
