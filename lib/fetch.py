@@ -16,7 +16,7 @@ def urlheadinfo(url):
 
     return (httphead.headers["last-modified"],httphead.headers["content-length"])
 
-def urlget(url, localfile="testurlget"):
+def urlget(url, localfile="testurlget", cache=False):
     httpreq = urllib2.Request(url)
     httpreq.add_header('User-Agent','Forban +http://www.gitorious.org/forban/')
     
@@ -48,10 +48,10 @@ def urlget(url, localfile="testurlget"):
     else:
         return False
 
-
 def managetest():
     #urlget("http://192.168.154.199:12555/s/?g=forban/index")
     print urlheadinfo("http://192.168.154.199:12555/s/?g=forban/index")
+    
 if __name__ == "__main__":
     managetest()
 
