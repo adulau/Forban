@@ -4,6 +4,7 @@ import sys
 import string
 import base64
 import ConfigParser
+import socket
 config = ConfigParser.RawConfigParser()
 config.read("../cfg/forban.cfg")
 
@@ -20,7 +21,12 @@ import cherrypy
 from cherrypy.lib.static import serve_file
 import mimetypes
 
-cherrypy.config.update({ 'server.socket_port': 12555 , 'server.socket_host': '::', 'tools.static.root':forbanshareroot})
+if socket.has_ipv6:
+    bindhost = "::"
+else:
+    bindhost = "0.0.0.0"
+
+cherrypy.config.update({ 'server.socket_port': 12555 , 'server.socket_host': bindhost, 'tools.static.root':forbanshareroot})
 
 forbanpath = { '/css/style.css': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/css/x.css'},
                '/img/forban-small.png': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/img/forban-small.png'}
