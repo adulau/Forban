@@ -44,7 +44,8 @@ class manage:
                 # announce sent by each Forban
                     if int(localsize) != int(m[1]):
                         fetch.urlget(url, cachepath+"/forban/index")
-
+                else:
+                        fetch.urlget(url, cachepath+"/forban/index")
 
     def search (self, query, uuid=None):
         queryresult = []
