@@ -17,7 +17,7 @@ import discover
 if __name__ == "__main__":
 
     while 1:
-        HOST, PORT = ("::",12555)
+        HOST, PORT = ("",12555)
         server = discover.UDPServer((HOST, PORT), discover.MyUDPHandler)
         server.serve_forever()
 
