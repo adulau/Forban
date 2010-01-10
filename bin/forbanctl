@@ -49,10 +49,11 @@ if sys.argv[1] == "start":
 
     print "Starting Forban services..."
     for service in forban_services:
-        print service+"to start..."
-        pid = service_start(servicename = service)
-        writepid(processname = service, pid = pid)
-        print pidof(processname=service)
+        if not ((config.get('global','mode') == "shared")  and (service == "forban_opportunistic")):
+            print service+"to start..."
+            pid = service_start(servicename = service)
+            writepid(processname = service, pid = pid)
+            print pidof(processname=service)
 
 elif sys.argv[1] == "stop":
 

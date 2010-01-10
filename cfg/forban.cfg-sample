@@ -11,6 +11,8 @@ version = 0.0.1
 #
 # shared : you can propose files from your loot but your Forban is
 # not trying to update his loot from the other discovered loots.
+# Usually shared mode is used when there is a fixed storage of content proposed
+# (like a large and organized library) but the content is updated via other means.
 #
 
 mode = opportunistic
