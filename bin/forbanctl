@@ -43,7 +43,7 @@ def usage():
 if len(sys.argv) < 2:
     usage()
 
-forban_services = ["forban_announce", "forban_discover", "forban_share", "forban_opportunistic"]
+forban_services = ["forban_discover", "forban_announce", "forban_share", "forban_opportunistic"]
 
 if sys.argv[1] == "start":
 
