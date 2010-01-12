@@ -59,7 +59,7 @@ class Root:
         mysourcev4 = discoveredloot.getipv4(discoveredloot.whoami())
         allindex = index.manage()
         for name in discoveredloot.listall():
-            if discoveredloot.exist(name):
+            if (discoveredloot.exist(name) and discoveredloot.lastannounced(name)):
                 allindex.cache(name)
             if discoveredloot.lastannounced(name):
                 html += "<tr>"
