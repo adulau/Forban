@@ -38,13 +38,15 @@ while(1):
         missingfiles = allindex.howfar(uuid)
         if not missingfiles or (discoveredloot.whoami() == uuid):
             print "missing no files with %s (%s)" % (discoveredloot.getname(uuid),uuid)
+        elif not discoveredloot.lastannounced(uuid):
+            print "%s (%s) not seen recently" % (discoveredloot.getname(uuid),(uuid))
         else:
             for missedfile in missingfiles:
                 if re.search(refilter, missedfile):
                     sourcev4 = discoveredloot.getipv4(uuid)
                     url =  """http://%s:12555/s/?g=%s&f=b64""" % (sourcev4, base64.b64encode(missedfile))
                     localfile = forbanshareroot + "/" + missedfile
-                    print "fetching %s to be saved in %s" % (url,localfile)
+                    print "from %s fetching %s to be saved in %s" % (uuid,url,localfile)
                     fetch.urlget(url,localfile)
                 allindex.build()
 
