@@ -115,7 +115,7 @@ class Root:
             html += """<td>%s</td><td><a
             href="http://%s:12555/s/?g=%s&f=b64">v4</a></td> """ % (filemissed,sourcev4,base64.b64encode(filemissed))
             if sourcev6 is not None:
-                html += """<td><a href="http://[%s]:12555/s/g=%s&f=b64">v6</a></td>""" % (sourcev6, base64.b64encode(filemissed))
+                html += """<td><a href="http://[%s]:12555/s/?g=%s&f=b64">v6</a></td>""" % (sourcev6, base64.b64encode(filemissed))
             html += "</tr>"
 
         html += "</table>"
