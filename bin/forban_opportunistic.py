@@ -30,9 +30,9 @@ allindex.build()
 while(1):
 
     for uuid in discoveredloot.listall():
-        # fetch the index of all discovered loots
+        # fetch the index of all discovered and recently announced loots
         # allowing to compare local loot to announced loot
-        if discoveredloot.exist(uuid):
+        if discoveredloot.exist(uuid) and discoveredloot.lastannounced(uuid):
             allindex.cache(uuid)
 
         missingfiles = allindex.howfar(uuid)
