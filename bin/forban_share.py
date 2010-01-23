@@ -98,7 +98,33 @@ class Root:
     
     def q(self, querystring):
         print querystring
-        return querystring
+        mindex = index.manage()
+        discoveredloot = loot.loot()
+        searchresult = []
+        for name in discoveredloot.listall():
+            if (discoveredloot.exist(name) and discoveredloot.lastannounced(name)):
+               fileavailable = mindex.search( uuid=name, query=querystring)
+               for filefound in fileavailable:
+                   searchresult.append((filefound,name))
+        searchresult.sort()
+        print searchresult
+        html = htmlheader
+        html += "<title>search results of %s</title></head>" % (querystring)
+        html += htmlnav
+        html += """<br/> <br/> <div class="left inner">"""
+        previousfile = None
+        html += "<table><tr><th>Filename</th><th>Available on</th></tr>"
+        for foundfiles in searchresult:
+            if foundfiles[0] == previousfile:
+                html += "%s" % (foundfiles[1])
+            elif previousfile == None:
+                html += "<td>%s</td> <td>%s" % (foundfiles[0].rsplit(",",1)[0],foundfiles[1])
+            else:
+                html += "</td></tr><td>%s</td> <td>%s" % (foundfiles[0].rsplit(",",1)[0],foundfiles[1])
+
+            previousfile=foundfiles[0]
+        html += "</td></tr></table></div>"
+        return html
 
     def v(self, uuid):
         mindex = index.manage()
