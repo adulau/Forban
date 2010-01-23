@@ -86,7 +86,10 @@ class manage:
                missingfile = l.rsplit(",",1)[0]
                missingfile = re.sub("^(\+)","",missingfile)
                lmodified.append(missingfile)
-        return lmodified
+        if lmodified:
+            return lmodified
+        else:
+            return None
 
 def test ():
     testindex = manage()
