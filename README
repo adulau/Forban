@@ -35,14 +35,34 @@ a HTTP URL is build to get to default forban service.
 The UDP port 12555 is there for announcing forban services.
 The TCP port 12555 is the HTTP server running for forban services.
 
-base URL:
+base URL: [REQUIRED]
 http://<ip>:<destport>/
-search URL:
-http://<ip>:<destport>/q/<yoursearch>
-store URL where Forban stored his loot and how to get a file:
-http://<ip>:<destport>/s/?g=base64(<filenamefromindex>)&f=b64
-index URL where Forban stored his index:
+
+index URL where Forban stored his index: [REQUIRED]
 http://<ip>:<destport>/s/?g=forban/index
+
+store URL where Forban stored his loot and how to get a file: [REQUIRED]
+http://<ip>:<destport>/s/?g=base64(<filenamefromindex>)&f=b64
+
+search URL: [OPTIONAL]
+http://<ip>:<destport>/q/?v=<yoursearch>&r=<refreshtimeinsec>
+
+REQUIRED interfaces are required to have a full operational Forban
+protocol in all the modes. The OPTIONAL interfaces are not required
+for machine-to-machine interaction but used to ease the life of the users.
+
+=== Forban mode available ===
+
+* Opportunistic mode
+* Shared mode
+
+The opportunistic mode and shared used all the REQUIRED components of
+the protocol. The only difference is the lack of automatic file fetching
+in the shared mode. The shared mode is usally used on fixed node content
+where the opportunistic fetching is not desired (e.g. a fixed bookshelf).
+
+The opportunistic mode is working as a simple gossip (or epidemic) protocol
+to replicate the information from one local to another local Forban.
 
 === message format - notes about HMAC ===
 
