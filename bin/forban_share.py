@@ -49,10 +49,12 @@ def mime_type(filename):
 class Root:
     def index(self, directory=forbanshareroot):
         html = htmlheader
-        html += """<br/> <br/> <div class="left inner">
-        <h2>Discovered link-local Forban available with their loot in the last 3
-        minutes</h2>
-        """
+        html += """<br/> <br/> <div class="right inner">"""
+        html += """ <h2>Search the loot...</h2> """
+        html += """ <form method=get action="q/"><input type="text" name="v" value=""> <input
+        type="submit" value="search"></form> """
+        html += """</div> <div class="left inner">"""
+        html += """ <h2>Discovered link-local Forban available with their loot in the last 3 minutes</h2> """
         html += htmlnav
         html += "<table>"
         discoveredloot = loot.loot()
@@ -100,7 +102,8 @@ class Root:
         html += htmlfooter
         return html
     
-    def q(self, querystring, r=None):
+    def q(self, v=None, r=None):
+        querystring = v
         print querystring
         mindex = index.manage()
         discoveredloot = loot.loot()
