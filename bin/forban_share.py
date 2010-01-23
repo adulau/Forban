@@ -46,6 +46,28 @@ href="http://www.gitorious.org/forban/">Forban (source code)</a></li></ul></div>
 def mime_type(filename):
     return mimetypes.guess_type(filename)[0] or 'application/octet-stream'
 
+def forban_geturl(uuid=None, filename=None, protocol="v4"):
+
+    if uuid is None or filename is None:
+        return False
+
+    discoveredloot = loot.loot()
+
+    if not discoveredloot.exist(uuid):
+        return False
+
+    if protocol == "v4":
+        ip = discoveredloot.getipv4(uuid)
+    else:
+        ip = discoveredloot.getipv6(uuid)
+
+    if protocol == "v4":
+        url = "http://%s:12555/s/?g=%s&f=b64" % (ip,base64.b64encode(filename))
+    else:
+        url = "http://[%s]:12555/s/?g=%s&f=b64" % (ip,base64.b64encode(filename))
+
+    return url
+
 class Root:
     def index(self, directory=forbanshareroot):
         html = htmlheader
@@ -124,12 +146,15 @@ class Root:
         previousfile = None
         html += "<table><tr><th>Filename</th><th>Available on</th></tr>"
         for foundfiles in searchresult:
+
             if foundfiles[0] == previousfile:
-                html += "%s" % (foundfiles[1])
+                html += """<a href="%s">%s</a> """ % (forban_geturl(uuid=foundfiles[1],filename=filename),discoveredloot.getname(foundfiles[1]))
             elif previousfile == None:
-                html += "<td>%s</td> <td>%s / " % (foundfiles[0].rsplit(",",1)[0],foundfiles[1])
+                filename = foundfiles[0].rsplit(",",1)[0]
+                html += """<td>%s</td> <td><a href="%s">%s</a> """ % (foundfiles[0].rsplit(",",1)[0],forban_geturl(uuid=foundfiles[1],filename=filename),discoveredloot.getname(foundfiles[1]))
             else:
-                html += "</td></tr><td>%s</td> <td>%s / " % (foundfiles[0].rsplit(",",1)[0],foundfiles[1])
+                filename = foundfiles[0].rsplit(",",1)[0]
+                html += """</td></tr><td>%s</td> <td><a href="%s">%s</a> """ % (foundfiles[0].rsplit(",",1)[0],forban_geturl(uuid=foundfiles[1],filename=filename),discoveredloot.getname(foundfiles[1]))
 
             previousfile=foundfiles[0]
         html += "</td></tr></table></div>"
