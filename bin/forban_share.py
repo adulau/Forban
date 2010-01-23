@@ -96,7 +96,7 @@ class Root:
         html += htmlfooter
         return html
     
-    def q(self, querystring):
+    def q(self, querystring, r=None):
         print querystring
         mindex = index.manage()
         discoveredloot = loot.loot()
@@ -107,9 +107,11 @@ class Root:
                for filefound in fileavailable:
                    searchresult.append((filefound,name))
         searchresult.sort()
-        print searchresult
         html = htmlheader
-        html += "<title>search results of %s</title></head>" % (querystring)
+        html += "<title>search results of %s</title>" % (querystring)
+        if r is not None:
+            html += """<meta http-equiv="refresh" content="%s">""" % (r)
+        html += "</head>"
         html += htmlnav
         html += """<br/> <br/> <div class="left inner">"""
         previousfile = None
@@ -118,9 +120,9 @@ class Root:
             if foundfiles[0] == previousfile:
                 html += "%s" % (foundfiles[1])
             elif previousfile == None:
-                html += "<td>%s</td> <td>%s" % (foundfiles[0].rsplit(",",1)[0],foundfiles[1])
+                html += "<td>%s</td> <td>%s / " % (foundfiles[0].rsplit(",",1)[0],foundfiles[1])
             else:
-                html += "</td></tr><td>%s</td> <td>%s" % (foundfiles[0].rsplit(",",1)[0],foundfiles[1])
+                html += "</td></tr><td>%s</td> <td>%s / " % (foundfiles[0].rsplit(",",1)[0],foundfiles[1])
 
             previousfile=foundfiles[0]
         html += "</td></tr></table></div>"
