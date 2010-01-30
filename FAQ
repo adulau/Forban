@@ -1,0 +1,66 @@
+FAQ - Forban
+http://www.foo.be/forban/
+
+== Protocol ==
+
+Q1. Why don't you use SSDP, Bonjour or any other existing
+    service announce and discovery in Forban?
+
+    Forban was first designed to rely on SSDP but we quickly
+    discovered various limitation or overhead that limited
+    us to use it. One the major limitation is the requirement
+    to include a Host: entry in a SSDP Notify message.
+
+    One of the main concept behind Forban is the ability to
+    setup something quickly even if IP addresses behind are
+    changing regularly. So we changed to a simple flooding
+    announce message without auto-shut-off algorithm or
+    ssdp:byebye scheme. We are using the old but functional
+    broadcast in IPv4 that allows Forban to work even where 
+    multicast is not properly switched.
+
+    We choose to design a small and stateless announce protocol 
+    that can be implemented without an XML parser or any complex
+    state machine.
+
+    For more information :
+    http://www.gitorious.org/forban/forban/blobs/master/README
+   
+Q2. Why Forban is configured by default in opportunistic
+    mode and getting all in files in its proximity?
+
+    That was the core idea of Forban when the project started.
+    When you start for the first time your Forban, it will fetch
+    automatically all files from his proximity. This is quite
+    important for very ephemeral connectivity. So the gossip
+    operation or the epidemic algorithm is the standard way
+    of operation. This was there to ensure a kind of persistence
+    of the data replicated.
+
+    If you don't want to use the opportunistic mode, there 
+    is the shared mode, where you can propose files to
+    be downloaded but where your Forban is not doing the
+    replication of all the files in its surrounding. You
+    can still download the files in a more conventional way
+    using the web interface.
+
+    To change between the two modes, you'll just need to
+    set it in the configuration :
+
+    mode = opportunistic
+    or
+    mode = shared
+
+== Security ==
+
+Q3. Forban can be used to automatically distribute malware or
+    viruses?
+
+    Yes but just like any other opportunistic file exchange scheme
+    or even HTTP services. This can be used as an easy way to exchange
+    malware or viruses. User must always use the appropriate measure
+    to protect his computer or mobile device (e.g. using a filter 
+    list in Forban, using an updated antivirus).
+
+
+If you have any question or ideas, send them to adulau @ foo . be 
