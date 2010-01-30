@@ -48,7 +48,7 @@ while(1):
                     localfile = forbanshareroot + "/" + missedfile
                     print "from %s fetching %s to be saved in %s" % (uuid,url,localfile)
                     fetch.urlget(url,localfile)
-                allindex.build()
+                    allindex.build()
 
     time.sleep(100)
 
