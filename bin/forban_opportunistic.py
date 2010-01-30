@@ -46,8 +46,11 @@ while(1):
                     sourcev4 = discoveredloot.getipv4(uuid)
                     url =  """http://%s:12555/s/?g=%s&f=b64""" % (sourcev4, base64.b64encode(missedfile))
                     localfile = forbanshareroot + "/" + missedfile
-                    print "from %s fetching %s to be saved in %s" % (uuid,url,localfile)
-                    fetch.urlget(url,localfile)
+                    if allindex.getfilesize(filename=missedfile) < allindex.getfilesize (filename=missedfile,uuid=uuid):
+                        print "local file smaller - from %s fetching %s to be saved in %s" % (uuid,url,localfile)
+                        fetch.urlget(url,localfile)
+                    else:
+                        print "local file larger %s - don't fetch it" % (localfile)
                     allindex.build()
 
     time.sleep(100)

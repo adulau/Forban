@@ -63,6 +63,23 @@ class manage:
 
         return queryresult
 
+    def getfilesize (self, filename=None, uuid=None):
+
+        if filename is None:
+            return False
+
+        # if uuid is None we use the local cache
+        if uuid is None:
+            location = self.location
+        else:
+            location = self.lootdir + uuid + "/cache/forban/index"
+        f = open(location, "r")
+        pmatch = re.compile(filename)
+        for line in f.readlines():
+            if pmatch.search(line):
+                v = line.rsplit(",",1)[1].rstrip('\n')
+                return int(v)
+
     def howfar (self, uuid):
         cachepath = self.lootdir + uuid + "/cache/forban/index"
         # how can I compare my cache to the other, if the other
@@ -96,7 +113,9 @@ def test ():
     #testindex.build()
     #testindex.cache("cb001bf2-1497-443c-9675-74de7027ecf9")
     #print testindex.howfar("e2f05993-eba1-4b94-8e56-d2157d1ce552")
-    print testindex.search("^((?!forban).)*$","e2f05993-eba1-4b94-8e56-d2157d1ce552");
+    #print testindex.search("^((?!forban).)*$","e2f05993-eba1-4b94-8e56-d2157d1ce552");
+    print testindex.getfilesize(filename="forban/index")
+    print testindex.getfilesize(filename="forban/index",uuid="8d63025e-2f11-4c08-837a-08c44b122150")
 
 if __name__ == "__main__":
 
