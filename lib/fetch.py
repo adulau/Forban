@@ -1,5 +1,6 @@
 import os
 import urllib2
+import shutil
 
 def urlheadinfo(url):
     request = urllib2.Request(url)
@@ -43,7 +44,7 @@ def urlget(url, localfile="testurlget"):
     
     if r.info().has_key('Content-Disposition'):
         f = open (localfile, "w")
-        f.write(r.read())
+        shutil.copyfileobj(r.fp,f)
         f.close()
         return True
     else:
