@@ -11,6 +11,7 @@ config.read("../cfg/forban.cfg")
 forbanpath = config.get('global','path')
 forbandiscoveredloots = forbanpath+"/var/loot/"
 forbanname = config.get('global','name')
+forbanmode = config.get('global','mode')
 forbanshareroot = config.get('forban','share')
 
 sys.path.append(forbanpath+"lib/")
@@ -36,12 +37,16 @@ htmlheader = """<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
 lang="en"> <head> <link rel="stylesheet" type="text/css" href="/css/style.css"
 /> </head>"""
 
-htmlfooter =  """</div></body></html>"""
+htmlfooter =  """<div id="w3c"><p><small>Forban is free software released under
+the AGPL. For more information about Forban and source code : <a
+href="http://www.foo.be/forban/">foo.be/forban/</a>.</small></p></div></div><!--
+end wrapper --></div></body></html>"""
 
 htmlnav = """ <body><div id="nav"><a href="/"><img src="/img/forban-small.png" alt="forban
-logo : a small island where a binary is going to and coming from" /></a><br /><ul><li><span class="home"><i>%s</i></span></li><li><a
-href="http://www.gitorious.org/forban/">Forban (source code)</a></li></ul></div>
-""" % forbanname
+logo : a small island where a stream of bits is going to and coming from"
+/></a><br /><ul><li><span class="home">Description : <i>%s</i><br/>Mode : <i>%s</i></span></li>
+</ul></div><div id="wrapper">
+""" % (forbanname, forbanmode)
 
 def mime_type(filename):
     return mimetypes.guess_type(filename)[0] or 'application/octet-stream'
@@ -71,13 +76,13 @@ def forban_geturl(uuid=None, filename=None, protocol="v4"):
 class Root:
     def index(self, directory=forbanshareroot):
         html = htmlheader
-        html += """<br/> <br/> <div class="right inner">"""
+        html += htmlnav
+        html += """<br/> <br/> <br/> <div class="right inner">"""
         html += """ <h2>Search the loot...</h2> """
         html += """ <form method=get action="q/"><input type="text" name="v" value=""> <input
         type="submit" value="search"></form> """
         html += """</div> <div class="left inner">"""
         html += """ <h2>Discovered link-local Forban available with their loot in the last 3 minutes</h2> """
-        html += htmlnav
         html += "<table>"
         discoveredloot = loot.loot()
         mysourcev4 = discoveredloot.getipv4(discoveredloot.whoami())
@@ -120,7 +125,7 @@ class Root:
                     html += "<td><i>yourself</i></td>"
                 html += "</tr>"
 
-        html += "</table>"
+        html += "</table></div>"
         html += htmlfooter
         return html
     
@@ -165,7 +170,7 @@ class Root:
         dloot = loot.loot()
         missingfiles = mindex.howfar(uuid)
         html = htmlheader
-        html += """<br/> <br/> <div class="left inner"> <h2>Missing files on your loot from %s </h2>""" % dloot.getname(uuid)
+        html += """<br/> <br/> <br/> <div class="left inner"> <h2>Missing files on your loot from %s </h2>""" % dloot.getname(uuid)
         html += htmlnav
         html += "<table>"
 
@@ -193,7 +198,7 @@ class Root:
         dloot = loot.loot()
         html = htmlheader
 
-        html += """<br/> <br/> <div class="left inner"> <h2>Files available in loot %s </h2>""" % dloot.getname(uuid)
+        html += """<br/> <br/> <br /> <div class="left inner"> <h2>Files available in loot %s </h2>""" % dloot.getname(uuid)
         html += htmlnav
         html += "<table>"
 
