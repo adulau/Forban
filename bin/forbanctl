@@ -2,6 +2,7 @@
 
 import sys
 import os
+import platform
 import signal
 import subprocess
 import ConfigParser
@@ -26,6 +27,14 @@ def writepid (processname = None, pid = None):
     else:
         return False
 
+def rmpid (processname = None):
+    pidpath = os.path.join (forbanpath,"./var/",processname+".pid")
+    if os.path.exists(pidpath):
+        os.unlink(pidpath)
+        return True
+    else:
+        return False
+
 def pidof(processname = None):
     pidpath = forbanpath+"/var/"+processname+".pid"
     if processname is not None and os.path.exists(pidpath):
@@ -36,8 +45,14 @@ def pidof(processname = None):
     else:
         return False
 
+def nppidof(processname = None):
+
+    if platform.system() is not "Windows":
+        #os.system("ps ax | grep forban_ | grep python | cut -d\" \" -f1 | sed -e '$!N;N;N; s/\\n/,/g'")
+        return True
+
 def usage():
-    print "forbanctl (start|stop)"
+    print "forbanctl (start|stop|forcestop)"
     exit (1)
 
 if len(sys.argv) < 2:
@@ -66,5 +81,13 @@ elif sys.argv[1] == "stop":
                 os.kill(int(pid), signal.SIGKILL)
             except OSError, e:
                 print service+  " unsuccessfully stopped"
+            print service
+            rmpid(processname=service)
+
+elif sys.argv[1] == "forcestop":
+    
+    print "(forced) Stopping Forban services..."
+    nppidof()
+
 else:
     usage()
