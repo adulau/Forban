@@ -2,7 +2,11 @@ import socket
 import string
 import time
 import datetime
-import hashlib, hmac
+try:
+    from hashlib import sha1
+except ImportError:
+    from sha import sha as sha1
+import hmac
 import re
 import sys
 
@@ -34,7 +38,7 @@ class message:
         if key is None:
             self.payload = self.payload
         else:
-            auth = hmac.new(key, self.payload, hashlib.sha1)
+            auth = hmac.new(key, self.payload, sha1)
             self.payload = self.payload + ";hmac;" + auth.hexdigest()
 
     def get (self):
