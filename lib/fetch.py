@@ -1,6 +1,9 @@
 import os
+import socket
 import urllib2
 import shutil
+
+socket.setdefaulttimeout(10)
 
 def urlheadinfo(url):
     request = urllib2.Request(url)
