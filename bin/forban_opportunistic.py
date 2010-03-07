@@ -45,11 +45,14 @@ while(1):
         if discoveredloot.exist(uuid) and discoveredloot.lastannounced(uuid):
             allindex.cache(uuid)
 
+        if not discoveredloot.lastannounced(uuid):
+            print "%s (%s) not seen recently, skipped" % (discoveredloot.getname(uuid),(uuid))
+            continue
+
         missingfiles = allindex.howfar(uuid)
+
         if not missingfiles or (discoveredloot.whoami() == uuid):
             print "missing no files with %s (%s)" % (discoveredloot.getname(uuid),uuid)
-        elif not discoveredloot.lastannounced(uuid):
-            print "%s (%s) not seen recently" % (discoveredloot.getname(uuid),(uuid))
         else:
             for missedfile in missingfiles:
                 if re.search(refilter, missedfile):
