@@ -1,7 +1,7 @@
 [global]
 name = adulau shared forban
 path = /home/adulau/git/forban/
-version = 0.0.8
+version = 0.0.9
 
 # available mode :
 #
