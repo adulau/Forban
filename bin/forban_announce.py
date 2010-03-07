@@ -7,7 +7,12 @@ config = ConfigParser.RawConfigParser()
 config.read("../cfg/forban.cfg")
 
 forbanpath = config.get('global','path')
+try:
+    announceinterval = config.get('global','announceinterval')
+except ConfigParser.NoOptionError:
+    announceinterval = 10
 
+announceinterval = float(announceinterval)
 
 sys.path.append(forbanpath+"lib/")
 
@@ -26,4 +31,4 @@ while 1:
     forbanindex.build()
     msg.gen()
     msg.send()
-    time.sleep(60)
+    time.sleep(announceinterval)

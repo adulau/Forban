@@ -16,6 +16,13 @@ version = 0.0.8
 #
 
 mode = opportunistic
+
+# announce interval in seconds
+#
+
+announceinterval = 15
+
+
 [forban]
 share = /home/adulau/git/forban/var/share/
 [opportunistic]
