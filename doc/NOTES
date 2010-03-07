@@ -11,3 +11,5 @@
 * be sure that the list of host to contact is randomized (-> issues of bootstrapping a lot of local Forban services)
 * calculate a weight factord based on the content proposed by Forban
 * reduce time to flood the announces (or make it variable ?)
+  [DONE] 10sec now default but can be configured
+  [DONE] opportunistic wake-up is function of the announce time

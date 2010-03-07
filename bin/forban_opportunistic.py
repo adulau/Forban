@@ -20,6 +20,16 @@ if not config.get("global","mode") == "opportunistic":
     print "not configured in opportunistic mode"
     exit(1)
 
+
+forbanpath = config.get('global','path')
+try:
+    announceinterval = config.get('global','announceinterval')
+except ConfigParser.NoOptionError:
+    announceinterval = 10
+
+announceinterval = float(announceinterval)
+
+
 ofilter = config.get('opportunistic','filter')
 print "applied regexp filter: %s" % ofilter
 refilter = re.compile(ofilter, re.I)
@@ -53,5 +63,5 @@ while(1):
                         print "local file larger %s - don't fetch it" % (localfile)
                     allindex.build()
 
-    time.sleep(100)
+    time.sleep(announceinterval*(announceinterval/(announceinterval-2)))
 
