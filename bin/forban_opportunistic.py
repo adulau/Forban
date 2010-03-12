@@ -59,11 +59,18 @@ while(1):
                     sourcev4 = discoveredloot.getipv4(uuid)
                     url =  """http://%s:12555/s/?g=%s&f=b64""" % (sourcev4, base64.b64encode(missedfile))
                     localfile = forbanshareroot + "/" + missedfile
-                    if allindex.getfilesize(filename=missedfile) < allindex.getfilesize (filename=missedfile,uuid=uuid):
+                    localsize = allindex.getfilesize(filename=missedfile)
+                    remotesize = allindex.getfilesize(filename=missedfile,uuid=uuid)
+                    if localsize < remotesize:
                         print "local file smaller - from %s fetching %s to be saved in %s" % (uuid,url,localfile)
                         fetch.urlget(url,localfile)
+                    elif localsize is False:
+                        print "local file not existing - from %s fetching %s to be saved in %s" % (uuid,url,localfile)
+                        fetch.urlget(url,localfile)
+                    elif remotesize is False:
+                        print "remote file index issue for %s on loot %s" % (missedfile, uuid)
                     else:
-                        print "local file larger %s - don't fetch it" % (localfile)
+                        print "local file larger or corrupt %s - don't fetch it" % (localfile)
                     allindex.build()
 
     time.sleep(announceinterval*(announceinterval/(announceinterval-2)))
