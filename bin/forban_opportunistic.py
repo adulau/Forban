@@ -2,7 +2,6 @@ import glob
 import os.path
 import sys
 import string
-import base64
 import time
 import ConfigParser
 import re
@@ -15,6 +14,7 @@ sys.path.append(forbanpath+"lib/")
 import index
 import loot
 import fetch
+import base64e
 
 if not config.get("global","mode") == "opportunistic":
     print "not configured in opportunistic mode"
@@ -57,7 +57,7 @@ while(1):
             for missedfile in missingfiles:
                 if re.search(refilter, missedfile):
                     sourcev4 = discoveredloot.getipv4(uuid)
-                    url =  """http://%s:12555/s/?g=%s&f=b64""" % (sourcev4, base64.b64encode(missedfile))
+                    url =  """http://%s:12555/s/?g=%s&f=b64e""" % (sourcev4, base64e.encode(missedfile))
                     localfile = forbanshareroot + "/" + missedfile
                     localsize = allindex.getfilesize(filename=missedfile)
                     remotesize = allindex.getfilesize(filename=missedfile,uuid=uuid)

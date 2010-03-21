@@ -2,7 +2,6 @@ import glob
 import os.path
 import sys
 import string
-import base64
 import ConfigParser
 import socket
 config = ConfigParser.RawConfigParser()
@@ -17,6 +16,7 @@ forbanshareroot = config.get('forban','share')
 sys.path.append(forbanpath+"lib/")
 import index
 import loot
+import base64e
 
 import cherrypy
 from cherrypy.lib.static import serve_file
@@ -67,9 +67,9 @@ def forban_geturl(uuid=None, filename=None, protocol="v4"):
         ip = discoveredloot.getipv6(uuid)
 
     if protocol == "v4":
-        url = "http://%s:12555/s/?g=%s&f=b64" % (ip,base64.b64encode(filename))
+        url = "http://%s:12555/s/?g=%s&f=b64e" % (ip,base64e.encode(filename))
     else:
-        url = "http://[%s]:12555/s/?g=%s&f=b64" % (ip,base64.b64encode(filename))
+        url = "http://[%s]:12555/s/?g=%s&f=b64e" % (ip,base64e.encode(filename))
 
     return url
 
@@ -185,9 +185,9 @@ class Root:
                 sourcev4 = dloot.getipv4(uuid)
                 sourcev6 = dloot.getipv6(uuid)
                 html += """<td>%s</td><td><a
-                href="http://%s:12555/s/?g=%s&f=b64">v4</a></td> """ % (filemissed,sourcev4,base64.b64encode(filemissed))
+                href="http://%s:12555/s/?g=%s&f=b64e">v4</a></td> """ % (filemissed,sourcev4,base64e.encode(filemissed))
                 if sourcev6 is not None:
-                    html += """<td><a href="http://[%s]:12555/s/?g=%s&f=b64">v6</a></td>""" % (sourcev6, base64.b64encode(filemissed))
+                    html += """<td><a href="http://[%s]:12555/s/?g=%s&f=b64e">v6</a></td>""" % (sourcev6, base64e.encode(filemissed))
                 html += "</tr>"
 
         html += "</table>"
@@ -209,10 +209,9 @@ class Root:
             html += "<tr>"
             sourcev4 = dloot.getipv4(uuid)
             sourcev6 = dloot.getipv6(uuid)
-            html += """<td>%s</td><td><a
-            href="http://%s:12555/s/?g=%s&f=b64">v4</a></td> """ % (filei,sourcev4,base64.b64encode(filei))
+            html += """<td>%s</td><td><a href="http://%s:12555/s/?g=%s&f=b64e">v4</a></td> """ % (filei,sourcev4,base64e.encode(filei))
             if sourcev6 is not None:
-                html += """<td><a href="http://[%s]:12555/s/?g=%s&f=b64">v6</a></td>""" % (sourcev6, base64.b64encode(filei))
+                html += """<td><a href="http://[%s]:12555/s/?g=%s&f=b64e">v6</a></td>""" % (sourcev6, base64e.encode(filei))
             html += "</tr>"
 
         html += "</table>"
@@ -227,8 +226,7 @@ class Root:
 class Download:
     def index(self, g=None, f=None):
         if f is not None:
-            g = base64.b64decode(g)
-            print g
+            g = base64e.decode(g)
         gs = string.replace(g, "..", "")
         gs = forbanshareroot + gs
         mimetypeguessed = mime_type(gs)

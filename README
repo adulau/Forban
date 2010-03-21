@@ -42,7 +42,7 @@ index URL where Forban stored his index: [REQUIRED]
 http://<ip>:<destport>/s/?g=forban/index
 
 store URL where Forban stored his loot and how to get a file: [REQUIRED]
-http://<ip>:<destport>/s/?g=base64(<filenamefromindex>)&f=b64
+http://<ip>:<destport>/s/?g=base64_urlsafe(<filenamefromindex>)&f=b64e
 
 search URL: [OPTIONAL]
 http://<ip>:<destport>/q/?v=<yoursearch>&r=<refreshtimeinsec>
@@ -50,6 +50,16 @@ http://<ip>:<destport>/q/?v=<yoursearch>&r=<refreshtimeinsec>
 REQUIRED interfaces are required to have a full operational Forban
 protocol in all the modes. The OPTIONAL interfaces are not required
 for machine-to-machine interaction but used to ease the life of the users.
+
+==== base64_urlsafe function (b64e) ====
+
+'+' is replaced by '-'.
+'/' is replaced by '_'(underscore).
+'=' is replaced by '!'.
+
+This is following the same approach of MIME::Base64::URLSafe
+or the python base64.urlsafe_b64encode with an addition to
+the equal sign being replaced by an exclamation mark.
 
 === Forban mode available ===
 
