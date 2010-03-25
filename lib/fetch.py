@@ -24,6 +24,8 @@ import shutil
 
 socket.setdefaulttimeout(10)
 
+import tmpname
+
 def urlheadinfo(url):
     request = urllib2.Request(url)
     request.add_header('User-Agent','Forban +http://www.gitorious.org/forban/')
@@ -63,18 +65,21 @@ def urlget(url, localfile="testurlget"):
     # not used right now. The interface is used as file transfert
     # so the Content-Disposition is a requirement for any other
     # HTTP clients
-    
+
+    tlocalfile = tmpname.get(localfile)
+
     if r.info().has_key('Content-Disposition'):
-        f = open (localfile, "w")
+        f = open (tlocalfile[1], "w")
         shutil.copyfileobj(r.fp,f)
         f.close()
+        os.rename(tlocalfile[1], tlocalfile[0])
         return True
     else:
         return False
 
 def managetest():
     #urlget("http://192.168.154.199:12555/s/?g=forban/index")
-    print urlheadinfo("http://192.168.1.4:12555/s/?g=forban/index")
+    print urlget("http://192.168.1.4:12555/s/?g=forban/index")
     
 if __name__ == "__main__":
     managetest()
