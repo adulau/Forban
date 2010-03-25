@@ -53,18 +53,7 @@ class manage:
             os.mkdir(cachepath)
         lloot = loot.loot()
         for url in lloot.getindexurl(uuid):
-            m = fetch.urlheadinfo(url)
-            # we assume an HTTP server with HEAD support
-            # (if HEAD is not successful, we don't GET)
-            if m is not False:
-                if os.path.exists(cachepath+"/forban/index"):
-                    localsize = os.stat(cachepath+"/forban/index").st_size
-                # we rely on the size only as the date is updated at each
-                # announce sent by each Forban
-                    if int(localsize) != int(m[1]):
-                        fetch.urlget(url, cachepath+"/forban/index")
-                else:
-                        fetch.urlget(url, cachepath+"/forban/index")
+            fetch.urlget(url, cachepath+"/forban/index")
 
     def search (self, query, uuid=None):
         queryresult = []
