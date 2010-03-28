@@ -37,8 +37,14 @@ import index
 import loot
 import base64e
 
-import cherrypy
-from cherrypy.lib.static import serve_file
+try:
+    import cherrypy
+    from cherrypy.lib.static import serve_file
+except ImportError:
+    sys.path.append(forbanpath+"lib/ext/")
+    import cherrypy
+    from cherrypy.lib.static import serve_file
+
 import mimetypes
 
 if socket.has_ipv6:
