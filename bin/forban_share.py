@@ -48,7 +48,12 @@ except ImportError:
 import mimetypes
 
 if socket.has_ipv6:
-    bindhost = "::"
+    try:
+        socktest = socket.socket(socket.AF_INET6)
+        bindhost = "::"
+        socktest.close()
+    except:
+        bindhost = "0.0.0.0"
 else:
     bindhost = "0.0.0.0"
 
