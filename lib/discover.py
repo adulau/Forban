@@ -39,7 +39,12 @@ class UDPServer(SocketServer.UDPServer):
 
 
     if socket.has_ipv6:
-        address_family = socket.AF_INET6
+        try:
+            socktest = socket.socket(socket.AF_INET6)
+            socktest.close()
+            address_family = socket.AF_INET6
+        except:
+            address_family = socket.AF_INET
 
     def server_bind(self):
 
