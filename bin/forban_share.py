@@ -140,7 +140,9 @@ class Root:
                     html += "<td>never seen</td>"
                 missingfiles = allindex.howfar(name)
 
-                if missingfiles is not None or (type(missingfiles) == bool):
+                if type(missingfiles) is bool:
+                    html += "<td><b>Missing index</b> from this loot"
+                elif missingfiles is not None:
                     html += "<td>Missing %s files from this loot" % len(missingfiles)
                 else:
                     html += "<td>Missing no files from this loot"
