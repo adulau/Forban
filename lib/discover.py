@@ -35,15 +35,32 @@ class MyUDPHandler(SocketServer.BaseRequestHandler):
             print "debug : not a forban message"
 
 class UDPServer(SocketServer.UDPServer):
+
+
+
     if socket.has_ipv6:
         address_family = socket.AF_INET6
+
     def server_bind(self):
+
+        self.v6success = True
+
+        try:
+            socktest = socket.socket(socket.AF_INET6)
+            socktest.close()
+        except:
+            self.v6success = False
+
+        if socket.has_ipv6 and self.v6success:
+            address_family = socket.AF_INET6
+
         #allowing to work in dual-stack when IPv6 is used
-        if socket.has_ipv6:
+        if socket.has_ipv6 and self.v6success:
             self.socket.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 0)
         self.socket.bind(self.server_address)
 
 if __name__ == "__main__":
+
    HOST, PORT = ("::",12555)
    server = UDPServer((HOST, PORT), MyUDPHandler)
    server.serve_forever()
