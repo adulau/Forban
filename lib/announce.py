@@ -68,14 +68,21 @@ class message:
         for destination in self.destination:
            
             if socket.has_ipv6 and re.search(":", destination):
-                sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-                # Required on some version of MacOS X while sending IPv6 UDP
-                # datagram
-                sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 1)
+
+                # Even if Python is compiled with IPv6, it doesn't mean that the os
+                # is supporting IPv6. (like the Nokia N900)
+                try:
+                    sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+                    # Required on some version of MacOS X while sending IPv6 UDP
+                    # datagram
+                    sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 1)
+                except:
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+
             else:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-           
+
             try:
                 sock.sendto(self.payload, (destination, int(self.port)))
             except socket.error, msg:
