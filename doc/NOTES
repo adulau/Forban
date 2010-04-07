@@ -2,14 +2,17 @@
 == portability ==
 
 * include a default CherryPy in the package
+  [DONE] done now in ./lib/ext/
 * or remove CherryPy requirements (and/or (re)implement the minimal HTTP services requirement)
 ** -> to just rely on a standard Python with no additional module (Nokia N900 test)
 
 == opportunistic ==
 
 * limit the timeout when the HTTP service is not responding
+  [DONE] socket.setdefaulttimeout(10) is globally set in the fetching library
+  -> Maybe this could be variable following the stability of the hosts discovered / link stability
 * be sure that the list of host to contact is randomized (-> issues of bootstrapping a lot of local Forban services)
-* calculate a weight factord based on the content proposed by Forban
+* calculate a weight factor based on the content proposed by the different Forban
 * reduce time to flood the announces (or make it variable ?)
   [DONE] 10sec now default but can be configured
   [DONE] opportunistic wake-up is function of the announce time
