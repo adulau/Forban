@@ -72,7 +72,8 @@ def urlget(url, localfile="testurlget"):
         f = open (tlocalfile[1], "w")
         shutil.copyfileobj(r.fp,f)
         f.close()
-        os.rename(tlocalfile[1], tlocalfile[0])
+        if os.path.exists(tlocalfile[1]):
+            os.rename(tlocalfile[1], tlocalfile[0])
         return True
     else:
         return False
