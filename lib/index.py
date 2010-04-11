@@ -108,7 +108,7 @@ class manage:
         mydiff = '\n'.join(list(difflib.unified_diff(f1vs,f2vs, lineterm="")))
         lmodified = []
         for l in mydiff.splitlines():
-            if re.search("(^\+)",l) and not re.search("^\+\+",l) and not re.search("forban",l):
+            if re.search("(^\+)",l) and not re.search("^\+\+",l) and not re.search("forban",l) and not re.search("/\.",l):
                missingfile = l.rsplit(",",1)[0]
                missingfile = re.sub("^(\+)","",missingfile)
                lmodified.append(missingfile)
