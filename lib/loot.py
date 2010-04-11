@@ -26,6 +26,7 @@ import sys
 # forban internal junk
 sys.path.append('.')
 import fid
+import tmpname
 
 class loot:
 
@@ -171,19 +172,27 @@ class loot:
         self.setsource(self.lsourcev4, self.lsourcev6)
 
     def setname (self, lname):
-        
-        f = open(self.lootpath+self.luuid+"/"+"name", "w")
+
+        localfile =  os.path.join(self.lootpath,self.luuid,"name")
+        tlocalfile = tmpname.get(localfile)
+
+        f = open(tlocalfile[1], "w")
         f.write(lname)
         f.close()
+
+        os.rename(tlocalfile[1], tlocalfile[0])
 
         # self is added for the same forban doing the announce
         # and the discovery
 
         myid = fid.manage()
         if myid.get() == self.luuid:
-            f = open (self.lootpath+self.luuid+"/"+"self", "w")
+            localfile = os.path.join(self.lootpath,self.luuid,"self")
+            tlocalfile = tmpname.get(localfile)
+            f = open (tlocalfile[1], "w")
             f.write("")
             f.close()
+            os.rename(tlocalfile[1], tlocalfile[0])
 
     def setsource (self, sourcev4 = None , sourcev6 = None):
         
