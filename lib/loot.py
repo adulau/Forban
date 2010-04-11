@@ -216,12 +216,14 @@ class loot:
 
     def setlastseen (self):
         
-        lastseenpath = self.lootpath+self.luuid+"/"+"last"
-        f = open(lastseenpath, "w")
+        localfile =  os.path.join(self.lootpath,self.luuid,"last")
+        tlocalfile = tmpname.get(localfile)
+        f = open(tlocalfile[1], "w")
         t = datetime.datetime.now()
         f.write(str(time.mktime(t.timetuple())))
         f.close()
-
+        if os.path.exists(tlocalfile[1]):
+            os.rename(tlocalfile[1], tlocalfile[0])
 
 def loottest():
         
