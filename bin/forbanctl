@@ -36,7 +36,8 @@ def service_start(servicename = None):
     return False
 
 def writepid (processname = None, pid = None):
-    pidpath = forbanpath+"/var/"+processname+".pid"
+    pidpath = os.path.join(forbanpath,"var",processname+".pid")
+
     if processname is not None and pid is not None:
         f = open (pidpath,"w")
         f.write(str(pid))
@@ -46,7 +47,7 @@ def writepid (processname = None, pid = None):
         return False
 
 def rmpid (processname = None):
-    pidpath = os.path.join (forbanpath,"./var/",processname+".pid")
+    pidpath = os.path.join(forbanpath,"var",processname+".pid")
     if os.path.exists(pidpath):
         os.unlink(pidpath)
         return True
@@ -54,7 +55,7 @@ def rmpid (processname = None):
         return False
 
 def pidof(processname = None):
-    pidpath = forbanpath+"/var/"+processname+".pid"
+    pidpath = os.path.join(forbanpath,"var",processname+".pid")
     if processname is not None and os.path.exists(pidpath):
         f = open (pidpath)
         pid = f.read()
