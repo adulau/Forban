@@ -19,6 +19,7 @@
 
 import sys
 import time
+import os
 
 import ConfigParser
 config = ConfigParser.RawConfigParser()
@@ -26,8 +27,8 @@ config.read("../cfg/forban.cfg")
 
 forbanpath = config.get('global','path')
 
-
-sys.path.append(forbanpath+"lib/")
+forbanpathlib = os.path.join(forbanpath,"lib")
+sys.path.append(forbanpathlib)
 
 import discover
 

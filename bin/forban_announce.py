@@ -19,6 +19,7 @@
 
 import sys
 import time
+import os
 
 import ConfigParser
 config = ConfigParser.RawConfigParser()
@@ -31,8 +32,9 @@ except ConfigParser.NoOptionError:
     announceinterval = 10
 
 announceinterval = float(announceinterval)
+forbanpathlib=os.path.join(forbanpath,"lib")
 
-sys.path.append(forbanpath+"lib/")
+sys.path.append(forbanpathlib)
 
 import announce
 import index

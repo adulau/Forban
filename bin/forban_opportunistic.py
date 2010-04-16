@@ -28,8 +28,8 @@ config = ConfigParser.RawConfigParser()
 config.read("../cfg/forban.cfg")
 forbanpath = config.get('global','path')
 forbanshareroot = config.get('forban','share')
-
-sys.path.append(forbanpath+"lib/")
+forbanpathlib = os.path.join(forbanpath,"lib")
+sys.path.append(forbanpathlib)
 import index
 import loot
 import fetch

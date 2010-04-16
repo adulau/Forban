@@ -31,8 +31,9 @@ forbandiscoveredloots = forbanpath+"/var/loot/"
 forbanname = config.get('global','name')
 forbanmode = config.get('global','mode')
 forbanshareroot = config.get('forban','share')
+forbanpathlib = os.path.join (forbanpath,"lib")
+sys.path.append(forbanpathlib)
 
-sys.path.append(forbanpath+"lib/")
 import index
 import loot
 import base64e
