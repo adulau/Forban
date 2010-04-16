@@ -32,7 +32,7 @@ class manage:
     location="../var/share/forban/index", forbanglobal = "../"):
         self.location = location
         self.sharedir = sharedir
-        self.lootdir = forbanglobal + "/var/loot/";
+        self.lootdir = os.path.join(forbanglobal,"var","loot/")
 
     def build (self):
         self.index = ""
@@ -48,7 +48,7 @@ class manage:
         os.rename(workingloc, self.location)
 
     def cache (self, uuid):
-        cachepath = self.lootdir + uuid + "/cache"
+        cachepath = os.path.join (self.lootdir, uuid, "cache")
         if not os.path.exists(cachepath):
             os.mkdir(cachepath)
         lloot = loot.loot()
