@@ -27,7 +27,7 @@ config = ConfigParser.RawConfigParser()
 config.read("../cfg/forban.cfg")
 
 forbanpath = config.get('global','path')
-forbandiscoveredloots = forbanpath+"/var/loot/"
+forbandiscoveredloots = os.path.join(forbanpath,"var","loot")
 forbanname = config.get('global','name')
 forbanmode = config.get('global','mode')
 forbanshareroot = config.get('forban','share')
@@ -42,7 +42,8 @@ try:
     import cherrypy
     from cherrypy.lib.static import serve_file
 except ImportError:
-    sys.path.append(forbanpath+"lib/ext/")
+    libexternal = os.path.join(forbanpath,"lib","ext")
+    sys.path.append(libexternal)
     import cherrypy
     from cherrypy.lib.static import serve_file
 
