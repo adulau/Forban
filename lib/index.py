@@ -30,7 +30,7 @@ class manage:
 
     def __init__ (self, sharedir="../var/share/",
     location="../var/share/forban/index", forbanglobal = "../"):
-        self.location = location
+        self.location = sharedir+"/forban/index"
         self.sharedir = sharedir
         self.lootdir = os.path.join(forbanglobal,"var","loot/")
 

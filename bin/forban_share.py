@@ -30,6 +30,7 @@ forbanpath = config.get('global','path')
 forbandiscoveredloots = os.path.join(forbanpath,"var","loot")
 forbanname = config.get('global','name')
 forbanmode = config.get('global','mode')
+
 try:
     forbanshareroot = config.get('forban','share')
 except ConfigParser.NoOptionError:
@@ -65,7 +66,7 @@ else:
 
 cherrypy.config.update({ 'server.socket_port': 12555 , 'server.socket_host': bindhost, 'tools.static.root':forbanshareroot})
 
-forbanpath = { '/css/style.css': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/css/x.css'},
+forbanpathcherry = { '/css/style.css': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/css/x.css'},
                '/img/forban-small.png': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/img/forban-small.png'}
              }
 
@@ -122,7 +123,7 @@ class Root:
         html += "<table>"
         discoveredloot = loot.loot()
         mysourcev4 = discoveredloot.getipv4(discoveredloot.whoami())
-        allindex = index.manage()
+        allindex =  index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
         for name in discoveredloot.listall():
             if (discoveredloot.exist(name) and discoveredloot.lastannounced(name)):
                 allindex.cache(name)
@@ -171,7 +172,7 @@ class Root:
     def q(self, v=None, r=None):
         querystring = v
         print querystring
-        mindex = index.manage()
+        mindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
         discoveredloot = loot.loot()
         searchresult = []
         for name in discoveredloot.listall():
@@ -205,7 +206,7 @@ class Root:
         return html
 
     def v(self, uuid):
-        mindex = index.manage()
+        mindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
         dloot = loot.loot()
         missingfiles = mindex.howfar(uuid)
         html = htmlheader
@@ -233,7 +234,7 @@ class Root:
         return html
 
     def l(self, uuid):
-        mindex = index.manage()
+        mindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
         dloot = loot.loot()
         html = htmlheader
 
@@ -277,5 +278,5 @@ if __name__ == '__main__':
     
     root = Root()
     root.s = Download()
-    cherrypy.quickstart(root, config=forbanpath)
+    cherrypy.quickstart(root, config=forbanpathcherry)
 

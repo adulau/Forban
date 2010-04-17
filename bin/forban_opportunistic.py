@@ -56,7 +56,7 @@ ofilter = config.get('opportunistic','filter')
 print "applied regexp filter: %s" % ofilter
 refilter = re.compile(ofilter, re.I)
 discoveredloot = loot.loot()
-allindex = index.manage()
+allindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
 allindex.build()
 
 while(1):

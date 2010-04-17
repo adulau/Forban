@@ -31,6 +31,11 @@ try:
 except ConfigParser.NoOptionError:
     announceinterval = 10
 
+try:
+    forbanshareroot = config.get('forban','share')
+except ConfigParser.NoOptionError:
+    forbanshareroot = os.path.join(forbanpath,"var","share/")
+
 announceinterval = float(announceinterval)
 forbanpathlib=os.path.join(forbanpath,"lib")
 
@@ -44,7 +49,7 @@ if __name__ == "__main__":
     forbanname = config.get('global','name')
     msg = announce.message(name=forbanname)
 
-    forbanindex = index.manage()
+    forbanindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
 
 while 1:
     # rebuild forban index
