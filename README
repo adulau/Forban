@@ -22,7 +22,7 @@ http://www.fsf.org/licensing/licenses/agpl-3.0.html
 ASCII encoded message using UDP on port 12555 with
 the following format: 
 
-forban;name;<nameoftheforban>;uuid;<identityoftheforban>;hmac;<hmacifapskisset>
+forban;name;<nameoftheforban>;uuid;<identityoftheforban>;hmac;<hmacvaluecofindex>
 
 The messages are flooded in broadcast (IPv4) and using
 ff02::1 (IPv6) at a regular interval.
@@ -76,8 +76,15 @@ to replicate the information from one local to another local Forban.
 
 === message format - notes about HMAC ===
 
-The HMAC value is currently useless as the URL is built on
-on the source address of the packet. TBU
+The optional HMAC value has two purposes :
+
+* To know if the index has been updated
+* and to verify (if a PSK is set) if the index has been tampered.
+
+When a PSK is not set, the default PSK value is 'Forban'.
+
+The value is optional as other Forban can download any index when they
+want.
 
 === software required ===
 
