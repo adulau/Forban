@@ -24,6 +24,13 @@ announceinterval = 15
 
 
 [forban]
-share = /home/adulau/git/forban/var/share/
+# default share directory is globalpath+/var/share
+# if you want to change the default directory, don't
+# forget to copy the minimal css and img in the sample
+# share directory. (not required but better for the
+# browsing experience of the web based clients)
+#
+#share = /home/adulau/git/forban/var/share/
+
 [opportunistic]
 filter =

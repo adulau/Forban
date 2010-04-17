@@ -30,7 +30,11 @@ forbanpath = config.get('global','path')
 forbandiscoveredloots = os.path.join(forbanpath,"var","loot")
 forbanname = config.get('global','name')
 forbanmode = config.get('global','mode')
-forbanshareroot = config.get('forban','share')
+try:
+    forbanshareroot = config.get('forban','share')
+except ConfigParser.NoOptionError:
+    forbanshareroot = os.path.join(forbanpath,"var","share/")
+
 forbanpathlib = os.path.join (forbanpath,"lib")
 sys.path.append(forbanpathlib)
 
