@@ -20,6 +20,8 @@
 import sys
 import time
 import os
+import logging
+import logging.handlers
 
 import ConfigParser
 config = ConfigParser.RawConfigParser()
@@ -36,13 +38,31 @@ try:
 except ConfigParser.NoOptionError:
     forbanshareroot = os.path.join(forbanpath,"var","share/")
 
+try:
+    forbanlogginglevel = config.get('global','logging')
+except ConfigParser.NoOptionError:
+    forbanlogginglevel = "INFO"
+
 announceinterval = float(announceinterval)
 forbanpathlib=os.path.join(forbanpath,"lib")
-
 sys.path.append(forbanpathlib)
 
 import announce
 import index
+
+forbanpathlog=os.path.join(forbanpath,"var","log")
+forbanpathlogfile=forbanpathlog+"/forban_announce.log"
+flogger = logging.getLogger('forban_announce')
+
+if forbanlogginglevel == "INFO":
+    flogger.setLevel(logging.INFO)
+else:
+    flogger.setLevel(logging.DEBUG)
+
+handler = logging.handlers.RotatingFileHandler(forbanpathlogfile, backupCount=5)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+flogger.addHandler(handler)
 
 if __name__ == "__main__":
 
@@ -50,10 +70,11 @@ if __name__ == "__main__":
     msg = announce.message(name=forbanname)
 
     forbanindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
-
+    flogger.info("forban_announce starting...")
 while 1:
     # rebuild forban index
     forbanindex.build()
     msg.gen()
+    flogger.debug(msg.get())
     msg.send()
     time.sleep(announceinterval)
