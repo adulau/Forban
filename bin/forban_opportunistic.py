@@ -24,6 +24,9 @@ import string
 import time
 import ConfigParser
 import re
+import logging
+import logging.handlers
+
 config = ConfigParser.RawConfigParser()
 config.read("../cfg/forban.cfg")
 forbanpath = config.get('global','path')
@@ -51,6 +54,27 @@ except ConfigParser.NoOptionError:
 
 announceinterval = float(announceinterval)
 
+try:
+    forbanlogginglevel = config.get('global','logging')
+except ConfigParser.NoOptionError:
+    forbanlogginglevel = "INFO"
+
+forbanpathlog=os.path.join(forbanpath,"var","log")
+if not os.path.exists(forbanpathlog):
+    os.mkdir(forbanpathlog)
+
+forbanpathlogfile=forbanpathlog+"/forban_opportunistic.log"
+flogger = logging.getLogger('forban_opportunistic')
+
+if forbanlogginglevel == "INFO":
+    flogger.setLevel(logging.INFO)
+else:
+    flogger.setLevel(logging.DEBUG)
+
+handler = logging.handlers.RotatingFileHandler(forbanpathlogfile, backupCount=5)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+flogger.addHandler(handler)
 
 ofilter = config.get('opportunistic','filter')
 print "applied regexp filter: %s" % ofilter
@@ -59,6 +83,7 @@ discoveredloot = loot.loot()
 allindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
 allindex.build()
 
+flogger.info("forban_opportunistic starting...")
 while(1):
 
     for uuid in discoveredloot.listall():
@@ -68,13 +93,13 @@ while(1):
             allindex.cache(uuid)
 
         if not discoveredloot.lastannounced(uuid):
-            print "%s (%s) not seen recently, skipped" % (discoveredloot.getname(uuid),(uuid))
+            flogger.info("%s (%s) not seen recently, skipped" % (discoveredloot.getname(uuid),(uuid)))
             continue
 
         missingfiles = allindex.howfar(uuid)
 
         if not missingfiles or (discoveredloot.whoami() == uuid):
-            print "missing no files with %s (%s)" % (discoveredloot.getname(uuid),uuid)
+            flogger.info("missing no files with %s (%s)" % (discoveredloot.getname(uuid),uuid))
         else:
             for missedfile in missingfiles:
                 if re.search(refilter, missedfile):
@@ -84,15 +109,15 @@ while(1):
                     localsize = allindex.getfilesize(filename=missedfile)
                     remotesize = allindex.getfilesize(filename=missedfile,uuid=uuid)
                     if localsize < remotesize:
-                        print "local file smaller - from %s fetching %s to be saved in %s" % (uuid,url,localfile)
+                        flogger.info("local file smaller - from %s fetching %s to be saved in %s" % (uuid,url,localfile))
                         fetch.urlget(url,localfile)
                     elif localsize is False:
-                        print "local file not existing - from %s fetching %s to be saved in %s" % (uuid,url,localfile)
+                        flogger.info("local file not existing - from %s fetching %s to be saved in %s" % (uuid,url,localfile))
                         fetch.urlget(url,localfile)
                     elif remotesize is False:
-                        print "remote file index issue for %s on loot %s" % (missedfile, uuid)
+                        flogger.info("remote file index issue for %s on loot %s" % (missedfile, uuid))
                     else:
-                        print "local file larger or corrupt %s - don't fetch it" % (localfile)
+                        flogger.info("local file larger or corrupt %s - don't fetch it" % (localfile))
                     allindex.build()
 
     time.sleep(announceinterval*(announceinterval/(announceinterval-2)))
