@@ -51,6 +51,9 @@ import announce
 import index
 
 forbanpathlog=os.path.join(forbanpath,"var","log")
+if not os.path.exists(forbanpathlog):
+    os.mkdir(forbanpathlog)
+
 forbanpathlogfile=forbanpathlog+"/forban_announce.log"
 flogger = logging.getLogger('forban_announce')
 
