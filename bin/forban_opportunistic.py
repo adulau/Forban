@@ -77,13 +77,13 @@ handler.setFormatter(formatter)
 flogger.addHandler(handler)
 
 ofilter = config.get('opportunistic','filter')
-print "applied regexp filter: %s" % ofilter
 refilter = re.compile(ofilter, re.I)
 discoveredloot = loot.loot()
 allindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
 allindex.build()
 
 flogger.info("forban_opportunistic starting...")
+flogger.info("applied regexp filter: %s" % ofilter)
 while(1):
 
     for uuid in discoveredloot.listall():
