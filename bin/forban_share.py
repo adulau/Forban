@@ -54,6 +54,13 @@ except ImportError:
 
 import mimetypes
 
+forbanpathlog=os.path.join(forbanpath,"var","log")
+if not os.path.exists(forbanpathlog):
+    os.mkdir(forbanpathlog)
+
+forbanpathlogfile=forbanpathlog+"/forban_share_access.log"
+forbanpathlogfilee=forbanpathlog+"/forban_share_error.log"
+
 if socket.has_ipv6:
     try:
         socktest = socket.socket(socket.AF_INET6)
@@ -64,7 +71,7 @@ if socket.has_ipv6:
 else:
     bindhost = "0.0.0.0"
 
-cherrypy.config.update({ 'server.socket_port': 12555 , 'server.socket_host': bindhost, 'tools.static.root':forbanshareroot})
+cherrypy.config.update({ 'log.screen': False, 'server.socket_port': 12555 , 'server.socket_host': bindhost, 'tools.static.root':forbanshareroot, 'log.access_file':forbanpathlogfile, 'log.error_file':forbanpathlogfilee})
 
 forbanpathcherry = { '/css/style.css': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/css/x.css'},
                '/img/forban-small.png': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/img/forban-small.png'}
