@@ -78,6 +78,7 @@ while 1:
     # rebuild forban index
     forbanindex.build()
     msg.gen()
+    msg.auth(value=forbanindex.gethmac())
     flogger.debug(msg.get())
     msg.send()
     time.sleep(announceinterval)

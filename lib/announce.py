@@ -50,16 +50,12 @@ class message:
             myid = fid.manage()
             self.payload    = self.payload + "uuid;" + myid.get()
 
-# the HMAC value is currently useless as the URL is built on
-# on the source address of the packet. TBU
+    def auth(self,value=None):
 
-    def auth(self,key=None):
-
-        if key is None:
+        if value is None:
             self.payload = self.payload
         else:
-            auth = hmac.new(key, self.payload, sha1)
-            self.payload = self.payload + ";hmac;" + auth.hexdigest()
+            self.payload = self.payload + ";hmac;" + value
 
     def get (self):
             return self.payload

@@ -22,9 +22,16 @@ import re
 import difflib
 import re
 import sys
+try:
+    from hashlib import sha1
+except ImportError:
+    from sha import sha as sha1
+
+import hmac
 
 import fetch
 import loot
+import tmpname
 
 class manage:
 
@@ -45,7 +52,44 @@ class manage:
         f = open (workingloc,"w")
         f.write(self.index)
         f.close()
+        hmacval = self.calchmac(filepath=workingloc)
+        hmacpath = self.location+".hmac"
+        self.save(value=hmacval, filepath=hmacpath)
         os.rename(workingloc, self.location)
+
+    def save (self, value=None, filepath=None):
+        if value is None:
+            return False
+        if filepath is None:
+            return False
+
+        tlocalfile = tmpname.get(filepath)
+
+        f = open(tlocalfile[1], "w")
+        f.write(value)
+        f.close()
+
+        os.rename(tlocalfile[1], tlocalfile[0])
+
+    def gethmac (self):
+        hmacpath = self.location+".hmac"
+        if not os.path.exists(hmacpath):
+            return False
+
+        f = open(hmacpath, "r")
+        val = f.read()
+        f.close()
+        return val
+
+    def calchmac (self, filepath=None, key="forban"):
+
+        if not os.path.exists(filepath):
+            return False
+        f = open (filepath,"r")
+        auth = hmac.new(key, f.read(), sha1)
+        f.close()
+
+        return auth.hexdigest()
 
     def cache (self, uuid):
         cachepath = os.path.join (self.lootdir, uuid, "cache")
@@ -53,7 +97,13 @@ class manage:
             os.mkdir(cachepath)
         lloot = loot.loot()
         for url in lloot.getindexurl(uuid):
-            fetch.urlget(url, cachepath+"/forban/index")
+            hmacannounced = lloot.gethmac(uuid)
+            hmaccalculated = self.calchmac(cachepath+"/forban/index")
+            print hmacannounced
+            print hmaccalculated
+            if not hmacannounced == hmaccalculated:
+                print "trying to fetch"
+                fetch.urlget(url, cachepath+"/forban/index")
 
     def search (self, query, uuid=None):
         queryresult = []
@@ -124,8 +174,10 @@ class manage:
 
 def test ():
     testindex = manage()
-    #testindex.build()
-    #testindex.cache("cb001bf2-1497-443c-9675-74de7027ecf9")
+    testindex.build()
+    print testindex.gethmac()
+
+    testindex.cache("8d63025e-2f11-4c08-837a-08c44b122150")
     #print testindex.howfar("e2f05993-eba1-4b94-8e56-d2157d1ce552")
     #print testindex.search("^((?!forban).)*$","e2f05993-eba1-4b94-8e56-d2157d1ce552");
     print testindex.getfilesize(filename="forban/index")
