@@ -102,10 +102,8 @@ class manage:
         for url in lloot.getindexurl(uuid):
             hmacannounced = lloot.gethmac(uuid)
             hmaccalculated = self.calchmac(cachepath+"/forban/index")
-            print hmacannounced
-            print hmaccalculated
+            # only fetch the index if the HMAC is different
             if not hmacannounced == hmaccalculated:
-                print "trying to fetch"
                 fetch.urlget(url, cachepath+"/forban/index")
 
     def search (self, query, uuid=None):
