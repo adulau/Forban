@@ -208,7 +208,7 @@ class loot:
 
     def sethmac (self, lhmac = None):
 
-        localfile = os.path.join(self.lootpath,self.uuid,"hmac")
+        localfile = os.path.join(self.lootpath,self.luuid,"hmac")
         tlocalfile = tmpname.get(localfile)
 
         f = open(tlocalfile[1], "w")
