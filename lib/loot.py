@@ -140,8 +140,16 @@ class loot:
     def add (self, dmessage, sip):
         
         mess = dmessage.split(";")
-        self.lname = mess[2]
-        self.luuid = mess[4]
+        for i in range (1, len(mess)-1, 2):
+            if mess[i] == "name":
+                #name is REQUIRED
+                self.lname = mess[i+1]
+            elif mess[i] == "uuid":
+                #uuid is REQUIRED
+                self.luuid = mess[i+1]
+            elif mess[i] == "hmac":
+                #hmac is RECOMMENDED
+                self.hmac = mess[i+1]
         self.lsource = sip
 
         if not self.exist(self.luuid):
