@@ -52,7 +52,7 @@ class message:
 
     def auth(self,value=None):
 
-        if value is None:
+        if value is None or value is False:
             self.payload = self.payload
         else:
             self.payload = self.payload + ";hmac;" + value
