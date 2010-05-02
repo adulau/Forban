@@ -63,6 +63,9 @@ class manage:
         if filepath is None:
             return False
 
+        if not os.path.exists(filepath):
+            return False
+
         tlocalfile = tmpname.get(filepath)
 
         f = open(tlocalfile[1], "w")
