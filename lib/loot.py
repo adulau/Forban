@@ -153,11 +153,11 @@ class loot:
                 self.hmac = mess[i+1]
         self.lsource = sip
 
-        if self.hmac is not None:
-            self.sethmac(lhmac=self.hmac)
-
         if not self.exist(self.luuid):
             os.mkdir(self.lootpath+self.luuid)
+
+        if self.hmac is not None:
+            self.sethmac(lhmac=self.hmac)
 
         self.setfirstseen()
         self.setlastseen()
