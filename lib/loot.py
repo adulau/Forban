@@ -140,6 +140,7 @@ class loot:
     def add (self, dmessage, sip):
         
         mess = dmessage.split(";")
+        self.hmac = None
         for i in range (1, len(mess)-1, 2):
             if mess[i] == "name":
                 #name is REQUIRED
@@ -151,6 +152,9 @@ class loot:
                 #hmac is RECOMMENDED
                 self.hmac = mess[i+1]
         self.lsource = sip
+
+        if self.hmac is not None:
+            self.sethmac(lhmac=self.hmac)
 
         if not self.exist(self.luuid):
             os.mkdir(self.lootpath+self.luuid)
@@ -202,6 +206,34 @@ class loot:
             f.close()
             os.rename(tlocalfile[1], tlocalfile[0])
 
+    def sethmac (self, lhmac = None):
+
+        localfile = os.path.join(self.lootpath,self.uuid,"hmac")
+        tlocalfile = tmpname.get(localfile)
+
+        f = open(tlocalfile[1], "w")
+        f.write(lhmac)
+        f.close()
+
+        os.rename(tlocalfile[1], tlocalfile[0])
+
+
+    def gethmac (self, uuid):
+
+        pathhmac = self.lootpath+"/"+uuid+"/hmac"
+
+        if self.exist(uuid):
+            if os.path.exists(pathhmac):
+                f = open (pathhmac)
+                rhmac = f.read()
+                f.close()
+                return rhmac
+            else:
+                return None
+        else:
+
+            return None
+
     def setsource (self, sourcev4 = None , sourcev6 = None):
         
         if sourcev4 is not None:
@@ -243,7 +275,7 @@ def loottest():
         print myloot.getlastseen("cb001bf2-1497-443c-9675-74de7027ecf9")
         print myloot.lastannounced("cb001bf2-1497-443c-9675-74de7027ecf9")
         print myloot.listall()
-
+        print myloot.gethmac("cb001bf2-1497-443c-9675-74de7027ecf9")
 if __name__ == "__main__":
     
     loottest()
