@@ -23,6 +23,7 @@ import sys
 import string
 import ConfigParser
 import socket
+import re
 config = ConfigParser.RawConfigParser()
 config.read("../cfg/forban.cfg")
 
@@ -252,6 +253,10 @@ class Root:
 
         for fileinindex in mindex.search("^((?!forban).)*$", uuid):
             filei = fileinindex.rsplit(",",1)[0]
+            if re.search('/\.',filei):
+                continue
+            if re.search('^\+\.',filei):
+                continue
             html += "<tr>"
             sourcev4 = dloot.getipv4(uuid)
             sourcev6 = dloot.getipv6(uuid)
