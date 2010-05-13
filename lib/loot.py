@@ -27,6 +27,7 @@ import sys
 sys.path.append('.')
 import fid
 import tmpname
+import tools
 
 class loot:
 
@@ -192,7 +193,7 @@ class loot:
         f.write(lname)
         f.close()
 
-        os.rename(tlocalfile[1], tlocalfile[0])
+        tools.rename(tlocalfile[1], tlocalfile[0])
 
         # self is added for the same forban doing the announce
         # and the discovery
@@ -204,7 +205,7 @@ class loot:
             f = open (tlocalfile[1], "w")
             f.write("")
             f.close()
-            os.rename(tlocalfile[1], tlocalfile[0])
+            tools.rename(tlocalfile[1], tlocalfile[0])
 
     def sethmac (self, lhmac = None):
 
@@ -215,7 +216,7 @@ class loot:
         f.write(lhmac)
         f.close()
 
-        os.rename(tlocalfile[1], tlocalfile[0])
+        tools.rename(tlocalfile[1], tlocalfile[0])
 
 
     def gethmac (self, uuid):
@@ -263,7 +264,7 @@ class loot:
         f.write(str(time.mktime(t.timetuple())))
         f.close()
         if os.path.exists(tlocalfile[1]):
-            os.rename(tlocalfile[1], tlocalfile[0])
+            tools.rename(tlocalfile[1], tlocalfile[0])
 
 def loottest():
         

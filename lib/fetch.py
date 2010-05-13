@@ -25,6 +25,7 @@ import shutil
 socket.setdefaulttimeout(10)
 
 import tmpname
+import tools
 
 def urlheadinfo(url):
     request = urllib2.Request(url)
@@ -73,7 +74,7 @@ def urlget(url, localfile="testurlget"):
         shutil.copyfileobj(r.fp,f)
         f.close()
         if os.path.exists(tlocalfile[1]):
-            os.rename(tlocalfile[1], tlocalfile[0])
+            tools.rename(tlocalfile[1], tlocalfile[0])
         return True
     else:
         return False

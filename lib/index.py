@@ -32,6 +32,7 @@ import hmac
 import fetch
 import loot
 import tmpname
+import tools
 
 class manage:
 
@@ -55,7 +56,7 @@ class manage:
         hmacval = self.calchmac(filepath=workingloc)
         hmacpath = self.location+".hmac"
         self.save(value=hmacval, filepath=hmacpath)
-        os.rename(workingloc, self.location)
+        tools.rename(workingloc, self.location)
 
     def save (self, value=None, filepath=None):
         if value is None:
@@ -63,13 +64,13 @@ class manage:
         if filepath is None:
             return False
 
-        tlocalfile = tmpname.get(filepath)
+        tlocalfile = tmpname.get(filepath, suff=str(os.getpid()))
 
         f = open(tlocalfile[1], "w")
         f.write(value)
         f.close()
 
-        os.rename(tlocalfile[1], tlocalfile[0])
+        tools.rename(tlocalfile[1], tlocalfile[0])
 
     def gethmac (self):
         hmacpath = self.location+".hmac"

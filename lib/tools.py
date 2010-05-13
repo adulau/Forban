@@ -28,6 +28,9 @@ def rename(source=None, destination=None):
     if source is None or destination is None:
         return False
 
+    if not os.path.exists(source):
+        return False
+
     sys = platform.system()
 
     if sys == "Windows":
