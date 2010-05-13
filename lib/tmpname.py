@@ -29,16 +29,21 @@ except ImportError:
 # (should be unique but reversible per filename)
 #
 
-def get(filename=None):
+def get(filename=None, suff=None):
 
     if filename is None:
         return False
 
     (lpath, lfile) = os.path.split(filename)
-    h = sha1()
-    h.update(lfile)
-    hv = h.hexdigest()[:8]
-    lfile = "."+lfile+"-"+hv
+
+    if suff is None:
+        h = sha1()
+        h.update(lfile)
+        hv = h.hexdigest()[:8]
+        lfile = "."+lfile+"-"+hv
+    else :
+        lfile = "."+lfile+"-"+str(suff)
+
     return (filename,os.path.join(lpath,lfile))
 
 if __name__ == "__main__":
