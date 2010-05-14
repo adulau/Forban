@@ -95,13 +95,20 @@ elif sys.argv[1] == "stop":
     for service in forban_services:
         pid = pidof(processname=service)
         if pid:
-            print service+" to be stopped..."
-            try:
-                os.kill(int(pid), signal.SIGKILL)
-            except OSError, e:
-                print service+  " unsuccessfully stopped"
-            print service
-            rmpid(processname=service)
+            if platform.system() == "Windows":
+                import win32api
+                import win32con
+                phandle = win32api.OpenProcess( win32con.PROCESS_TERMINATE, 0, int(pid))
+                win32api.TerminateProcess( phandle, 0)
+                win32api.CloseHandle( phandle)
+                rmpid(processname=service)
+            else:
+                try:
+                    os.kill(int(pid), signal.SIGKILL)
+                except OSError, e:
+                    print service+  " unsuccessfully stopped"
+                print service
+                rmpid(processname=service)
 
 elif sys.argv[1] == "forcestop":
     
