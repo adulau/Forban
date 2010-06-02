@@ -20,6 +20,31 @@
 import os
 import platform
 
+
+def convertbytes (bytes=None):
+
+    if bytes is None:
+        return False
+
+    bytes = float(bytes)
+
+    if bytes >= 1099511627776:
+        tera = bytes / 1099511627776
+        cbytes = '%.2fTB' % tera
+    elif bytes >= 1073741824:
+        giga = bytes / 1073741824
+        cbytes = '%.2fGB' % giga
+    elif bytes >= 1048576:
+        mega = bytes / 1048576
+        cbytes = '%.2fMB' % mega
+    elif bytes >= 1024:
+        kilo = bytes / 1024
+        cbytes = '%.2fKB' % kilo
+    else:
+        cbytes = '%.2fb' % bytes
+
+    return cbytes
+
 # Rename function to handle the platform specific case
 # especially with Windows platform.
 
@@ -42,5 +67,6 @@ def rename(source=None, destination=None):
         os.rename(source, destination)
 
 if __name__ == "__main__":
+   print convertbytes (1234567)
     
-    print rename("x","xy")
+   # print rename("x","xy")
