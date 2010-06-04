@@ -108,6 +108,42 @@ the Forban UDP announce message. As the URL is built based
 on the destination port used in the announce, the TCP web-based services 
 MUST share the same port.   
 
+Base URL
+========
+
+In Forban, the URL to access a Forban is composed by using the announce
+message. The URL format is the following constructed with the source
+IP of the Forban announce message and the destination port used.
+
+::
+
+ http://[source]:[port]/
+
+Index URL
+=========
+
+The index URL is used to fetch the index of the Forban and MUST be present.
+The index URL is a composed of the base URL plus a specific path :
+
+::
+
+ http://[baseurl]/s/?g=forban/index
+
+Fetch URL
+=========
+
+The fetch URL is used to fetch a specific file from a Forban and
+MUST be present. The
+fetch URL is composed of the base URL plus a specific path including
+the filename of the file name in Base64 ursafe :
+
+::
+
+ http://[baseurl]/s/?g=base64_urlsafe(<filenamefromindex>)&f=b64e
+
+
+
+
 Notation Conventions
 ####################
 The capitalized key words "MUST", "MUST NOT",

@@ -95,7 +95,31 @@ Forban web-based service MUST use the same port number allocated by
 the Forban UDP announce message. As the URL is built based
 on the destination port used in the announce, the TCP web-based services
 MUST share the same port.</t>
-</section><section title="Notation Conventions"><t>
+<section title="Base URL"><t>
+In Forban, the URL to access a Forban is composed by using the announce
+message. The URL format is the following constructed with the source
+IP of the Forban announce message and the destination port used.</t>
+<figure>
+<artwork>
+http://[source]:[port]/</artwork>
+</figure>
+</section><section title="Index URL"><t>
+The index URL is used to fetch the index of the Forban and MUST be present.
+The index URL is a composed of the base URL plus a specific path :</t>
+<figure>
+<artwork>
+http://[baseurl]/s/?g=forban/index</artwork>
+</figure>
+</section><section title="Fetch URL"><t>
+The fetch URL is used to fetch a specific file from a Forban and
+MUST be present. The
+fetch URL is composed of the base URL plus a specific path including
+the filename of the file name in Base64 ursafe :</t>
+<figure>
+<artwork>
+http://[baseurl]/s/?g=base64_urlsafe(&lt;filenamefromindex&gt;)&amp;f=b64e</artwork>
+</figure>
+</section></section><section title="Notation Conventions"><t>
 The capitalized key words &quot;MUST&quot;, &quot;MUST NOT&quot;,
 &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;, &quot;SHOULD&quot;,
 &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;MAY&quot;, and
