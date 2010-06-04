@@ -129,6 +129,7 @@ class Root:
         html += """</div> <div class="left inner">"""
         html += """ <h2>Discovered link-local Forban available with their loot in the last 3 minutes</h2> """
         html += "<table>"
+        html += "<th><td>Access</td><td>Name</td><td>Last seen</td><td>Size</td><td>How many files are missing from yourself?</td><td></td></th>"
         discoveredloot = loot.loot()
         mysourcev4 = discoveredloot.getipv4(discoveredloot.whoami())
         allindex =  index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
@@ -160,6 +161,9 @@ class Root:
                     html += "<td>never seen</td>"
                 missingfiles = allindex.howfar(name)
 
+                totalsize = allindex.totalfilesize(name)
+                html +="<td>%s</td>" % str(totalsize)
+
                 if type(missingfiles) is bool:
                     html += "<td><b>Missing index</b> from this loot"
                 elif missingfiles is not None:
@@ -171,6 +175,8 @@ class Root:
                 html += """ <a href="http://%s:12555/l/%s">[view index]</a> """ % (mysourcev4,name)
                 if name == discoveredloot.whoami():
                     html += "<td><i>yourself</i></td>"
+                else:
+                    html += "<td></td>"
                 html += "</tr>"
 
         html += "</table></div>"
