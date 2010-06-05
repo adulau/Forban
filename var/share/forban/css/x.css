@@ -64,21 +64,18 @@ table {
 
 th, td {
   padding-right: 1em;
-  text-align: left;
 }
 
 th {
-  vertical-align: bottom;
-  border-bottom: 1px solid black;
 }
 
 td {
   vertical-align: top;
   padding-top: 5px;
+  border-bottom: 1px dashed #ccc;
 }
 
 table.border td, table.border th {
-  border: 1px solid black;
 }
 
 p {

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rfc SYSTEM "http://xml.resource.org/authoring/rfc2629.dtd" >
+<?rfc toc="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<?rfc rfcedstyle="no"?>
+<?rfc comments="no"?>
+<?rfc inline="yes"?>
+<?rfc private="yes"?>
+<rfc>
+<front>
+<title>
+Forban Protocol</title>
+<author fullname='Alexandre Dulaunoy' surname='Dulaunoy' initials='A. D.'><organization>quuxlabs</organization>
+<address><email>a@foo.be</email></address>
+</author><date year="2010" month="May"/>
+<abstract>
+<t>
+Forban protocol is a simple Peer-to-Peer (p2p) protocol for local area
+network to exchange files. This memo describes the protocol to announce
+and discover Peer-to-Peer Forban nodes. As Forban is a Web-based protocol,
+this memo includes the convention to reach discovered Forban nodes.</t>
+</abstract>
+<!-- Use headers in this order #=~-_ -->
+</front>
+<middle>
+<section title="Introduction"><t>
+Forban protocol allows users and machines on the same local area network to
+share and distribute files. The purpose of the protocol is providing a
+simple method to share files without a complex setup on intermittent
+local area network.</t>
+<t>
+The Forban protocol is described in two basic operations:</t>
+<t>
+<list style="symbols">
+<t>
+Discovering Forban nodes</t>
+<t>
+Accessing the discovered Forban nodes</t>
+</list>
+</t>
+<t>
+The Forban protocol used to announce the Forban nodes is
+a simple flooding protocol using UDP messages.</t>
+<t>
+The Forban nodes serve a Web-based protocol relying on the URL
+syntax convention described in this memo.</t>
+</section><section title="Applicability Statement"><t>
+Forban protocol is intended to function within a local area network where
+the number of network nodes is limited (below a thousand of network
+nodes).</t>
+<t>
+The protocol is intended to work on intermittent and mobile network
+connectivity using IPv4 or IPv6.</t>
+</section><section title="Forban Node Definition"><t>
+A Forban node is uniquely defined by an UUID as described in <xref target="RFC4122">
+</xref>
+.
+The UUID MUST be persistent on the Forban node and created
+at the first startup of the Forban node. A Forban node MUST be autonomous
+from any other network services beside the access medium and the IPv4/IPv6
+network used.</t>
+<t>
+A Forban node SHOULD have a comprehensive name to describe the node.</t>
+<t>
+A Forban node MAY be connected to more than one network at same time
+using different access medium.</t>
+</section><section title="Discovery Process"><section title="Announce Message"><t>
+An announce message uses the user datagram protocol (UDP) to flood
+regularly the network. The message size is limited by the maximum
+supported UDP size in IPv4 of 65535 octets minus UDP and IP header.</t>
+<t>
+The destination UDP port used by default for Forban is port 12555.</t>
+<t>
+The announce messages are text-based messages. The message is composed
+of a single line without CR or CRLF at the end. The message always
+starts with a beacon named 'forban;' to detect a Forban message. After
+the beacon, there is a key-value list separated by ';'.</t>
+<figure>
+<artwork>
+key = 'name' | 'uuid' | 'hmac'
+value = *OCTET
+forbanmessage = 'forban;'*(key';'value';')</artwork>
+</figure>
+<t>
+A sample Forban announce message without UDP headers :</t>
+<figure>
+<artwork>
+forban;name;a sample forban;uuid;d55727ed-5c6a-49a8-9d8d-28b4004aee0c;hmac;9bc2974df7325cd0ecf517c572fe20859aa2c228</artwork>
+</figure>
+</section></section><section title="Access Process"><t>
+Forban web-based service MUST use the same port number allocated by
+the Forban UDP announce message. As the URL is built based
+on the destination port used in the announce, the TCP web-based services
+MUST share the same port.</t>
+<section title="Base URL"><t>
+In Forban, the URL to access a Forban is composed by using the announce
+message. The URL format is the following constructed with the source
+IP of the Forban announce message and the destination port used.</t>
+<figure>
+<artwork>
+http://[source]:[port]/</artwork>
+</figure>
+</section><section title="Index URL"><t>
+The index URL is used to fetch the index of the Forban and MUST be present.
+The index URL is a composed of the base URL plus a specific path :</t>
+<figure>
+<artwork>
+http://[baseurl]/s/?g=forban/index</artwork>
+</figure>
+</section><section title="Fetch URL"><t>
+The fetch URL is used to fetch a specific file from a Forban and
+MUST be present. The
+fetch URL is composed of the base URL plus a specific path including
+the filename of the file name in Base64 ursafe :</t>
+<figure>
+<artwork>
+http://[baseurl]/s/?g=base64_urlsafe(&lt;filenamefromindex&gt;)&amp;f=b64e</artwork>
+</figure>
+</section></section><section title="Notation Conventions"><t>
+The capitalized key words &quot;MUST&quot;, &quot;MUST NOT&quot;,
+&quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;, &quot;SHOULD&quot;,
+&quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;MAY&quot;, and
+&quot;OPTIONAL&quot; in this document are to be
+interpreted as described in <xref target="RFC2119">
+</xref>
+.</t>
+</section><section title="Terminology"><t>
+<list style="symbols">
+<t>
+Forban node - is local area network device supporting the Forban protocol as described in this memo</t>
+<t>
+Forban index - is the index of files proposed by a Forban node</t>
+</list>
+</t>
+</section><section title="Editorial Notes"><t>
+To provide feedback on this draft join the Forban
+mailing list at
+<eref target="http://groups.google.com/group/forban">http://groups.google.com/group/forban</eref></t>
+</section><section title="References"></section></middle>
+<back>
+<references>
+
+<reference anchor='RFC2119'>
+
+<front>
+<title abbrev='RFC Key Words'>Key words for use in RFCs to Indicate Requirement Levels</title>
+<author initials='S.' surname='Bradner' fullname='Scott Bradner'>
+<organization>Harvard University</organization>
+<address>
+<postal>
+<street>1350 Mass. Ave.</street>
+<street>Cambridge</street>
+<street>MA 02138</street></postal>
+<phone>- +1 617 495 3864</phone>
+<email>sob@harvard.edu</email></address></author>
+<date year='1997' month='March' />
+<area>General</area>
+<keyword>keyword</keyword>
+<abstract>
+<t>
+   In many standards track documents several words are used to signify
+   the requirements in the specification.  These words are often
+   capitalized.  This document defines these words as they should be
+   interpreted in IETF documents.  Authors who follow these guidelines
+   should incorporate this phrase near the beginning of their document:
+
+<list>
+<t>
+      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in
+      RFC 2119.
+</t></list></t>
+<t>
+   Note that the force of these words is modified by the requirement
+   level of the document in which they are used.
+</t></abstract></front>
+
+<seriesInfo name='BCP' value='14' />
+<seriesInfo name='RFC' value='2119' />
+<format type='TXT' octets='4723' target='ftp://ftp.isi.edu/in-notes/rfc2119.txt' />
+<format type='HTML' octets='17491' target='http://xml.resource.org/public/rfc/html/rfc2119.html' />
+<format type='XML' octets='5777' target='http://xml.resource.org/public/rfc/xml/rfc2119.xml' />
+</reference>
+Bradner, S., &quot;Key words for use in RFCs to Indicate Requirement Levels&quot;, BCP 14, RFC 2119, March 1997.
+<reference anchor='RFC4122'>
+
+<front>
+<title abbrev='UUID URN'>A Universally Unique IDentifier (UUID) URN Namespace</title>
+<author initials='P.' surname='Leach' fullname='Paul J. Leach'>
+<organization>Microsoft</organization>
+<address>
+<postal>
+<street>1 Microsoft Way</street>
+<city>Redmond</city>
+<region>WA</region>
+<code>98052</code>
+<country>US</country></postal>
+<phone>+1 425-882-8080</phone>
+<email>paulle@microsoft.com</email></address></author>
+<author initials='M.' surname='Mealling' fullname='Michael Mealling'>
+<organization>Refactored Networks, LLC</organization>
+<address>
+<postal>
+<street>1635 Old Hwy 41</street>
+<street>Suite 112, Box 138</street>
+<city>Kennesaw</city>
+<region>GA</region>
+<code>30152</code>
+<country>US</country></postal>
+<phone>+1-678-581-9656</phone>
+<email>michael@refactored-networks.com</email>
+<uri>http://www.refactored-networks.com</uri></address></author>
+<author initials='R.' surname='Salz' fullname='Rich Salz'>
+<organization>DataPower Technology, Inc.</organization>
+<address>
+<postal>
+<street>1 Alewife Center</street>
+<city>Cambridge</city>
+<region>MA</region>
+<code>02142</code>
+<country>US</country></postal>
+<phone>+1 617-864-0455</phone>
+<email>rsalz@datapower.com</email>
+<uri>http://www.datapower.com</uri></address></author>
+<date year='2005' month='July' />
+<keyword>URN, UUID</keyword>
+<abstract>
+<t>This specification defines a Uniform Resource Name namespace for
+      UUIDs (Universally Unique IDentifier), also known as GUIDs (Globally
+      Unique IDentifier). A UUID is 128 bits long, and can
+      guarantee uniqueness across space and time. UUIDs were originally
+      used in the Apollo Network Computing System and later in the Open
+      Software Foundation's (OSF) Distributed Computing Environment (DCE),
+      and then in Microsoft Windows platforms.</t>
+<t>This specification is derived from the DCE specification with the
+      kind permission of the OSF (now known as The Open Group).  Information from earlier versions of the DCE specification have been	
+      incorporated into this document.</t></abstract></front>
+
+<seriesInfo name='RFC' value='4122' />
+<format type='TXT' octets='59319' target='http://www.rfc-editor.org/rfc/rfc4122.txt' />
+<format type='HTML' octets='82717' target='http://xml.resource.org/public/rfc/html/rfc4122.html' />
+<format type='XML' octets='62931' target='http://xml.resource.org/public/rfc/xml/rfc4122.xml' />
+</reference>
+Leach, P., Mealling, M., and R. Salz, &quot;A Universally Unique IDentifier (UUID) URN Namespace&quot;, RFC 4122, July 2005.</references>
+</back>
+</rfc>

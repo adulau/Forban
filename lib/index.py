@@ -138,6 +138,27 @@ class manage:
                 return int(v)
         return False
 
+    def totalfilesize (self, uuid=None, prettyprint = True):
+
+        if uuid is None:
+            return False
+        cachepath = os.path.join(self.lootdir, uuid, "cache","forban","index")
+
+        if not os.path.exists(cachepath):
+            return False
+        totalvalue = 0
+        f = open (cachepath, "r")
+        for line in f.readlines():
+            val = line.rsplit(",",1)[1].rstrip('\n')
+            totalvalue = totalvalue + int(val)
+
+        f.close()
+
+        if prettyprint is False:
+            return totalvalue
+        else:
+            return tools.convertbytes(totalvalue)
+
     def howfar (self, uuid):
         cachepath = self.lootdir + uuid + "/cache/forban/index"
         # how can I compare my cache to the other, if the other
@@ -181,6 +202,7 @@ def test ():
     #print testindex.search("^((?!forban).)*$","e2f05993-eba1-4b94-8e56-d2157d1ce552");
     print testindex.getfilesize(filename="forban/index")
     print testindex.getfilesize(filename="forban//index",uuid="8d63025e-2f11-4c08-837a-08c44b122150")
+    print testindex.totalfilesize(uuid="d55727ed-5c6a-49a8-9d8d-28b4004aee0c")
 
 if __name__ == "__main__":
 

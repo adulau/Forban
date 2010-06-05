@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<reference anchor='RFC4122'>
+
+<front>
+<title abbrev='UUID URN'>A Universally Unique IDentifier (UUID) URN Namespace</title>
+<author initials='P.' surname='Leach' fullname='Paul J. Leach'>
+<organization>Microsoft</organization>
+<address>
+<postal>
+<street>1 Microsoft Way</street>
+<city>Redmond</city>
+<region>WA</region>
+<code>98052</code>
+<country>US</country></postal>
+<phone>+1 425-882-8080</phone>
+<email>paulle@microsoft.com</email></address></author>
+<author initials='M.' surname='Mealling' fullname='Michael Mealling'>
+<organization>Refactored Networks, LLC</organization>
+<address>
+<postal>
+<street>1635 Old Hwy 41</street>
+<street>Suite 112, Box 138</street>
+<city>Kennesaw</city>
+<region>GA</region>
+<code>30152</code>
+<country>US</country></postal>
+<phone>+1-678-581-9656</phone>
+<email>michael@refactored-networks.com</email>
+<uri>http://www.refactored-networks.com</uri></address></author>
+<author initials='R.' surname='Salz' fullname='Rich Salz'>
+<organization>DataPower Technology, Inc.</organization>
+<address>
+<postal>
+<street>1 Alewife Center</street>
+<city>Cambridge</city>
+<region>MA</region>
+<code>02142</code>
+<country>US</country></postal>
+<phone>+1 617-864-0455</phone>
+<email>rsalz@datapower.com</email>
+<uri>http://www.datapower.com</uri></address></author>
+<date year='2005' month='July' />
+<keyword>URN, UUID</keyword>
+<abstract>
+<t>This specification defines a Uniform Resource Name namespace for
+      UUIDs (Universally Unique IDentifier), also known as GUIDs (Globally
+      Unique IDentifier). A UUID is 128 bits long, and can
+      guarantee uniqueness across space and time. UUIDs were originally
+      used in the Apollo Network Computing System and later in the Open
+      Software Foundation's (OSF) Distributed Computing Environment (DCE),
+      and then in Microsoft Windows platforms.</t>
+<t>This specification is derived from the DCE specification with the
+      kind permission of the OSF (now known as The Open Group).  Information from earlier versions of the DCE specification have been	
+      incorporated into this document.</t></abstract></front>
+
+<seriesInfo name='RFC' value='4122' />
+<format type='TXT' octets='59319' target='http://www.rfc-editor.org/rfc/rfc4122.txt' />
+<format type='HTML' octets='82717' target='http://xml.resource.org/public/rfc/html/rfc4122.html' />
+<format type='XML' octets='62931' target='http://xml.resource.org/public/rfc/xml/rfc4122.xml' />
+</reference>
