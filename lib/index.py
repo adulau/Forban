@@ -131,7 +131,7 @@ class manage:
         else:
             location = self.lootdir + uuid + "/cache/forban/index"
         f = open(location, "r")
-        pmatch = re.compile(filename)
+        pmatch = re.compile(re.escape(filename))
         for line in f.readlines():
             if pmatch.search(line):
                 v = line.rsplit(",",1)[1].rstrip('\n')
