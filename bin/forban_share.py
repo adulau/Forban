@@ -171,8 +171,8 @@ class Root:
                 else:
                     html += "<td>Missing no files from this loot"
 
-                html += """ <a href="http://%s:12555/v/%s">[view missing]</a> """ % (mysourcev4,name)
-                html += """ <a href="http://%s:12555/l/%s">[view index]</a> """ % (mysourcev4,name)
+                html += """ <a href="http://%s:12555/v/%s">[missing?]</a> """ % (mysourcev4,name)
+                html += """ <a href="http://%s:12555/l/%s">[browse]</a> """ % (mysourcev4,name)
                 if name == discoveredloot.whoami():
                     html += "<td><i>yourself</i></td>"
                 else:
