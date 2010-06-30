@@ -43,6 +43,7 @@ sys.path.append(forbanpathlib)
 import index
 import loot
 import base64e
+import tools
 
 try:
     import cherrypy
@@ -255,7 +256,7 @@ class Root:
         html += """<br/> <br/> <br /> <div class="left inner"> <h2>Files available in loot %s </h2>""" % dloot.getname(uuid)
         html += htmlnav
         html += "<table>"
-
+        html += "<tr><td>Filename</td><td>Fetch</td></tr>"
 
         for fileinindex in mindex.search("^((?!forban).)*$", uuid):
             filei = fileinindex.rsplit(",",1)[0]
@@ -266,7 +267,8 @@ class Root:
             html += "<tr>"
             sourcev4 = dloot.getipv4(uuid)
             sourcev6 = dloot.getipv6(uuid)
-            html += """<td>%s</td><td><a href="http://%s:12555/s/?g=%s&f=b64e">v4</a></td> """ % (filei,sourcev4,base64e.encode(filei))
+            size = tools.convertbytes(mindex.getfilesize(filename=filei,uuid=uuid))
+            html += """<td>%s (%s)</td><td><a href="http://%s:12555/s/?g=%s&f=b64e">v4</a></td> """ % (filei,size,sourcev4,base64e.encode(filei))
             if sourcev6 is not None:
                 html += """<td><a href="http://[%s]:12555/s/?g=%s&f=b64e">v6</a></td>""" % (sourcev6, base64e.encode(filei))
             html += "</tr>"
