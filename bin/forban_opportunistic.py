@@ -59,6 +59,11 @@ try:
 except ConfigParser.NoOptionError:
     forbanlogginglevel = "INFO"
 
+try:
+    forbanloggingsize = config.get('global','loggingmaxsize')
+except ConfigParser.NoOptionError:
+    forbanloggingsize = 100000
+
 forbanpathlog=os.path.join(forbanpath,"var","log")
 if not os.path.exists(forbanpathlog):
     os.mkdir(forbanpathlog)
@@ -71,7 +76,7 @@ if forbanlogginglevel == "INFO":
 else:
     flogger.setLevel(logging.DEBUG)
 
-handler = logging.handlers.RotatingFileHandler(forbanpathlogfile, backupCount=5)
+handler = logging.handlers.RotatingFileHandler(forbanpathlogfile, backupCount=5, maxBytes = forbanloggingsize)
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 handler.setFormatter(formatter)
 flogger.addHandler(handler)

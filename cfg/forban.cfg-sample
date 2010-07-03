@@ -4,6 +4,7 @@ path = /home/adulau/git/forban/
 version = 0.0.19
 # logging can be INFO (default) or DEBUG
 logging = DEBUG
+loggingsizemax = 1000000
 # available mode :
 #
 # opportunistic (default): every new files discovered are duplicated
