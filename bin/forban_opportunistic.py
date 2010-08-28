@@ -81,7 +81,11 @@ formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(messag
 handler.setFormatter(formatter)
 flogger.addHandler(handler)
 
-ofilter = config.get('opportunistic','filter')
+try:
+    ofilter = config.get('opportunistic','filter')
+except ConfigParser.NoOptionError:
+    ofilter = ""
+
 refilter = re.compile(ofilter, re.I)
 discoveredloot = loot.loot()
 allindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
@@ -102,7 +106,7 @@ while(1):
             continue
 
         missingfiles = allindex.howfar(uuid)
-
+        # avoid comparing with ourself
         if not missingfiles or (discoveredloot.whoami() == uuid):
             flogger.info("missing no files with %s (%s)" % (discoveredloot.getname(uuid),uuid))
         else:
