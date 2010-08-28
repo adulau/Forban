@@ -18,7 +18,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import time
 import os
 
 import ConfigParser
@@ -36,7 +35,7 @@ import discover
 if __name__ == "__main__":
 
     while 1:
-        HOST, PORT = ("",12555)
+        HOST, PORT = ("", 12555)
         server = discover.UDPServer((HOST, PORT), discover.MyUDPHandler)
         server.serve_forever()
 
