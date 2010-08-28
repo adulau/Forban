@@ -46,6 +46,14 @@ def writepid (processname = None, pid = None):
     else:
         return False
 
+def checkpid (servicename = None):
+    pidpath = os.path.join(forbanpath,"var",servicename+".pid")
+
+    if os.path.exists(pidpath):
+        return True
+    else:
+        return False
+
 def rmpid (processname = None):
     pidpath = os.path.join(forbanpath,"var",processname+".pid")
     if os.path.exists(pidpath):
@@ -85,9 +93,12 @@ if sys.argv[1] == "start":
     for service in forban_services:
         if not ((config.get('global','mode') == "shared")  and (service == "forban_opportunistic")):
             print service+"to start..."
-            pid = service_start(servicename = service)
-            writepid(processname = service, pid = pid)
-            print pidof(processname=service)
+            if not checkpid(servicename = service):
+                pid = service_start(servicename = service)
+                writepid(processname = service, pid = pid)
+                print pidof(processname=service)
+            else:
+                print service+" could not be started (pid exists)"
 
 elif sys.argv[1] == "stop":
 
