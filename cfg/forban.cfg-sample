@@ -36,3 +36,8 @@ announceinterval = 15
 
 [opportunistic]
 filter =
+# 0 means unlimited (default) and may use all the available disk space
+# value is expressed in GB if reached the opportunistic process won't
+# fetch the files.
+
+maxsize = 0

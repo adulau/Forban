@@ -87,6 +87,12 @@ except ConfigParser.NoOptionError:
     ofilter = ""
 
 refilter = re.compile(ofilter, re.I)
+
+try:
+    maxsize = config.get('opportunistic','maxsize')
+except ConfigParser.NoOptionError:
+    maxsize = 0
+
 discoveredloot = loot.loot()
 allindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
 allindex.build()
@@ -96,6 +102,13 @@ flogger.info("applied regexp filter: %s" % ofilter)
 while(1):
 
     for uuid in discoveredloot.listall():
+
+        # check if my loot is not exceeding the maxsize
+        mysize = allindex.totalfilesize(discoveredloot.whoami())
+        if float(maxsize) != 0:
+            if float(mysize[:-2])>float(maxsize):
+                flogger.info("maxsize exceeded (current:%s - max:%sGB)" % (mysize, maxsize))
+                continue
         # fetch the index of all discovered and recently announced loots
         # allowing to compare local loot to announced loot
         if discoveredloot.exist(uuid) and discoveredloot.lastannounced(uuid):
