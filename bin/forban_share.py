@@ -187,7 +187,6 @@ class Root:
     
     def q(self, v=None, r=None):
         querystring = v
-        print querystring
         mindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
         discoveredloot = loot.loot()
         searchresult = []
