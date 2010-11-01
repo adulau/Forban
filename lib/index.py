@@ -115,6 +115,10 @@ class manage:
         f = open(location, "r")
         for cacheline in f.readlines():
             if pmatch.search(cacheline):
+                if re.search('/\.',cacheline):
+                    continue
+                if re.search('^\+\.',cacheline):
+                    continue
                 queryresult.append(cacheline)
         f.close()
 
