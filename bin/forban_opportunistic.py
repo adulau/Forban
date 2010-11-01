@@ -106,6 +106,8 @@ while(1):
         # check if my loot is not exceeding the maxsize
         mysize = allindex.totalfilesize(discoveredloot.whoami())
         if float(maxsize) != 0:
+            if mysize is False:
+                continue
             if float(mysize[:-2])>float(maxsize):
                 flogger.info("maxsize exceeded (current:%s - max:%sGB)" % (mysize, maxsize))
                 continue
