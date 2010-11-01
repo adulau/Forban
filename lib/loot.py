@@ -73,19 +73,23 @@ class loot:
     def getlastseen (self, uuid):
 
         pathlastseen = self.lootpath+"/"+uuid+"/last"
-
+        defaultlastseen = 100
         if self.exist(uuid):
 
             if os.path.exists(pathlastseen):
-                f = open (pathlastseen)
-                rlastseen = f.read()
-                f.close()
+                try:
+                    f = open (pathlastseen)
+                    rlastseen = f.read()
+                    f.close()
+                except:
+                    rlastseen = defaultlastseen
+
                 return rlastseen
             else:
-                return None
+                return defaultlastseen
         else:
 
-            return None
+            return defaultlastseen
 
     def lastannounced (self, uuid, timeago=300):
 
