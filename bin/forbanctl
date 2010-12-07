@@ -26,7 +26,13 @@ import subprocess
 import ConfigParser
 config = ConfigParser.RawConfigParser()
 config.read("../cfg/forban.cfg")
-forbanpath = config.get('global','path')
+
+try:
+    forbanpath = config.get('global','path')
+except ConfigParser.NoSectionError:
+    print "Forban config file is missing or incorrect"
+    print "You should go into ../cfg/ and cp forban.cfg-sample forban.cfg"
+    sys.exit()
 
 def service_start(servicename = None):
     if servicename is not None:
