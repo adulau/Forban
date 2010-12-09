@@ -35,7 +35,17 @@ announceinterval = 15
 #share = /home/adulau/git/forban/var/share/
 
 [opportunistic]
+
+# filter is filter to download only the matching filename
+
 filter =
+
+# efilter is an excluding filter used to not download
+# filename matching the pattern
+
+efilter =
+
+
 # 0 means unlimited (default) and may use all the available disk space
 # value is expressed in GB if reached the opportunistic process won't
 # fetch the files.
