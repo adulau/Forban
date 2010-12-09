@@ -46,12 +46,16 @@ def urlheadinfo(url):
 def urlget(url, localfile="testurlget"):
     httpreq = urllib2.Request(url)
     httpreq.add_header('User-Agent','Forban +http://www.gitorious.org/forban/')
-    
+
     try:
         r = urllib2.urlopen(httpreq)
     except urllib2.HTTPError, e:
         return False
     except urllib2.URLError, e:
+        return False
+    except socket.error,e:
+        return False
+    except socket.timeout:
         return False
     else:
         pass
