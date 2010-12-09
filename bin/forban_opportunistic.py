@@ -92,7 +92,10 @@ except ConfigParser.NoOptionError:
     efilter = None
 
 refilter = re.compile(ofilter, re.I)
-exfilter = re.compile(efilter, re.I)
+if efilter is not None:
+    exfilter = re.compile(efilter, re.I)
+else:
+    exfilter = re.compile("", re.I)
 
 try:
     maxsize = config.get('opportunistic','maxsize')
@@ -134,8 +137,6 @@ while(1):
         else:
             for missedfile in missingfiles:
                 if re.search(refilter, missedfile) and not (re.search(exfilter, missedfile) and efilter is not None):
-                    if re.search(exfilter, missedfile):
-                            flogger.info("Should be excluded %s" % missedfile)
                     sourcev4 = discoveredloot.getipv4(uuid)
                     url =  """http://%s:12555/s/?g=%s&f=b64e""" % (sourcev4, base64e.encode(missedfile))
                     localfile = forbanshareroot + "/" + missedfile
