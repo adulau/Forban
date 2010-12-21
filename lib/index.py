@@ -95,7 +95,7 @@ class manage:
     def cache (self, uuid):
         cachepath = os.path.join (self.lootdir, uuid, "cache")
         if not os.path.exists(cachepath):
-            os.mkdir(cachepath)
+            os.makedirs(cachepath)
         lloot = loot.loot()
         for url in lloot.getindexurl(uuid):
             hmacannounced = lloot.gethmac(uuid)
