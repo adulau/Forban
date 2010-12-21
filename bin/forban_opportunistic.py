@@ -27,8 +27,15 @@ import re
 import logging
 import logging.handlers
 
+def guesspath():
+    pp = os.path.realpath(sys.argv[0])
+    bis = pp.rsplit("/",2)
+    return bis[0]
+
 config = ConfigParser.RawConfigParser()
-config.read("../cfg/forban.cfg")
+config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
+
+
 forbanpath = config.get('global','path')
 try:
     forbanshareroot = config.get('forban','share')

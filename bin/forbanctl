@@ -24,8 +24,14 @@ import platform
 import signal
 import subprocess
 import ConfigParser
+
+def guesspath():
+    pp = os.path.realpath(sys.argv[0])
+    bis = pp.rsplit("/",2)
+    return bis[0]
+
 config = ConfigParser.RawConfigParser()
-config.read("../cfg/forban.cfg")
+config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
 try:
     forbanpath = config.get('global','path')
@@ -37,7 +43,8 @@ except ConfigParser.NoSectionError:
 def service_start(servicename = None):
     if servicename is not None:
         service = servicename+".py"
-        proc =  subprocess.Popen(["python",service])
+        servicepath = os.path.join(guesspath(),"bin",service)
+        proc =  subprocess.Popen(["python",servicepath])
         return proc.pid
     return False
 
