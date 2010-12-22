@@ -94,7 +94,7 @@ def nppidof(processname = None):
         return True
 
 def usage():
-    print "forbanctl (start|stop|forcestop)"
+    print "forbanctl (start|stop|restart)"
     exit (1)
 
 if len(sys.argv) < 2:
@@ -102,22 +102,25 @@ if len(sys.argv) < 2:
 
 forban_services = ["forban_discover", "forban_announce", "forban_share", "forban_opportunistic"]
 
-if sys.argv[1] == "start":
-
+def Start():
     print "Starting Forban services..."
+    retval=True
     for service in forban_services:
         if not ((config.get('global','mode') == "shared")  and (service == "forban_opportunistic")):
-            print service+"to start..."
+            print service+" is starting with pid:"
             if not checkpid(servicename = service):
                 pid = service_start(servicename = service)
                 writepid(processname = service, pid = pid)
                 print pidof(processname=service)
             else:
                 print service+" could not be started (pid exists)"
+                retval=False
 
-elif sys.argv[1] == "stop":
+    return retval
 
+def Stop():
     print "Stopping Forban services..."
+    retval=True
     for service in forban_services:
         pid = pidof(processname=service)
         if pid:
@@ -133,13 +136,17 @@ elif sys.argv[1] == "stop":
                     os.kill(int(pid), signal.SIGKILL)
                 except OSError, e:
                     print service+  " unsuccessfully stopped"
+                    retval=False
                 print service
                 rmpid(processname=service)
+    return retval
 
-elif sys.argv[1] == "forcestop":
-    
-    print "(forced) Stopping Forban services..."
-    nppidof()
-
+if sys.argv[1] == "start":
+    Start()
+elif sys.argv[1] == "stop":
+    Stop()
+elif sys.argv[1] == "restart":
+    Stop()
+    Start()
 else:
     usage()
