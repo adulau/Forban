@@ -33,7 +33,11 @@ def guesspath():
 config = ConfigParser.RawConfigParser()
 config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
-forbanpath = config.get('global','path')
+try:
+    forbanpath = config.get('global','path')
+except ConfigParser.NoOptionError:
+    forbanpath = os.path.join(guesspath())
+
 forbandiscoveredloots = os.path.join(forbanpath,"var","loot")
 forbanname = config.get('global','name')
 forbanmode = config.get('global','mode')

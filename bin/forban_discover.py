@@ -29,7 +29,14 @@ def guesspath():
 config = ConfigParser.RawConfigParser()
 config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
-forbanpath = config.get('global','path')
+try:
+    forbanpath = config.get('global','path')
+except ConfigParser.NoSectionError:
+    print "Forban config file is missing or incorrect"
+    print "You should go into ../cfg/ and cp forban.cfg-sample forban.cfg"
+    sys.exit()
+except ConfigParser.NoOptionError:
+    forbanpath = os.path.join(guesspath())
 
 forbanpathlib = os.path.join(forbanpath,"lib")
 sys.path.append(forbanpathlib)

@@ -32,7 +32,11 @@ def guesspath():
 config = ConfigParser.RawConfigParser()
 config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
-forbanpath = config.get('global','path')
+try:
+    forbanpath = config.get('global','path')
+except ConfigParser.NoOptionError:
+    forbanpath = os.path.join(guesspath())
+
 try:
     announceinterval = config.get('global','announceinterval')
 except ConfigParser.NoOptionError:

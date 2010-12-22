@@ -36,11 +36,19 @@ config = ConfigParser.RawConfigParser()
 config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
 
-forbanpath = config.get('global','path')
+try:
+    forbanpath = config.get('global','path')
+except ConfigParser.NoOptionError:
+    forbanpath = os.path.join(guesspath())
+
 try:
     forbanshareroot = config.get('forban','share')
 except ConfigParser.NoOptionError:
     forbanshareroot = os.path.join(forbanpath,"var","share/")
+except ConfigParser.NoOptionError:
+    forbanpath = os.path.join(guesspath())
+    forbanshareroot = os.path.join(forbanpath,"var","share/")
+
 forbanpathlib = os.path.join(forbanpath,"lib")
 sys.path.append(forbanpathlib)
 import index
@@ -53,7 +61,6 @@ if not config.get("global","mode") == "opportunistic":
     exit(1)
 
 
-forbanpath = config.get('global','path')
 try:
     announceinterval = config.get('global','announceinterval')
 except ConfigParser.NoOptionError:

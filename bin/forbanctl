@@ -39,6 +39,8 @@ except ConfigParser.NoSectionError:
     print "Forban config file is missing or incorrect"
     print "You should go into ../cfg/ and cp forban.cfg-sample forban.cfg"
     sys.exit()
+except ConfigParser.NoOptionError:
+    forbanpath = os.path.join(guesspath())
 
 def service_start(servicename = None):
     if servicename is not None:
