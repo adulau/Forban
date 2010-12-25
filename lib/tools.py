@@ -66,7 +66,14 @@ def rename(source=None, destination=None):
     else:
         os.rename(source, destination)
 
+# Guess local hostname on Unix and Windows
+#
+
+def guesshostname():
+    guessedhostname = platform.node()
+    return guessedhostname
+
 if __name__ == "__main__":
    print convertbytes (1234567)
-    
+   print guesshostname()
    # print rename("x","xy")

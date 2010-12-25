@@ -39,7 +39,6 @@ except ConfigParser.NoOptionError:
     forbanpath = os.path.join(guesspath())
 
 forbandiscoveredloots = os.path.join(forbanpath,"var","loot")
-forbanname = config.get('global','name')
 forbanmode = config.get('global','mode')
 
 try:
@@ -54,6 +53,11 @@ import index
 import loot
 import base64e
 import tools
+
+try:
+    forbanname = config.get('global','name')
+except ConfigParser.NoOptionError:
+    forbanname = tools.guesshostname()
 
 try:
     import cherrypy

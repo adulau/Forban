@@ -64,6 +64,7 @@ sys.path.append(forbanpathlib)
 
 import announce
 import index
+import tools
 
 forbanpathlog=os.path.join(forbanpath,"var","log")
 if not os.path.exists(forbanpathlog):
@@ -84,7 +85,11 @@ flogger.addHandler(handler)
 
 if __name__ == "__main__":
 
-    forbanname = config.get('global','name')
+    try:
+        forbanname = config.get('global','name')
+    except ConfigParser.NoOptionError:
+        forbanname = tools.guesshostname()
+
     msg = announce.message(name=forbanname)
 
     forbanindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
