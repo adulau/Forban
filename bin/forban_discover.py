@@ -23,7 +23,8 @@ import ConfigParser
 
 def guesspath():
     pp = os.path.realpath(sys.argv[0])
-    bis = pp.rsplit("/",2)
+    lpath = os.path.split(pp)
+    bis = os.path.split(lpath[0])
     return bis[0]
 
 config = ConfigParser.RawConfigParser()
