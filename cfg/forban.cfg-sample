@@ -1,6 +1,6 @@
 [global]
-name = adulau shared forban
-path = /home/adulau/git/forban/
+#name = adulau shared forban
+#path = /home/adulau/git/forban/
 version = 0.0.24
 # logging can be INFO (default) or DEBUG
 logging = DEBUG
