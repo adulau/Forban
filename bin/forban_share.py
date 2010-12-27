@@ -43,9 +43,9 @@ forbandiscoveredloots = os.path.join(forbanpath,"var","loot")
 try:
     forbanmode = config.get('global','mode')
 except ConfigParser.NoOptionError:
-    forbanmode = opportunistic
+    forbanmode = "opportunistic"
 except ConfigParser.NoSectionError:
-    forbanmode = opportunistic
+    forbanmode = "opportunistic"
 
 try:
     forbanshareroot = config.get('forban','share')

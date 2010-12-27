@@ -59,9 +59,9 @@ import base64e
 try:
     forbanmode = config.get('global','mode')
 except ConfigParser.NoOptionError:
-    forbanmode = opportunistic
+    forbanmode = "opportunistic"
 except ConfigParser.NoSectionError:
-    forbanmode = opportunistic
+    forbanmode = "opportunistic"
 
 if not forbanmode == "opportunistic":
     print "not configured in opportunistic mode"

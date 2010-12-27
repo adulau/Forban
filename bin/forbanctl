@@ -105,9 +105,9 @@ forban_services = ["forban_discover", "forban_announce", "forban_share", "forban
 try:
     forbanmode = config.get('global','mode')
 except ConfigParser.NoOptionError:
-    forbanmode = opportunistic
+    forbanmode = "opportunistic"
 except ConfigParser.NoSectionError:
-    forbanmode = opportunistic
+    forbanmode = "opportunistic"
 
 def Start():
     print "Starting Forban services..."
