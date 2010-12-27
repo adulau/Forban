@@ -56,7 +56,14 @@ import loot
 import fetch
 import base64e
 
-if not config.get("global","mode") == "opportunistic":
+try:
+    forbanmode = config.get('global','mode')
+except ConfigParser.NoOptionError:
+    forbanmode = opportunistic
+except ConfigParser.NoSectionError:
+    forbanmode = opportunistic
+
+if not forbanmode == "opportunistic":
     print "not configured in opportunistic mode"
     exit(1)
 
