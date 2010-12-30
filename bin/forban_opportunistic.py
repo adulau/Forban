@@ -39,12 +39,12 @@ config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
 try:
     forbanpath = config.get('global','path')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     forbanpath = os.path.join(guesspath())
 
 try:
     forbanshareroot = config.get('forban','share')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     forbanshareroot = os.path.join(forbanpath,"var","share/")
 except ConfigParser.NoOptionError:
     forbanpath = os.path.join(guesspath())
@@ -59,9 +59,7 @@ import base64e
 
 try:
     forbanmode = config.get('global','mode')
-except ConfigParser.NoOptionError:
-    forbanmode = "opportunistic"
-except ConfigParser.NoSectionError:
+except ConfigParser.Error:
     forbanmode = "opportunistic"
 
 if not forbanmode == "opportunistic":
@@ -71,19 +69,19 @@ if not forbanmode == "opportunistic":
 
 try:
     announceinterval = config.get('global','announceinterval')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     announceinterval = 10
 
 announceinterval = float(announceinterval)
 
 try:
     forbanlogginglevel = config.get('global','logging')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     forbanlogginglevel = "INFO"
 
 try:
     forbanloggingsize = config.get('global','loggingmaxsize')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     forbanloggingsize = 100000
 
 forbanpathlog=os.path.join(forbanpath,"var","log")
@@ -105,12 +103,12 @@ flogger.addHandler(handler)
 
 try:
     ofilter = config.get('opportunistic','filter')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     ofilter = ""
 
 try:
     efilter = config.get('opportunistic','efilter')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     efilter = None
 
 refilter = re.compile(ofilter, re.I)
@@ -121,7 +119,7 @@ else:
 
 try:
     maxsize = config.get('opportunistic','maxsize')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     maxsize = 0
 
 discoveredloot = loot.loot()
