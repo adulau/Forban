@@ -50,7 +50,7 @@ Forban protocol
 ASCII encoded message using UDP on port 12555 with
 the following format: 
 
-forban;name;<nameoftheforban>;uuid;<identityoftheforban>;hmac;<hmacvaluecofindex>
+    forban;name;<nameoftheforban>;uuid;<identityoftheforban>;hmac;<hmacvaluecofindex>
 
 The messages are flooded in broadcast (IPv4) and using
 ff02::1 (IPv6) at a regular interval.
@@ -64,16 +64,16 @@ The UDP port 12555 is there for announcing forban services.
 The TCP port 12555 is the HTTP server running for forban services.
 
 base URL: [REQUIRED]
-http://<ip>:<destport>/
+    http://<ip>:<destport>/
 
 index URL where Forban stored his index: [REQUIRED]
-http://<ip>:<destport>/s/?g=forban/index
+    http://<ip>:<destport>/s/?g=forban/index
 
 store URL where Forban stored his loot and how to get a file: [REQUIRED]
-http://<ip>:<destport>/s/?g=base64_urlsafe(<filenamefromindex>)&f=b64e
+    http://<ip>:<destport>/s/?g=base64_urlsafe(<filenamefromindex>)&f=b64e
 
 search URL: [OPTIONAL]
-http://<ip>:<destport>/q/?v=<yoursearch>&r=<refreshtimeinsec>
+    http://<ip>:<destport>/q/?v=<yoursearch>&r=<refreshtimeinsec>
 
 REQUIRED interfaces are required to have a full operational Forban
 protocol in all the modes. The OPTIONAL interfaces are not required
