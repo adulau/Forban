@@ -3,8 +3,8 @@
 # standalone Forban "client" written in Bash
 #
 # This is just a proof-of-concept to show how
-# easy it's to get standard something using
-# the forban protocol
+# easy it's to get a script using
+# the Forban protocol
 #
 # Software required: tcpdump and curl
 
