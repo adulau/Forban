@@ -103,7 +103,7 @@ lang="en"> <head> <link rel="stylesheet" type="text/css" href="/css/style.css"
 /> </head>"""
 
 htmlfooter =  """<div id="w3c"><p><small>Forban is free software released under
-the AGPL. For more information about Forban and source code : <a
+the <a href="http://www.gnu.org/licenses/agpl.html">AGPL</a>. For more information about Forban and source code : <a
 href="http://www.foo.be/forban/">foo.be/forban/</a>.</small></p></div></div><!--
 end wrapper --></div></body></html>"""
 

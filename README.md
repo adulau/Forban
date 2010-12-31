@@ -1,7 +1,7 @@
 Forban
 ======
 
-Forban is a p2p application for link-local and local area network.
+[Forban](http://www.foo.be/forban/) is a p2p application for link-local and local area network.
 
 Forban works independently from Internet and use only the local 
 area capabilities to announce, discover, search or share files. 
