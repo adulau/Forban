@@ -36,21 +36,19 @@ config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
 try:
     forbanpath = config.get('global','path')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     forbanpath = os.path.join(guesspath())
 
 forbandiscoveredloots = os.path.join(forbanpath,"var","loot")
 
 try:
     forbanmode = config.get('global','mode')
-except ConfigParser.NoOptionError:
-    forbanmode = "opportunistic"
-except ConfigParser.NoSectionError:
+except ConfigParser.Error:
     forbanmode = "opportunistic"
 
 try:
     forbanshareroot = config.get('forban','share')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     forbanshareroot = os.path.join(forbanpath,"var","share/")
 
 forbanpathlib = os.path.join (forbanpath,"lib")
@@ -63,7 +61,7 @@ import tools
 
 try:
     forbanname = config.get('global','name')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     forbanname = tools.guesshostname()
 
 try:

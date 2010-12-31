@@ -35,27 +35,27 @@ config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
 try:
     forbanpath = config.get('global','path')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     forbanpath = os.path.join(guesspath())
 
 try:
     announceinterval = config.get('global','announceinterval')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     announceinterval = 10
 
 try:
     forbanshareroot = config.get('forban','share')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     forbanshareroot = os.path.join(forbanpath,"var","share/")
 
 try:
     forbanlogginglevel = config.get('global','logging')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     forbanlogginglevel = "INFO"
 
 try:
     forbanloggingsize = config.get('global','loggingmaxsize')
-except ConfigParser.NoOptionError:
+except ConfigParser.Error:
     forbanloggingsize = 100000
 
 
@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
     try:
         forbanname = config.get('global','name')
-    except ConfigParser.NoOptionError:
+    except ConfigParser.Error:
         forbanname = tools.guesshostname()
 
     msg = announce.message(name=forbanname)

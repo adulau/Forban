@@ -35,7 +35,8 @@ try:
 except ConfigParser.NoSectionError:
     print "Forban config file is missing or incorrect"
     print "You should go into ../cfg/ and cp forban.cfg-sample forban.cfg"
-    sys.exit()
+    print "In any case, Forban should be able to work even without the config file"
+    forbanpath = os.path.join(guesspath())
 except ConfigParser.NoOptionError:
     forbanpath = os.path.join(guesspath())
 
