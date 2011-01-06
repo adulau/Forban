@@ -122,7 +122,7 @@ try:
 except ConfigParser.Error:
     maxsize = 0
 
-discoveredloot = loot.loot()
+discoveredloot = loot.loot(dynpath=os.path.join(forbanpath,"var"))
 allindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
 allindex.build()
 

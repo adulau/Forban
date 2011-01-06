@@ -34,7 +34,7 @@ class loot:
     def __init__ (self, dynpath = "../var/"):
 
         self.dynpath = dynpath
-        self.lootpath = dynpath + "loot/" 
+        self.lootpath = os.path.join(dynpath,"loot")
         if not os.path.isdir(self.lootpath):
             os.mkdir(self.lootpath)
 
@@ -48,7 +48,7 @@ class loot:
 
     def getname (self, uuid):
 
-        pathname = self.lootpath+"/"+uuid+"/name"
+        pathname = os.path.join(self.lootpath,uuid,"name")
 
         if os.path.exists(pathname):
             f = open (pathname)
@@ -60,7 +60,7 @@ class loot:
 
     def getipv4 (self, uuid):
 
-        pathsourcev4 = self.lootpath+"/"+uuid+"/sourcev4"
+        pathsourcev4 = os.path.join(self.lootpath,uuid,"sourcev4")
 
         if os.path.exists(pathsourcev4):
             f = open (pathsourcev4)
@@ -72,7 +72,7 @@ class loot:
 
     def getlastseen (self, uuid):
 
-        pathlastseen = self.lootpath+"/"+uuid+"/last"
+        pathlastseen = os.path.join(self.lootpath,uuid,"last")
         defaultlastseen = 100
         if self.exist(uuid):
 
@@ -103,13 +103,13 @@ class loot:
             return False
 
     def whoami (self):
-        
+
         lfid = fid.manage()
         return lfid.get()
 
     def getipv6 (self, uuid):
 
-        pathsourcev6 = self.lootpath+"/"+uuid+"/sourcev6"
+        pathsourcev6 = os.path.join(self.lootpath,uuid,"sourcev6")
 
         if os.path.exists(pathsourcev6):
             f = open (pathsourcev6)
@@ -118,15 +118,15 @@ class loot:
             return rname
         else:
             return None
- 
+
     def exist (self, uuid):
 
-        aloot = self.lootpath+uuid+"/"
+        aloot = os.path.join(self.lootpath,uuid)
         if os.path.isdir(aloot):
             return True
         else:
             return False
-    
+
     def getindexurl (self, uuid, v4only=True):
         iurl = []
 
@@ -143,7 +143,7 @@ class loot:
             return False
 
     def add (self, dmessage, sip):
-        
+
         mess = dmessage.split(";")
         self.hmac = None
         for i in range (1, len(mess)-1, 2):
@@ -159,7 +159,7 @@ class loot:
         self.lsource = sip
 
         if not self.exist(self.luuid):
-            os.mkdir(self.lootpath+self.luuid)
+            os.mkdir(os.path.join(self.lootpath,self.luuid))
 
         if self.hmac is not None:
             self.sethmac(lhmac=self.hmac)
@@ -225,7 +225,7 @@ class loot:
 
     def gethmac (self, uuid):
 
-        pathhmac = self.lootpath+"/"+uuid+"/hmac"
+        pathhmac = os.path.join(self.lootpath,uuid,"hmac")
 
         if self.exist(uuid):
             if os.path.exists(pathhmac):
@@ -240,19 +240,19 @@ class loot:
             return None
 
     def setsource (self, sourcev4 = None , sourcev6 = None):
-        
+
         if sourcev4 is not None:
-            f = open(self.lootpath+self.luuid+"/"+"sourcev4", "w")
+            f = open(os.path.join(self.lootpath,self.luuid,"sourcev4"), "w")
             f.write(sourcev4)
             f.close()
         if sourcev6 is not None:
-            f = open(self.lootpath+self.luuid+"/"+"sourcev6", "w")
+            f = open(os.path.join(self.lootpath,self.luuid,"sourcev6"), "w")
             f.write(sourcev6)
             f.close()
 
     def setfirstseen (self):
-        
-        firstseenpath = self.lootpath+self.luuid+"/"+"first"
+
+        firstseenpath = os.path.join(self.lootpath,self.luuid,"first")
         if not os.path.exists(firstseenpath):
             f = open(firstseenpath, "w")
             t = datetime.datetime.now()
@@ -260,7 +260,7 @@ class loot:
             f.close()
 
     def setlastseen (self):
-        
+
         localfile =  os.path.join(self.lootpath,self.luuid,"last")
         tlocalfile = tmpname.get(localfile)
         f = open(tlocalfile[1], "w")
@@ -271,7 +271,7 @@ class loot:
             tools.rename(tlocalfile[1], tlocalfile[0])
 
 def loottest():
-        
+
         myloot = loot()
         if not myloot.exist("1234"):
             print "not existing -> ok"
@@ -281,6 +281,7 @@ def loottest():
         print myloot.lastannounced("cb001bf2-1497-443c-9675-74de7027ecf9")
         print myloot.listall()
         print myloot.gethmac("cb001bf2-1497-443c-9675-74de7027ecf9")
+
 if __name__ == "__main__":
-    
+
     loottest()

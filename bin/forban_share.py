@@ -121,7 +121,7 @@ def forban_geturl(uuid=None, filename=None, protocol="v4"):
     if uuid is None or filename is None:
         return False
 
-    discoveredloot = loot.loot()
+    discoveredloot = loot.loot(dynpath=os.path.join(forbanpath,"var"))
 
     if not discoveredloot.exist(uuid):
         return False
@@ -150,7 +150,7 @@ class Root:
         html += """ <h2>Discovered link-local Forban available with their loot in the last 3 minutes</h2> """
         html += "<table>"
         html += "<th><td>Access</td><td>Name</td><td>Last seen</td><td>Size</td><td>How many files are missing from yourself?</td><td></td></th>"
-        discoveredloot = loot.loot()
+        discoveredloot = loot.loot(dynpath=os.path.join(forbanpath,"var"))
         mysourcev4 = discoveredloot.getipv4(discoveredloot.whoami())
         allindex =  index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
         for name in discoveredloot.listall():
@@ -207,7 +207,7 @@ class Root:
     def q(self, v=None, r=None):
         querystring = v
         mindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
-        discoveredloot = loot.loot()
+        discoveredloot = loot.loot(dynpath=os.path.join(forbanpath,"var"))
         searchresult = []
         for name in discoveredloot.listall():
             if (discoveredloot.exist(name) and discoveredloot.lastannounced(name)):
@@ -241,7 +241,7 @@ class Root:
 
     def v(self, uuid):
         mindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
-        dloot = loot.loot()
+        dloot = loot.loot(dynpath=os.path.join(forbanpath,"var"))
         missingfiles = mindex.howfar(uuid)
         html = htmlheader
         html += """<br/> <br/> <br/> <div class="left inner"> <h2>Missing files on your loot from %s </h2>""" % dloot.getname(uuid)
@@ -269,7 +269,7 @@ class Root:
 
     def l(self, uuid):
         mindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
-        dloot = loot.loot()
+        dloot = loot.loot(dynpath=os.path.join(forbanpath,"var"))
         html = htmlheader
 
         html += """<br/> <br/> <br /> <div class="left inner"> <h2>Files available in loot %s </h2>""" % dloot.getname(uuid)
