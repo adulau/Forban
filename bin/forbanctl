@@ -24,6 +24,7 @@ import platform
 import signal
 import subprocess
 import ConfigParser
+import time
 
 def guesspath():
     pp = os.path.realpath(sys.argv[0])
@@ -48,6 +49,7 @@ def service_start(servicename = None):
         service = servicename+".py"
         servicepath = os.path.join(guesspath(),"bin",service)
         proc =  subprocess.Popen(["python",servicepath])
+        time.sleep(0.15)
         return proc.pid
     return False
 
