@@ -88,7 +88,8 @@ forbanpathlog=os.path.join(forbanpath,"var","log")
 if not os.path.exists(forbanpathlog):
     os.mkdir(forbanpathlog)
 
-forbanpathlogfile=forbanpathlog+"/forban_opportunistic.log"
+forbanpathlogfile=os.path.join(forbanpathlog,"forban_opportunistic.log")
+
 flogger = logging.getLogger('forban_opportunistic')
 
 if forbanlogginglevel == "INFO":

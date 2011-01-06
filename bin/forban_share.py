@@ -79,8 +79,8 @@ forbanpathlog=os.path.join(forbanpath,"var","log")
 if not os.path.exists(forbanpathlog):
     os.mkdir(forbanpathlog)
 
-forbanpathlogfile=forbanpathlog+"/forban_share_access.log"
-forbanpathlogfilee=forbanpathlog+"/forban_share_error.log"
+forbanpathlogfile=os.path.join(forbanpathlog,"forban_share_access.log")
+forbanpathlogfilee=os.path.join(forbanpathlog,"forban_share_error.log")
 
 if socket.has_ipv6:
     try:
