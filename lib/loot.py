@@ -104,7 +104,7 @@ class loot:
 
     def whoami (self):
 
-        lfid = fid.manage()
+        lfid = fid.manage(dynpath=self.dynpath)
         return lfid.get()
 
     def getipv6 (self, uuid):
@@ -202,7 +202,7 @@ class loot:
         # self is added for the same forban doing the announce
         # and the discovery
 
-        myid = fid.manage()
+        myid = fid.manage(dynpath=self.dynpath)
         if myid.get() == self.luuid:
             localfile = os.path.join(self.lootpath,self.luuid,"self")
             tlocalfile = tmpname.get(localfile)

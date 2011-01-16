@@ -37,17 +37,17 @@ import fid
 class message:
 
     def __init__(self,name="notset", uuid=None, port="12555", timestamp=None,
-    auth=None, destination=["ff02::1","255.255.255.255", ]):
-            
+    auth=None, destination=["ff02::1","255.255.255.255", ], dynpath="../var"):
             self.name       = name
             self.uuid       = uuid
             self.port       = port
             self.count      = 0
             self.destination = destination
+            self.dynpath    = dynpath
 
     def gen (self):
             self.payload    = "forban;name;" + self.name + ";"
-            myid = fid.manage()
+            myid = fid.manage(dynpath=self.dynpath)
             self.payload    = self.payload + "uuid;" + myid.get()
 
     def auth(self,value=None):
@@ -62,7 +62,6 @@ class message:
 
     def send(self):
         for destination in self.destination:
-           
             if socket.has_ipv6 and re.search(":", destination):
 
                 # Even if Python is compiled with IPv6, it doesn't mean that the os
@@ -88,7 +87,6 @@ class message:
 
 
 def managetest():
-   
     msg = message()
     msg.gen()
     msg.auth()
@@ -98,6 +96,5 @@ def managetest():
     print msg.get()
 
 if __name__ == "__main__":
-                                       
     managetest()
 

@@ -28,11 +28,11 @@ class manage:
     def __init__ (self, dynpath = "../var/"):
 
         self.dynpath = dynpath
-        self.fidpath = dynpath + "fid" 
+        self.fidpath = os.path.join(dynpath,"fid")
         self.create()
-    
+
     def create(self):
- 
+
         if os.path.isdir(self.dynpath) and os.path.isfile(self.fidpath):
             fidfile = open(self.fidpath,'r')
             self.fid = fidfile.read()
@@ -59,6 +59,6 @@ def managetest():
         print fid.get()
 
 if __name__ == "__main__":
-    
+
     managetest()
-            
+
