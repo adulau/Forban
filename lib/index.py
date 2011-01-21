@@ -46,8 +46,11 @@ class manage:
         self.index = ""
         for root, dirs, files in os.walk(self.sharedir, topdown=True):
             for name in files:
-                self.index = self.index + os.path.join(root.split(self.sharedir)[1],name)+","+str(os.path.getsize(os.path.join(root,name)))+"\n"
-        
+                try:
+                    self.index = self.index + os.path.join(root.split(self.sharedir)[1],name)+","+str(os.path.getsize(os.path.join(root,name)))+"\n"
+                except:
+                    pass
+
         pid = os.getpid()
         workingloc = self.location+"."+str(pid)
         f = open (workingloc,"w")
