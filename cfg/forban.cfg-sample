@@ -43,7 +43,7 @@ filter =
 # efilter is an excluding filter used to not download
 # filename matching the pattern
 
-efilter =
+#efilter =
 
 
 # 0 means unlimited (default) and may use all the available disk space
