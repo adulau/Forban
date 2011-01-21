@@ -152,8 +152,10 @@ while(1):
             continue
 
         missingfiles = allindex.howfar(uuid)
-        # avoid comparing with ourself
-        if not missingfiles or (discoveredloot.whoami() == uuid):
+
+        if (discoveredloot.whoami() == uuid):
+            flogger.debug("we are not opportunistic on ourself %s (%s)" % (discoveredloot.getname(uuid),uuid))
+        elif not missingfiles:
             flogger.info("missing no files with %s (%s)" % (discoveredloot.getname(uuid),uuid))
         else:
             for missedfile in missingfiles:
