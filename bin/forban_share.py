@@ -114,7 +114,10 @@ logo : a small island where a stream of bits is going to and coming from"
 """ % (forbanname, forbanmode)
 
 def mime_type(filename):
-    return mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+    if re.search('/forban/index',filename):
+        return 'text/plain'
+    else:
+        return mimetypes.guess_type(filename)[0] or 'application/octet-stream'
 
 def forban_geturl(uuid=None, filename=None, protocol="v4"):
 
