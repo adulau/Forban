@@ -61,7 +61,7 @@ def urlget(url, localfile="testurlget"):
         pass
 
     (lpath, lfile) = os.path.split(localfile)
-    
+
     if not os.path.isdir(lpath) and not (lpath ==''):
         os.makedirs(lpath)
 
@@ -75,7 +75,10 @@ def urlget(url, localfile="testurlget"):
 
     if r.info().has_key('Content-Disposition'):
         f = open (tlocalfile[1], "w")
-        shutil.copyfileobj(r.fp,f)
+        try:
+            shutil.copyfileobj(r.fp,f)
+        except:
+            return False
         f.close()
         if os.path.exists(tlocalfile[1]):
             tools.rename(tlocalfile[1], tlocalfile[0])
@@ -86,7 +89,7 @@ def urlget(url, localfile="testurlget"):
 def managetest():
     #urlget("http://192.168.154.199:12555/s/?g=forban/index")
     print urlget("http://192.168.1.4:12555/s/?g=forban/index")
-    
+
 if __name__ == "__main__":
     managetest()
 
