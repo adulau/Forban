@@ -57,6 +57,10 @@ function ForbanSearch {
 
 
 function ForbanDiscover {
+        TYPE=$1
+        [ -z $1 ] && TYPE="normal"
+        URLOPEN=()
+
         while [ 1 ];
         do
                 A=`GetAnnounce`
@@ -64,16 +68,39 @@ function ForbanDiscover {
                 UUID=`echo "${A}" | GetUUID`
                 NAME=`echo "${A}" | GetName`        
                 echo "Found Forban" ${NAME} "("${UUID}")"
-                echo ${X} | GetURL
+                URL=`echo ${X} | GetURL`
+                if [ ${TYPE} == "browse" ]; then
+                        urll="notvisited"
+                        for urlo in ${URLOPEN[*]}
+                        do
+                                if [ ${urlo} == ${URL} ]; then
+                                        urll="visited"
+                                fi
+                        done
+                        if [ ${urll} == "notvisited" ]; then
+                                echo "not visited, opening a browser page..."
+                                if [ `uname` == "Darwin" ]; then
+                                        open ${URL}
+                                else
+                                        firefox ${URL}
+                                fi
+                                URLOPEN=("${URLOPEN[@]}" "${URL}")
+                        fi
+                fi
+
+
+                echo ${URL}
         done
 }
 
 case "$1" in
         monitor)    ForbanDiscover
                     ;;
+        bmonitor)   ForbanDiscover browse
+                    ;;
         search)     keywords=$2
                     ForbanSearch ${keywords}
                     ;;
-        *)          echo $0 "[monitor] [search {keywords}]"
+        *)          echo $0 "[monitor] [bmonitor] [search {keywords}]"
 esac
 
