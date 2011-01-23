@@ -9,7 +9,7 @@
 # Software required: tcpdump and curl
 
 function GetAnnounce {
-sudo tcpdump -c 1 -t -p -n -l -A -s0 -ien1 "udp and port 12555 and udp[8:2]==0x666f" 2>/dev/null
+sudo tcpdump -c 1 -t -p -n -l -A -s0 -iany "udp and port 12555 and udp[8:2]==0x666f" 2>/dev/null
 }
 
 function GetName {
