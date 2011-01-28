@@ -41,6 +41,7 @@ class manage:
         self.location = sharedir+"/forban/index"
         self.sharedir = sharedir
         self.lootdir = os.path.join(forbanglobal,"var","loot/")
+        self.dynpath = os.path.join(forbanglobal,"var")
 
     def build (self):
         self.index = ""
@@ -99,7 +100,7 @@ class manage:
         cachepath = os.path.join (self.lootdir, uuid, "cache")
         if not os.path.exists(cachepath):
             os.makedirs(cachepath)
-        lloot = loot.loot()
+        lloot = loot.loot(self.dynpath)
         for url in lloot.getindexurl(uuid):
             hmacannounced = lloot.gethmac(uuid)
             hmaccalculated = self.calchmac(cachepath+"/forban/index")

@@ -20,22 +20,31 @@
 import SocketServer
 import socket
 import sys
+import os
 # forban internal junk
 sys.path.append('.')
 import loot
 
+def guesspath():
+    pp = os.path.realpath(sys.argv[0])
+    lpath = os.path.split(pp)
+    bis = os.path.split(lpath[0])
+    return bis[0]
+
+forbanpath = os.path.join(guesspath())
+
 class MyUDPHandler(SocketServer.BaseRequestHandler):
+
     def handle(self):
         data = self.request[0].strip()
         socket = self.request[1]
         if data[:6] == "forban":
-            myloot = loot.loot()
+            myloot = loot.loot(dynpath=os.path.join(forbanpath,"var"))
             myloot.add(data, self.client_address[0])
         else:
             print "debug : not a forban message"
 
 class UDPServer(SocketServer.UDPServer):
-
 
 
     if socket.has_ipv6:
