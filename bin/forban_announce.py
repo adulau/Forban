@@ -91,7 +91,7 @@ if __name__ == "__main__":
     except ConfigParser.Error:
         forbanname = tools.guesshostname()
 
-    msg = announce.message(name=forbanname)
+    msg = announce.message(name=forbanname, dynpath=os.path.join(forbanpath,"var"))
 
     forbanindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
     flogger.info("forban_announce starting...")
