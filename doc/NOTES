@@ -37,6 +37,14 @@
    value by the Forban node operator
 * status update to know what file is currently downloaded
 
+== opportunistic_fs ==
+
+* allow Forban to share files via removable devices
+** a common "FORBAN" directory name is created
+** the method can be used to import files into Forban nodes
+** configuration to describe if the input from removable
+devices is two ways or just one way (from or to the device)
+
 == general ==
 
 * publish Forban local index to a remote server
