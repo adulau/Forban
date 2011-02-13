@@ -291,9 +291,7 @@ class Root:
             sourcev4 = dloot.getipv4(uuid)
             sourcev6 = dloot.getipv6(uuid)
             size = tools.convertbytes(mindex.getfilesize(filename=filei,uuid=uuid))
-            html += """<td>%s (%s)</td><td><a href="http://%s:12555/s/?g=%s&f=b64e">v4</a></td> """ % (filei,size,sourcev4,base64e.encode(filei))
-            if sourcev6 is not None:
-                html += """<td><a href="http://[%s]:12555/s/?g=%s&f=b64e">v6</a></td>""" % (sourcev6, base64e.encode(filei))
+            html += """<td>%s (%s)</td><td><a href="/s/?g=%s&f=b64e">get</a></td> """ % (filei,size,base64e.encode(filei))
             html += "</tr>"
 
         html += "</table>"
