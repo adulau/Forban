@@ -196,8 +196,9 @@ class Root:
 
                 if name != discoveredloot.whoami():
                     html += """ <a href="http://%s:12555/v/%s">[missing?]</a> """ % (mysourcev4,name)
-                html += """ <a href="http://%s:12555/l/%s">[browse]</a> """ % (mysourcev4,name)
+                    html += """ <a href="http://%s:12555/l/%s">[browse]</a> """ % (mysourcev4,name)
                 if name == discoveredloot.whoami():
+                    html += """ <a href="/l/%s">[browse]</a> """ % (name)
                     html += "<td><i>yourself</i></td>"
                 else:
                     html += "<td></td>"
