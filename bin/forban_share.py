@@ -92,7 +92,7 @@ if socket.has_ipv6:
 else:
     bindhost = "0.0.0.0"
 
-cherrypy.config.update({ 'log.screen': False, 'server.socket_port': 12555 , 'server.socket_host': bindhost, 'tools.static.root':forbanshareroot, 'log.access_file':forbanpathlogfile, 'log.error_file':forbanpathlogfilee})
+cherrypy.config.update({ 'log.screen': False, 'server.socket_port': 12555 , 'server.socket_host': bindhost, 'tools.static.root':forbanshareroot, 'log.access_file':forbanpathlogfile, 'log.error_file':forbanpathlogfilee, 'request.show_tracebacks': False})
 
 forbanpathcherry = { '/css/style.css': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/css/x.css'},
                '/img/forban-small.png': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/img/forban-small.png'}
