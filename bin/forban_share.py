@@ -318,6 +318,8 @@ class Download:
 if __name__ == '__main__':
     
     root = Root()
+    favicon_path = os.path.join(forbanshareroot, "forban", "img", "forban-favicon.png")
+    root.favicon_ico = cherrypy.tools.staticfile.handler(filename=favicon_path)
     root.s = Download()
     cherrypy.quickstart(root, config=forbanpathcherry)
 
