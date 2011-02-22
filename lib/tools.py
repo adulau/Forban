@@ -2,7 +2,7 @@
 #
 # For more information : http://www.foo.be/forban/
 #
-# Copyright (C) 2009-2010 Alexandre Dulaunoy - http://www.foo.be/
+# Copyright (C) 2009-2011 Alexandre Dulaunoy - http://www.foo.be/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -73,7 +73,32 @@ def guesshostname():
     guessedhostname = platform.node()
     return guessedhostname
 
+# Return a list of tuple (filepath, size, mtime) for a directory
+#
+
+def dirtree(rootdir=None):
+    if rootdir==None:
+        return False
+    if not os.path.exists(rootdir):
+        return False
+
+    index = []
+
+    for root, dirs, files in os.walk(rootdir, topdown=True):
+        for name in files:
+            try:
+                filename = os.path.join(root, name)
+                filenamesize = str(os.path.getsize(os.path.join(root,name)))
+                filenamemtime = str(os.path.getmtime(os.path.join(root,name)))
+                index.append((filename,filenamesize,filenamemtime))
+            except:
+                pass
+
+    return index
+
+
 if __name__ == "__main__":
    print convertbytes (1234567)
    print guesshostname()
+   print dirtree("/media")
    # print rename("x","xy")
