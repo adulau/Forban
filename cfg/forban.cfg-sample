@@ -51,3 +51,24 @@ filter =
 # fetch the files.
 
 maxsize = 0
+
+# the opportunistic_fs is looking for a forban directory
+# on the specify directory (usually removal devices) and
+# trying to replicate files from the usual forban share
+# back to those removal devices 
+
+# To keep the operation similar 
+#
+# If the Forban is in shared mode, it will only push files
+# to the removal device.
+# 
+# If the Forban is in opportunistic mode, it will push/fetch files
+# to/from the removal device.
+
+# If the directory is not set, the opportunistic_fs is not
+# started
+ 
+[opportunistic_fs]
+
+directory =
+
