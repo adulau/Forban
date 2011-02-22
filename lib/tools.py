@@ -19,7 +19,7 @@
 
 import os
 import platform
-
+import re
 
 def convertbytes (bytes=None):
 
@@ -96,9 +96,28 @@ def dirtree(rootdir=None):
 
     return index
 
+# Return a list of directories matching a pattern
+#
+
+def finddir(rootdir=None, dirmatch="forban"):
+    if rootdir==None:
+        return False
+    if not os.path.exists(rootdir):
+        return False
+
+    dirfound = []
+
+    for root, dirs, files in os.walk(rootdir, topdown=True):
+        for name in dirs:
+            if re.search(name, dirmatch):
+                if os.path.isdir(os.path.join(root,name)):
+                    dirpath = str(os.path.join(root,name))
+                    dirfound.append(dirpath)
+
+    return dirfound
 
 if __name__ == "__main__":
    print convertbytes (1234567)
    print guesshostname()
-   print dirtree("/media")
+   print finddir("/media")
    # print rename("x","xy")
