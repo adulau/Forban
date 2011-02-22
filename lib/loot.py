@@ -127,7 +127,7 @@ class loot:
         else:
             return False
 
-    def getindexurl (self, uuid, v4only=True):
+    def getindexurl (self, uuid, v4only=False):
         iurl = []
 
         if self.exist(uuid):
