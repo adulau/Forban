@@ -61,7 +61,7 @@ maxsize = 0
 #
 # If the Forban is in shared mode, it will only push files
 # to the removal device.
-# 
+#
 # If the Forban is in opportunistic mode, it will push/fetch files
 # to/from the removal device.
 
@@ -70,9 +70,20 @@ maxsize = 0
 
 [opportunistic_fs]
 
-directory =
+# the directory for removal media
+directory = /media
 
 # only use the device if the Forban directory is present
 # 1=check
 # 0=don't check
 checkforban = 1
+
+# mode of operation
+# in ---> getting files from to the forban share directory
+# out --> sending out files from forban share directory to opportunistic directory
+# both--> sending/getting from/to forban share directory to/from opportunistic directory
+mode = out
+
+# total size limit
+#limit=
+
