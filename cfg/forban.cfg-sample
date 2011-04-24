@@ -1,7 +1,7 @@
 [global]
 #name = adulau shared forban
 #path = /home/adulau/git/forban/
-version = 0.0.28
+version = 0.0.29
 # logging can be INFO (default) or DEBUG
 logging = DEBUG
 loggingsizemax = 1000000
