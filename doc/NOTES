@@ -18,6 +18,8 @@
 * (3) creation of easy to install packages
 ** Pyinstaller usage to build executable from the Python scripts
 * Forban USB key for windows, linux or macos user (Forban on a key) (link:3)
+* Standalone USB key with http://distro.ibiblio.org/tinycorelinux/welcome.html
+  [OPEN-TEST]
 
 == opportunistic ==
 
@@ -47,6 +49,10 @@ devices is two ways or just one way (from or to the device)
 
 == general ==
 
+* publish as DNS records internal IP address to overcome network
+  limitation where the broadcast/multicast is blocked. The format
+  could be something like <uuid>.u.forban.info and with a search
+  engine with name and location. (from a discussion with David Durvaux)
 * publish Forban local index to a remote server
 * anonymous sharing outside the local scope (via Internet)
 * on request download to allow people to request files (via Internet)
