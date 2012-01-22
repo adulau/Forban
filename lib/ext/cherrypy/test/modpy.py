@@ -39,7 +39,7 @@ curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 import re
 import time
 
-from cherrypy.test import test
+from cherrypy.test import helper
 
 
 def read_process(cmd, args=""):
@@ -63,15 +63,15 @@ conf_modpython_gateway = """
 
 ServerName 127.0.0.1
 DocumentRoot "/"
-Listen %s
+Listen %(port)s
 LoadModule python_module modules/mod_python.so
 
 SetHandler python-program
 PythonFixupHandler cherrypy.test.modpy::wsgisetup
-PythonOption testmod %s
+PythonOption testmod %(modulename)s
 PythonHandler modpython_gateway::handler
 PythonOption wsgi.application cherrypy::tree
-PythonOption socket_host %s
+PythonOption socket_host %(host)s
 PythonDebug On
 """
 
@@ -80,35 +80,46 @@ conf_cpmodpy = """
 
 ServerName 127.0.0.1
 DocumentRoot "/"
-Listen %s
+Listen %(port)s
 LoadModule python_module modules/mod_python.so
 
 SetHandler python-program
 PythonFixupHandler cherrypy.test.modpy::cpmodpysetup
 PythonHandler cherrypy._cpmodpy::handler
-PythonOption cherrypy.setup cherrypy.test.%s::setup_server
-PythonOption socket_host %s
+PythonOption cherrypy.setup cherrypy.test.%(modulename)s::setup_server
+PythonOption socket_host %(host)s
 PythonDebug On
 """
 
-def start(testmod, host, port, conf_template):
-    mpconf = CONF_PATH
-    if not os.path.isabs(mpconf):
-        mpconf = os.path.join(curdir, mpconf)
+class ModPythonSupervisor(helper.Supervisor):
     
-    f = open(mpconf, 'wb')
-    try:
-        f.write(conf_template % (port, testmod, host))
-    finally:
-        f.close()
+    using_apache = True
+    using_wsgi = False
+    template = None
     
-    result = read_process(APACHE_PATH, "-k start -f %s" % mpconf)
-    if result:
-        print result
-
-def stop():
-    """Gracefully shutdown a server that is serving forever."""
-    read_process(APACHE_PATH, "-k stop")
+    def __str__(self):
+        return "ModPython Server on %s:%s" % (self.host, self.port)
+    
+    def start(self, modulename):
+        mpconf = CONF_PATH
+        if not os.path.isabs(mpconf):
+            mpconf = os.path.join(curdir, mpconf)
+        
+        f = open(mpconf, 'wb')
+        try:
+            f.write(self.template %
+                    {'port': self.port, 'modulename': modulename,
+                     'host': self.host})
+        finally:
+            f.close()
+        
+        result = read_process(APACHE_PATH, "-k start -f %s" % mpconf)
+        if result:
+            print(result)
+    
+    def stop(self):
+        """Gracefully shutdown a server that is serving forever."""
+        read_process(APACHE_PATH, "-k stop")
 
 
 loaded = False
@@ -149,47 +160,4 @@ def cpmodpysetup(req):
             })
     from mod_python import apache
     return apache.OK
-
-
-class ModPythonTestHarness(test.TestHarness):
-    """TestHarness for ModPython and CherryPy."""
-    
-    use_wsgi = False
-    
-    def _run(self, conf):
-        import cherrypy
-        cherrypy.server.using_apache = True
-        
-        from cherrypy.test import webtest
-        webtest.WebCase.PORT = self.port
-        webtest.WebCase.harness = self
-        webtest.WebCase.scheme = "http"
-        webtest.WebCase.interactive = self.interactive
-        print
-        print "Running tests:", self.server
-        
-        if self.use_wsgi:
-            cherrypy.server.using_wsgi = True
-            conf_template = conf_modpython_gateway
-        else:
-            cherrypy.server.using_wsgi = False
-            conf_template = conf_cpmodpy
-        
-        # mod_python, since it runs in the Apache process, must be
-        # started separately for each test, and then *that* process
-        # must run the setup_server() function for the test.
-        # Then our process can run the actual test.
-        success = True
-        for testmod in self.tests:
-            try:
-                start(testmod, self.host, self.port, conf_template)
-                suite = webtest.ReloadingTestLoader().loadTestsFromName(testmod)
-                result = webtest.TerseTestRunner(verbosity=2).run(suite)
-                success &= result.wasSuccessful()
-            finally:
-                stop()
-        if success:
-            return 0
-        else:
-            return 1
 

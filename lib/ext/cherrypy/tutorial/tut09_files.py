@@ -53,10 +53,13 @@ class FileDemo(object):
     def index(self):
         return """
         <html><body>
+            <h2>Upload a file</h2>
             <form action="upload" method="post" enctype="multipart/form-data">
             filename: <input type="file" name="myFile" /><br />
             <input type="submit" />
             </form>
+            <h2>Download a file</h2>
+            <a href='download'>This one</a>
         </body></html>
         """
     index.exposed = True
@@ -72,8 +75,8 @@ class FileDemo(object):
         
         # Although this just counts the file length, it demonstrates
         # how to read large files in chunks instead of all at once.
-        # CherryPy uses Python's cgi module to read the uploaded file
-        # into a temporary file; myFile.file.read reads from that.
+        # CherryPy reads the uploaded file into a temporary file;
+        # myFile.file.read reads from that.
         size = 0
         while True:
             data = myFile.file.read(8192)
@@ -81,7 +84,7 @@ class FileDemo(object):
                 break
             size += len(data)
         
-        return out % (size, myFile.filename, myFile.type)
+        return out % (size, myFile.filename, myFile.content_type)
     upload.exposed = True
     
     def download(self):
@@ -91,9 +94,14 @@ class FileDemo(object):
     download.exposed = True
 
 
-cherrypy.tree.mount(FileDemo())
+import os.path
+tutconf = os.path.join(os.path.dirname(__file__), 'tutorial.conf')
 
 if __name__ == '__main__':
-    import os.path
-    thisdir = os.path.dirname(__file__)
-    cherrypy.quickstart(config=os.path.join(thisdir, 'tutorial.conf'))
+    # CherryPy always starts with app.root when trying to map request URIs
+    # to objects, so we need to mount a request handler root. A request
+    # to '/' will be mapped to HelloWorld().index().
+    cherrypy.quickstart(FileDemo(), config=tutconf)
+else:
+    # This branch is for the test suite; you can ignore it.
+    cherrypy.tree.mount(FileDemo(), config=tutconf)

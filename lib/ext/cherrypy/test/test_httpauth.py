@@ -1,67 +1,64 @@
-from cherrypy.test import test
-test.prefer_parent_path()
-
-import md5, sha
-
 import cherrypy
+from cherrypy._cpcompat import md5, sha, ntob
 from cherrypy.lib import httpauth
-
-def setup_server():
-    class Root:
-        def index(self):
-            return "This is public."
-        index.exposed = True
-
-    class DigestProtected:
-        def index(self):
-            return "Hello %s, you've been authorized." % cherrypy.request.login
-        index.exposed = True
-
-    class BasicProtected:
-        def index(self):
-            return "Hello %s, you've been authorized." % cherrypy.request.login
-        index.exposed = True
-
-    class BasicProtected2:
-        def index(self):
-            return "Hello %s, you've been authorized." % cherrypy.request.login
-        index.exposed = True
-
-    def fetch_users():
-        return {'test': 'test'}
-
-    def sha_password_encrypter(password):
-        return sha.new(password).hexdigest()
-    
-    def fetch_password(username):
-        return sha.new('test').hexdigest()
-
-    conf = {'/digest': {'tools.digest_auth.on': True,
-                        'tools.digest_auth.realm': 'localhost',
-                        'tools.digest_auth.users': fetch_users},
-            '/basic': {'tools.basic_auth.on': True,
-                       'tools.basic_auth.realm': 'localhost',
-                       'tools.basic_auth.users': {'test': md5.new('test').hexdigest()}},
-            '/basic2': {'tools.basic_auth.on': True,
-                        'tools.basic_auth.realm': 'localhost',
-                        'tools.basic_auth.users': fetch_password,
-                        'tools.basic_auth.encrypt': sha_password_encrypter}}
-            
-    root = Root()
-    root.digest = DigestProtected()
-    root.basic = BasicProtected()
-    root.basic2 = BasicProtected2()
-    cherrypy.tree.mount(root, config=conf)
-    cherrypy.config.update({'environment': 'test_suite'})
 
 from cherrypy.test import helper
 
 class HTTPAuthTest(helper.CPWebCase):
 
+    def setup_server():
+        class Root:
+            def index(self):
+                return "This is public."
+            index.exposed = True
+
+        class DigestProtected:
+            def index(self):
+                return "Hello %s, you've been authorized." % cherrypy.request.login
+            index.exposed = True
+
+        class BasicProtected:
+            def index(self):
+                return "Hello %s, you've been authorized." % cherrypy.request.login
+            index.exposed = True
+
+        class BasicProtected2:
+            def index(self):
+                return "Hello %s, you've been authorized." % cherrypy.request.login
+            index.exposed = True
+
+        def fetch_users():
+            return {'test': 'test'}
+
+        def sha_password_encrypter(password):
+            return sha(ntob(password)).hexdigest()
+        
+        def fetch_password(username):
+            return sha(ntob('test')).hexdigest()
+
+        conf = {'/digest': {'tools.digest_auth.on': True,
+                            'tools.digest_auth.realm': 'localhost',
+                            'tools.digest_auth.users': fetch_users},
+                '/basic': {'tools.basic_auth.on': True,
+                           'tools.basic_auth.realm': 'localhost',
+                           'tools.basic_auth.users': {'test': md5(ntob('test')).hexdigest()}},
+                '/basic2': {'tools.basic_auth.on': True,
+                            'tools.basic_auth.realm': 'localhost',
+                            'tools.basic_auth.users': fetch_password,
+                            'tools.basic_auth.encrypt': sha_password_encrypter}}
+                
+        root = Root()
+        root.digest = DigestProtected()
+        root.basic = BasicProtected()
+        root.basic2 = BasicProtected2()
+        cherrypy.tree.mount(root, config=conf)
+    setup_server = staticmethod(setup_server)
+
+
     def testPublic(self):
         self.getPage("/")
         self.assertStatus('200 OK')
-        self.assertHeader('Content-Type', 'text/html')
+        self.assertHeader('Content-Type', 'text/html;charset=utf-8')
         self.assertBody('This is public.')
 
     def testBasic(self):
@@ -151,7 +148,4 @@ class HTTPAuthTest(helper.CPWebCase):
         self.getPage('/digest/', [('Authorization', auth)])
         self.assertStatus('200 OK')
         self.assertBody("Hello test, you've been authorized.")
-            
-if __name__ == "__main__":
-    setup_server()
-    helper.testmain()
+

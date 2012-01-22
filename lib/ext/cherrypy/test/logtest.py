@@ -3,6 +3,9 @@
 import sys
 import time
 
+import cherrypy
+from cherrypy._cpcompat import basestring, ntob, unicodestr
+
 
 try:
     # On Windows, msvcrt.getch reads a single char without output.
@@ -38,37 +41,39 @@ class LogCase(object):
     
     logfile = None
     lastmarker = None
-    markerPrefix = "test suite marker: "
+    markerPrefix = ntob("test suite marker: ")
     
     def _handleLogError(self, msg, data, marker, pattern):
-        print
-        print "    ERROR:", msg
+        print("")
+        print("    ERROR: %s" % msg)
         
         if not self.interactive:
             raise self.failureException(msg)
         
         p = "    Show: [L]og [M]arker [P]attern; [I]gnore, [R]aise, or sys.e[X]it >> "
-        print p,
+        sys.stdout.write(p + ' ')
+        # ARGH
+        sys.stdout.flush()
         while True:
             i = getchar().upper()
             if i not in "MPLIRX":
                 continue
-            print i.upper()  # Also prints new line
+            print(i.upper())  # Also prints new line
             if i == "L":
                 for x, line in enumerate(data):
                     if (x + 1) % self.console_height == 0:
                         # The \r and comma should make the next line overwrite
-                        print "<-- More -->\r",
+                        sys.stdout.write("<-- More -->\r ")
                         m = getchar().lower()
                         # Erase our "More" prompt
-                        print "            \r",
+                        sys.stdout.write("            \r ")
                         if m == "q":
                             break
-                    print line.rstrip()
+                    print(line.rstrip())
             elif i == "M":
-                print repr(marker or self.lastmarker)
+                print(repr(marker or self.lastmarker))
             elif i == "P":
-                print repr(pattern)
+                print(repr(pattern))
             elif i == "I":
                 # return without raising the normal exception
                 return
@@ -76,7 +81,7 @@ class LogCase(object):
                 raise self.failureException(msg)
             elif i == "X":
                 self.exit()
-            print p,
+            sys.stdout.write(p + ' ')
     
     def exit(self):
         sys.exit()
@@ -91,7 +96,7 @@ class LogCase(object):
             key = str(time.time())
         self.lastmarker = key
         
-        open(self.logfile, 'ab+').write("%s%s\n" % (self.markerPrefix, key))
+        open(self.logfile, 'ab+').write(ntob("%s%s\n" % (self.markerPrefix, key),"utf-8"))
     
     def _read_marked_region(self, marker=None):
         """Return lines from self.logfile in the marked region.
@@ -107,6 +112,8 @@ class LogCase(object):
         if marker is None:
             return open(logfile, 'rb').readlines()
         
+        if isinstance(marker, unicodestr):
+            marker = marker.encode('utf-8')
         data = []
         in_region = False
         for line in open(logfile, 'rb'):
@@ -158,9 +165,11 @@ class LogCase(object):
             # Single arg. Use __getitem__ and allow lines to be str or list.
             if isinstance(lines, (tuple, list)):
                 lines = lines[0]
+            if isinstance(lines, unicodestr):
+                lines = lines.encode('utf-8')
             if lines not in data[sliceargs]:
                 msg = "%r not found on log line %r" % (lines, sliceargs)
-                self._handleLogError(msg, [data[sliceargs]], marker, lines)
+                self._handleLogError(msg, [data[sliceargs],"--EXTRA CONTEXT--"] + data[sliceargs+1:sliceargs+6], marker, lines)
         else:
             # Multiple args. Use __getslice__ and require lines to be list.
             if isinstance(lines, tuple):
@@ -171,6 +180,8 @@ class LogCase(object):
             
             start, stop = sliceargs
             for line, logline in zip(lines, data[start:stop]):
+                if isinstance(line, unicodestr):
+                    line = line.encode('utf-8')
                 if line not in logline:
                     msg = "%r not found in log" % line
                     self._handleLogError(msg, data[start:stop], marker, line)

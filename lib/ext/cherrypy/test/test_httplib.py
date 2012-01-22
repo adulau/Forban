@@ -1,32 +1,29 @@
-"""Tests for cherrypy/lib/http.py."""
-
-from cherrypy.test import test
-test.prefer_parent_path()
+"""Tests for cherrypy/lib/httputil.py."""
 
 import unittest
-from cherrypy.lib import http
+from cherrypy.lib import httputil
 
 
 class UtilityTests(unittest.TestCase):
     
     def test_urljoin(self):
         # Test all slash+atom combinations for SCRIPT_NAME and PATH_INFO
-        self.assertEqual(http.urljoin("/sn/", "/pi/"), "/sn/pi/")
-        self.assertEqual(http.urljoin("/sn/", "/pi"), "/sn/pi")
-        self.assertEqual(http.urljoin("/sn/", "/"), "/sn/")
-        self.assertEqual(http.urljoin("/sn/", ""), "/sn/")
-        self.assertEqual(http.urljoin("/sn", "/pi/"), "/sn/pi/")
-        self.assertEqual(http.urljoin("/sn", "/pi"), "/sn/pi")
-        self.assertEqual(http.urljoin("/sn", "/"), "/sn/")
-        self.assertEqual(http.urljoin("/sn", ""), "/sn")
-        self.assertEqual(http.urljoin("/", "/pi/"), "/pi/")
-        self.assertEqual(http.urljoin("/", "/pi"), "/pi")
-        self.assertEqual(http.urljoin("/", "/"), "/")
-        self.assertEqual(http.urljoin("/", ""), "/")
-        self.assertEqual(http.urljoin("", "/pi/"), "/pi/")
-        self.assertEqual(http.urljoin("", "/pi"), "/pi")
-        self.assertEqual(http.urljoin("", "/"), "/")
-        self.assertEqual(http.urljoin("", ""), "/")
+        self.assertEqual(httputil.urljoin("/sn/", "/pi/"), "/sn/pi/")
+        self.assertEqual(httputil.urljoin("/sn/", "/pi"), "/sn/pi")
+        self.assertEqual(httputil.urljoin("/sn/", "/"), "/sn/")
+        self.assertEqual(httputil.urljoin("/sn/", ""), "/sn/")
+        self.assertEqual(httputil.urljoin("/sn", "/pi/"), "/sn/pi/")
+        self.assertEqual(httputil.urljoin("/sn", "/pi"), "/sn/pi")
+        self.assertEqual(httputil.urljoin("/sn", "/"), "/sn/")
+        self.assertEqual(httputil.urljoin("/sn", ""), "/sn")
+        self.assertEqual(httputil.urljoin("/", "/pi/"), "/pi/")
+        self.assertEqual(httputil.urljoin("/", "/pi"), "/pi")
+        self.assertEqual(httputil.urljoin("/", "/"), "/")
+        self.assertEqual(httputil.urljoin("/", ""), "/")
+        self.assertEqual(httputil.urljoin("", "/pi/"), "/pi/")
+        self.assertEqual(httputil.urljoin("", "/pi"), "/pi")
+        self.assertEqual(httputil.urljoin("", "/"), "/")
+        self.assertEqual(httputil.urljoin("", ""), "/")
 
 if __name__ == '__main__':
     unittest.main()

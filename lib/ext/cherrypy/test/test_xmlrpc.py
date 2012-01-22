@@ -1,6 +1,47 @@
-from cherrypy.test import test
-test.prefer_parent_path()
-import xmlrpclib
+import sys
+from cherrypy._cpcompat import py3k
+
+try:
+    from xmlrpclib import DateTime, Fault, ProtocolError, ServerProxy, SafeTransport
+except ImportError:
+    from xmlrpc.client import DateTime, Fault, ProtocolError, ServerProxy, SafeTransport
+
+if py3k:
+    HTTPSTransport = SafeTransport
+
+    # Python 3.0's SafeTransport still mistakenly checks for socket.ssl
+    import socket
+    if not hasattr(socket, "ssl"):
+        socket.ssl = True
+else:
+    class HTTPSTransport(SafeTransport):
+        """Subclass of SafeTransport to fix sock.recv errors (by using file)."""
+        
+        def request(self, host, handler, request_body, verbose=0):
+            # issue XML-RPC request
+            h = self.make_connection(host)
+            if verbose:
+                h.set_debuglevel(1)
+            
+            self.send_request(h, handler, request_body)
+            self.send_host(h, host)
+            self.send_user_agent(h)
+            self.send_content(h, request_body)
+            
+            errcode, errmsg, headers = h.getreply()
+            if errcode != 200:
+                raise ProtocolError(host + handler, errcode, errmsg, headers)
+            
+            self.verbose = verbose
+            
+            # Here's where we differ from the superclass. It says:
+            # try:
+            #     sock = h._conn.sock
+            # except AttributeError:
+            #     sock = None
+            # return self._parse_response(h.getfile(), sock)
+            
+            return self.parse_response(h.getfile())
 
 import cherrypy
 
@@ -49,7 +90,7 @@ def setup_server():
         return_float.exposed = True
 
         def return_datetime(self):
-            return xmlrpclib.DateTime((2003, 10, 7, 8, 1, 0, 1, 280, -1))
+            return DateTime((2003, 10, 7, 8, 1, 0, 1, 280, -1))
         return_datetime.exposed = True
 
         def return_boolean(self):
@@ -61,7 +102,7 @@ def setup_server():
         test_argument_passing.exposed = True
 
         def test_returning_Fault(self):
-            return xmlrpclib.Fault(1, "custom Fault response")
+            return Fault(1, "custom Fault response")
         test_returning_Fault.exposed = True
 
     root = Root()
@@ -70,58 +111,21 @@ def setup_server():
         'request.dispatch': cherrypy.dispatch.XMLRPCDispatcher(),
         'tools.xmlrpc.allow_none': 0,
         }})
-    cherrypy.config.update({'environment': 'test_suite'})
-
-
-class HTTPSTransport(xmlrpclib.SafeTransport):
-    """Subclass of SafeTransport to fix sock.recv errors (by using file)."""
-    
-    def request(self, host, handler, request_body, verbose=0):
-        # issue XML-RPC request
-        h = self.make_connection(host)
-        if verbose:
-            h.set_debuglevel(1)
-        
-        self.send_request(h, handler, request_body)
-        self.send_host(h, host)
-        self.send_user_agent(h)
-        self.send_content(h, request_body)
-        
-        errcode, errmsg, headers = h.getreply()
-        if errcode != 200:
-            raise xmlrpclib.ProtocolError(host + handler, errcode, errmsg,
-                                          headers)
-        
-        self.verbose = verbose
-        
-        # Here's where we differ from the superclass. It says:
-        # try:
-        #     sock = h._conn.sock
-        # except AttributeError:
-        #     sock = None
-        # return self._parse_response(h.getfile(), sock)
-        
-        return self.parse_response(h.getfile())
 
 
 from cherrypy.test import helper
 
 class XmlRpcTest(helper.CPWebCase):
+    setup_server = staticmethod(setup_server)
     def testXmlRpc(self):
         
-        # load the appropriate xmlrpc proxy
-        scheme = "http"
-        try:
-            scheme = self.harness.scheme
-        except AttributeError:
-            pass
-        
+        scheme = self.scheme
         if scheme == "https":
             url = 'https://%s:%s/xmlrpc/' % (self.interface(), self.PORT)
-            proxy = xmlrpclib.ServerProxy(url, transport=HTTPSTransport())
+            proxy = ServerProxy(url, transport=HTTPSTransport())
         else:
             url = 'http://%s:%s/xmlrpc/' % (self.interface(), self.PORT)
-            proxy = xmlrpclib.ServerProxy(url)
+            proxy = ServerProxy(url)
         
         # begin the tests ...
         self.getPage("/xmlrpc/foo")
@@ -137,15 +141,16 @@ class XmlRpcTest(helper.CPWebCase):
         self.assertEqual(proxy.return_int(), 42)
         self.assertEqual(proxy.return_float(), 3.14)
         self.assertEqual(proxy.return_datetime(),
-                         xmlrpclib.DateTime((2003, 10, 7, 8, 1, 0, 1, 280, -1)))
+                         DateTime((2003, 10, 7, 8, 1, 0, 1, 280, -1)))
         self.assertEqual(proxy.return_boolean(), True)
         self.assertEqual(proxy.test_argument_passing(22), 22 * 2)
         
         # Test an error in the page handler (should raise an xmlrpclib.Fault)
         try:
             proxy.test_argument_passing({})
-        except Exception, x:
-            self.assertEqual(x.__class__, xmlrpclib.Fault)
+        except Exception:
+            x = sys.exc_info()[1]
+            self.assertEqual(x.__class__, Fault)
             self.assertEqual(x.faultString, ("unsupported operand type(s) "
                                              "for *: 'dict' and 'int'"))
         else:
@@ -155,8 +160,9 @@ class XmlRpcTest(helper.CPWebCase):
         # if a method is not found, an xmlrpclib.Fault should be raised
         try:
             proxy.non_method()
-        except Exception, x:
-            self.assertEqual(x.__class__, xmlrpclib.Fault)
+        except Exception:
+            x = sys.exc_info()[1]
+            self.assertEqual(x.__class__, Fault)
             self.assertEqual(x.faultString, 'method "non_method" is not supported')
         else:
             self.fail("Expected xmlrpclib.Fault")
@@ -164,14 +170,10 @@ class XmlRpcTest(helper.CPWebCase):
         # Test returning a Fault from the page handler.
         try:
             proxy.test_returning_Fault()
-        except Exception, x:
-            self.assertEqual(x.__class__, xmlrpclib.Fault)
+        except Exception:
+            x = sys.exc_info()[1]
+            self.assertEqual(x.__class__, Fault)
             self.assertEqual(x.faultString, ("custom Fault response"))
         else:
             self.fail("Expected xmlrpclib.Fault")
-
-
-if __name__ == '__main__':
-    setup_server()
-    helper.testmain()
 

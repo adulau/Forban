@@ -1,7 +1,3 @@
-from cherrypy.test import test
-test.prefer_parent_path()
-
-import httplib
 import os
 localDir = os.path.dirname(__file__)
 import sys
@@ -9,7 +5,9 @@ import threading
 import time
 
 import cherrypy
+from cherrypy._cpcompat import copykeys, HTTPConnection, HTTPSConnection
 from cherrypy.lib import sessions
+from cherrypy.lib.httputil import response_codes
 
 def http_methods_allowed(methods=['GET', 'HEAD']):
     method = cherrypy.request.method.upper()
@@ -35,6 +33,11 @@ def setup_server():
             cherrypy.session.cache.clear()
         clear.exposed = True
         
+        def data(self):
+            cherrypy.session['aha'] = 'foo'
+            return repr(cherrypy.session._data)
+        data.exposed = True
+        
         def testGen(self):
             counter = cherrypy.session.get('counter', 0) + 1
             cherrypy.session['counter'] = counter
@@ -51,6 +54,11 @@ def setup_server():
             self.__class__._cp_config.update({'tools.sessions.storage_type': newtype})
             if hasattr(cherrypy, "session"):
                 del cherrypy.session
+            cls = getattr(sessions, newtype.title() + 'Session')
+            if cls.clean_thread:
+                cls.clean_thread.stop()
+                cls.clean_thread.unsubscribe()
+                del cls.clean_thread
         setsessiontype.exposed = True
         setsessiontype._cp_config = {'tools.sessions.on': False}
         
@@ -99,14 +107,24 @@ def setup_server():
         def length(self):
             return str(len(cherrypy.session))
         length.exposed = True
+        
+        def session_cookie(self):
+            # Must load() to start the clean thread.
+            cherrypy.session.load()
+            return cherrypy.session.id
+        session_cookie.exposed = True
+        session_cookie._cp_config = {
+            'tools.sessions.path': '/session_cookie',
+            'tools.sessions.name': 'temp',
+            'tools.sessions.persistent': False}
     
     cherrypy.tree.mount(Root())
-    cherrypy.config.update({'environment': 'test_suite'})
 
 
 from cherrypy.test import helper
 
 class SessionTest(helper.CPWebCase):
+    setup_server = staticmethod(setup_server)
     
     def tearDown(self):
         # Clean up sessions.
@@ -118,14 +136,29 @@ class SessionTest(helper.CPWebCase):
         self.getPage('/setsessiontype/ram')
         self.getPage('/clear')
         
+        # Test that a normal request gets the same id in the cookies.
+        # Note: this wouldn't work if /data didn't load the session.
+        self.getPage('/data')
+        self.assertBody("{'aha': 'foo'}")
+        c = self.cookies[0]
+        self.getPage('/data', self.cookies)
+        self.assertEqual(self.cookies[0], c)
+        
         self.getPage('/testStr')
         self.assertBody('1')
+        cookie_parts = dict([p.strip().split('=')
+                             for p in self.cookies[0][1].split(";")])
+        # Assert there is an 'expires' param
+        self.assertEqual(set(cookie_parts.keys()),
+                         set(['session_id', 'expires', 'Path']))
         self.getPage('/testGen', self.cookies)
         self.assertBody('2')
         self.getPage('/testStr', self.cookies)
         self.assertBody('3')
+        self.getPage('/data', self.cookies)
+        self.assertBody("{'aha': 'foo', 'counter': 3}")
         self.getPage('/length', self.cookies)
-        self.assertBody('1')
+        self.assertBody('2')
         self.getPage('/delkey?key=counter', self.cookies)
         self.assertStatus(200)
         
@@ -193,10 +226,10 @@ class SessionTest(helper.CPWebCase):
         
         def request(index):
             if self.scheme == 'https':
-                c = httplib.HTTPSConnection('%s:%s' % (self.interface(), self.PORT))
+                c = HTTPSConnection('%s:%s' % (self.interface(), self.PORT))
             else:
-                c = httplib.HTTPConnection('%s:%s' % (self.interface(), self.PORT))
-            for i in xrange(request_count):
+                c = HTTPConnection('%s:%s' % (self.interface(), self.PORT))
+            for i in range(request_count):
                 c.putrequest('GET', '/')
                 for k, v in cookies:
                     c.putheader(k, v)
@@ -208,12 +241,12 @@ class SessionTest(helper.CPWebCase):
                 else:
                     data_dict[index] = max(data_dict[index], int(body))
                 # Uncomment the following line to prove threads overlap.
-##                print index,
+##                sys.stdout.write("%d " % index)
         
         # Start <request_count> requests from each of
         # <client_thread_count> concurrent clients
         ts = []
-        for c in xrange(client_thread_count):
+        for c in range(client_thread_count):
             data_dict[c] = 0
             t = threading.Thread(target=request, args=(c,))
             ts.append(t)
@@ -226,7 +259,7 @@ class SessionTest(helper.CPWebCase):
         expected = 1 + (client_thread_count * request_count)
         
         for e in errors:
-            print e
+            print(e)
         self.assertEqual(hitcount, expected)
     
     def test_3_Redirect(self):
@@ -254,7 +287,7 @@ class SessionTest(helper.CPWebCase):
         # before_finalize (save) and on_end (close). So the session
         # code has to survive calling save/close without init.
         self.getPage('/restricted', self.cookies, method='POST')
-        self.assertErrorPage(405, "Specified method is invalid for this server.")
+        self.assertErrorPage(405, response_codes[405][1])
     
     def test_6_regenerate(self):
         self.getPage('/testStr')
@@ -275,6 +308,45 @@ class SessionTest(helper.CPWebCase):
         id2 = self.cookies[0][1].split(";", 1)[0].split("=", 1)[1]
         self.assertNotEqual(id1, id2)
         self.assertNotEqual(id2, 'maliciousid')
+    
+    def test_7_session_cookies(self):
+        self.getPage('/setsessiontype/ram')
+        self.getPage('/clear')
+        self.getPage('/session_cookie')
+        # grab the cookie ID
+        cookie_parts = dict([p.strip().split('=') for p in self.cookies[0][1].split(";")])
+        # Assert there is no 'expires' param
+        self.assertEqual(set(cookie_parts.keys()), set(['temp', 'Path']))
+        id1 = cookie_parts['temp']
+        self.assertEqual(copykeys(sessions.RamSession.cache), [id1])
+        
+        # Send another request in the same "browser session".
+        self.getPage('/session_cookie', self.cookies)
+        cookie_parts = dict([p.strip().split('=') for p in self.cookies[0][1].split(";")])
+        # Assert there is no 'expires' param
+        self.assertEqual(set(cookie_parts.keys()), set(['temp', 'Path']))
+        self.assertBody(id1)
+        self.assertEqual(copykeys(sessions.RamSession.cache), [id1])
+        
+        # Simulate a browser close by just not sending the cookies
+        self.getPage('/session_cookie')
+        # grab the cookie ID
+        cookie_parts = dict([p.strip().split('=') for p in self.cookies[0][1].split(";")])
+        # Assert there is no 'expires' param
+        self.assertEqual(set(cookie_parts.keys()), set(['temp', 'Path']))
+        # Assert a new id has been generated...
+        id2 = cookie_parts['temp']
+        self.assertNotEqual(id1, id2)
+        self.assertEqual(set(sessions.RamSession.cache.keys()), set([id1, id2]))
+        
+        # Wait for the session.timeout on both sessions
+        time.sleep(2.5)
+        cache = copykeys(sessions.RamSession.cache)
+        if cache:
+            if cache == [id2]:
+                self.fail("The second session did not time out.")
+            else:
+                self.fail("Unknown session id in cache: %r", cache)
 
 
 import socket
@@ -300,11 +372,13 @@ try:
         break
 except (ImportError, socket.error):
     class MemcachedSessionTest(helper.CPWebCase):
+        setup_server = staticmethod(setup_server)
         
         def test(self):
-            print "skipped",
+            return self.skip("memcached not reachable ")
 else:
     class MemcachedSessionTest(helper.CPWebCase):
+        setup_server = staticmethod(setup_server)
         
         def test_0_Session(self):
             self.getPage('/setsessiontype/memcached')
@@ -346,10 +420,10 @@ else:
             data_dict = {}
             
             def request(index):
-                for i in xrange(request_count):
+                for i in range(request_count):
                     self.getPage("/", cookies)
                     # Uncomment the following line to prove threads overlap.
-##                    print index,
+##                    sys.stdout.write("%d " % index)
                 if not self.body.isdigit():
                     self.fail(self.body)
                 data_dict[index] = v = int(self.body)
@@ -357,7 +431,7 @@ else:
             # Start <request_count> concurrent requests from
             # each of <client_thread_count> clients
             ts = []
-            for c in xrange(client_thread_count):
+            for c in range(client_thread_count):
                 data_dict[c] = 0
                 t = threading.Thread(target=request, args=(c,))
                 ts.append(t)
@@ -386,10 +460,5 @@ else:
             # before_finalize (save) and on_end (close). So the session
             # code has to survive calling save/close without init.
             self.getPage('/restricted', self.cookies, method='POST')
-            self.assertErrorPage(405, "Specified method is invalid for this server.")
+            self.assertErrorPage(405, response_codes[405][1])
 
-
-
-if __name__ == "__main__":
-    setup_server()
-    helper.testmain()

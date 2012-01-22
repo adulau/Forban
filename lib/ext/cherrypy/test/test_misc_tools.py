@@ -1,6 +1,3 @@
-from cherrypy.test import test
-test.prefer_parent_path()
-
 import os
 localDir = os.path.dirname(__file__)
 logfile = os.path.join(localDir, "test_misc_tools.log")
@@ -60,38 +57,61 @@ def setup_server():
         accept.exposed = True
         reject = accept
     
+    class AutoVary:
+        def index(self):
+            # Read a header directly with 'get'
+            ae = cherrypy.request.headers.get('Accept-Encoding')
+            # Read a header directly with '__getitem__'
+            cl = cherrypy.request.headers['Host']
+            # Read a header directly with '__contains__'
+            hasif = 'If-Modified-Since' in cherrypy.request.headers
+            # Read a header directly with 'has_key'
+            if hasattr(dict, 'has_key'):
+                # Python 2
+                has = cherrypy.request.headers.has_key('Range')
+            else:
+                # Python 3
+                has = 'Range' in cherrypy.request.headers
+            # Call a lib function
+            mtype = tools.accept.callable(['text/html', 'text/plain'])
+            return "Hello, world!"
+        index.exposed = True
+    
     conf = {'/referer': {'tools.referer.on': True,
                          'tools.referer.pattern': r'http://[^/]*example\.com',
                          },
             '/referer/reject': {'tools.referer.accept': False,
                                 'tools.referer.accept_missing': True,
                                 },
+            '/autovary': {'tools.autovary.on': True},
             }
     
     root = Root()
     root.referer = Referer()
     root.accept = Accept()
+    root.autovary = AutoVary()
     cherrypy.tree.mount(root, config=conf)
-    cherrypy.config.update({'environment': 'test_suite',
-                            'log.error_file': logfile})
+    cherrypy.config.update({'log.error_file': logfile})
 
 
 from cherrypy.test import helper
 
 class ResponseHeadersTest(helper.CPWebCase):
+    setup_server = staticmethod(setup_server)
 
     def testResponseHeadersDecorator(self):
         self.getPage('/')
         self.assertHeader("Content-Language", "en-GB")
-        self.assertHeader('Content-Type', 'text/plain')
+        self.assertHeader('Content-Type', 'text/plain;charset=utf-8')
 
     def testResponseHeaders(self):
         self.getPage('/other')
         self.assertHeader("Content-Language", "fr")
-        self.assertHeader('Content-Type', 'text/plain')
+        self.assertHeader('Content-Type', 'text/plain;charset=utf-8')
 
 
 class RefererTest(helper.CPWebCase):
+    setup_server = staticmethod(setup_server)
     
     def testReferer(self):
         self.getPage('/referer/accept')
@@ -113,6 +133,7 @@ class RefererTest(helper.CPWebCase):
 
 
 class AcceptTest(helper.CPWebCase):
+    setup_server = staticmethod(setup_server)
     
     def test_Accept_Tool(self):
         # Test with no header provided
@@ -176,7 +197,11 @@ class AcceptTest(helper.CPWebCase):
                              "text/html, text/plain.")
 
 
+class AutoVaryTest(helper.CPWebCase):
+    setup_server = staticmethod(setup_server)
 
-if __name__ == "__main__":
-    setup_server()
-    helper.testmain()
+    def testAutoVary(self):
+        self.getPage('/autovary/')
+        self.assertHeader(
+            "Vary", 'Accept, Accept-Charset, Accept-Encoding, Host, If-Modified-Since, Range')
+
