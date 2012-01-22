@@ -26,7 +26,7 @@ def encode( istring ):
 
 def decode( istring ):
     istring = istring.replace("!","=")
-    b64s = base64.urlsafe_b64decode(istring)
+    b64s = base64.urlsafe_b64decode(istring.encode("utf-8"))
     return b64s
 
 if __name__ == "__main__":
