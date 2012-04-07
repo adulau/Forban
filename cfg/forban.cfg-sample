@@ -24,6 +24,14 @@ mode = opportunistic
 
 announceinterval = 15
 
+# index rebuild factor
+# is the waiting factor (multiply) compared to the announce interval
+# for rebuilding the index.
+# By default, the value is set to one. Meaning the rebuild
+# will take place at the same time of the announceinterval.
+
+# indexrebuild = 1
+
 
 [forban]
 # default share directory is globalpath+/var/share

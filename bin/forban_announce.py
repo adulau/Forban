@@ -2,7 +2,7 @@
 #
 # For more information : http://www.foo.be/forban/
 #
-# Copyright (C) 2009-2010 Alexandre Dulaunoy - http://www.foo.be/
+# Copyright (C) 2009-2012 Alexandre Dulaunoy - http://www.foo.be/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -39,9 +39,14 @@ except ConfigParser.Error:
     forbanpath = os.path.join(guesspath())
 
 try:
-    announceinterval = config.get('global','announceinterval')
+    announceinterval = config.getint('global','announceinterval')
 except ConfigParser.Error:
     announceinterval = 10
+
+try:
+    indexrebuild = config.getint('global','indexrebuild')
+except ConfigParser.Error:
+    indexrebuild = 1
 
 try:
     forbanshareroot = config.get('forban','share')
@@ -95,11 +100,17 @@ if __name__ == "__main__":
 
     forbanindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
     flogger.info("forban_announce starting...")
+
+intervalcounter = 1
 while 1:
-    # rebuild forban index
-    forbanindex.build()
+    # rebuild forban index (at startup always rebuild)
+    if intervalcounter <= 1:
+        forbanindex.build()
+        intervalcounter = indexrebuild
+        flogger.debug("Index rebuilt")
     msg.gen()
     msg.auth(value=forbanindex.gethmac())
     flogger.debug(msg.get())
     msg.send()
+    intervalcounter = intervalcounter - 1
     time.sleep(announceinterval)
