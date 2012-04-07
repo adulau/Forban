@@ -30,7 +30,7 @@ announceinterval = 15
 # By default, the value is set to one. Meaning the rebuild
 # will take place at the same time of the announceinterval.
 
-# indexrebuild = 1
+#indexrebuild = 1
 
 
 [forban]
