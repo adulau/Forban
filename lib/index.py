@@ -2,7 +2,7 @@
 #
 # For more information : http://www.foo.be/forban/
 #
-# Copyright (C) 2009-2010 Alexandre Dulaunoy - http://www.foo.be/
+# Copyright (C) 2009-2012 Alexandre Dulaunoy - http://www.foo.be/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -45,7 +45,7 @@ class manage:
 
     def build (self):
         self.index = ""
-        for root, dirs, files in os.walk(self.sharedir, topdown=True):
+        for root, dirs, files in os.walk(self.sharedir, topdown=True, followlinks=True):
             for name in files:
                 try:
                     self.index = self.index + os.path.join(root.split(self.sharedir)[1],name)+","+str(os.path.getsize(os.path.join(root,name)))+"\n"
