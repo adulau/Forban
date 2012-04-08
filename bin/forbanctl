@@ -3,7 +3,7 @@
 #
 # For more information : http://www.foo.be/forban/
 #
-# Copyright (C) 2009-2010 Alexandre Dulaunoy - http://www.foo.be/
+# Copyright (C) 2009-2012 Alexandre Dulaunoy - http://www.foo.be/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -86,12 +86,20 @@ def pidof(processname = None):
         f = open (pidpath)
         pid = f.read()
         f.close()
-        return pid
+        return int(pid)
     else:
         return False
 
+def processexists(pid):
+    # Use the canonical POSIX way to check an existing process
+    try: return os.kill(pid,0)
+    except OSError,e:
+        if e.errno == 3: return True # process is not existing
+        elif e.errnor == 1: return False # cannot send signal to process
+        else: raise
+
 def usage():
-    print "forbanctl (start|stop|restart)"
+    print "forbanctl (start|stop|restart|cleanup)"
     exit (1)
 
 if len(sys.argv) < 2:
@@ -122,6 +130,25 @@ def Start():
 
     return retval
 
+def CleanUp():
+    print "Cleaning up..."
+    retval=True
+    for service in forban_services:
+        pid = pidof(processname=service)
+        print pid
+        if processexists(pid):
+            print service+" DO NOT exist - delete pid"
+            rmpid(processname=service)
+        elif pid:
+            print service+" DO exist - kill and delete pid"
+            os.kill(pid, signal.SIGKILL)
+            rmpid(processname=service)
+        else:
+            print "Not PID"
+        retval=False
+
+    return retval
+
 def Stop():
     print "Stopping Forban services..."
     retval=True
@@ -147,6 +174,8 @@ def Stop():
 
 if sys.argv[1] == "start":
     Start()
+elif sys.argv[1] == "cleanup":
+    CleanUp()
 elif sys.argv[1] == "stop":
     Stop()
 elif sys.argv[1] == "restart":
