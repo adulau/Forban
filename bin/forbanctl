@@ -90,12 +90,6 @@ def pidof(processname = None):
     else:
         return False
 
-def nppidof(processname = None):
-
-    if platform.system() is not "Windows":
-        #os.system("ps ax | grep forban_ | grep python | cut -d\" \" -f1 | sed -e '$!N;N;N; s/\\n/,/g'")
-        return True
-
 def usage():
     print "forbanctl (start|stop|restart)"
     exit (1)
