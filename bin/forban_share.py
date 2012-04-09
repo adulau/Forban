@@ -280,8 +280,9 @@ class Root:
         html += htmlnav
         html += "<table>"
         html += "<tr><td>Filename</td><td>Fetch</td></tr>"
-
-        for fileinindex in mindex.search("^((?!forban).)*$", uuid):
+        tempindex = mindex.search("^((?!forban).)*$", uuid)
+        tempindex.sort(key=string.lower)
+        for fileinindex in tempindex:
             filei = fileinindex.rsplit(",",1)[0]
             if re.search('/\.',filei):
                 continue
