@@ -101,7 +101,8 @@ def processexists(pid):
 
 def deleteloots():
     lootpath = os.path.join(forbanpath,"var","loot")
-
+    if not os.path.exists(lootpath):
+        return False
     for dirs in os.listdir(lootpath):
         lootdir = os.path.join(lootpath,dirs)
         print lootdir+" removed..."
