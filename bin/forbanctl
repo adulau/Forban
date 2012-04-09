@@ -20,6 +20,7 @@
 
 import sys
 import os
+import shutil
 import platform
 import signal
 import subprocess
@@ -98,8 +99,16 @@ def processexists(pid):
         elif e.errnor == 1: return False # cannot send signal to process
         else: raise
 
+def deleteloots():
+    lootpath = os.path.join(forbanpath,"var","loot")
+
+    for dirs in os.listdir(lootpath):
+        lootdir = os.path.join(lootpath,dirs)
+        print lootdir+" removed..."
+        shutil.rmtree(lootdir)
+
 def usage():
-    print "forbanctl (start|stop|restart|cleanup)"
+    print "forbanctl (start|stop|restart|cleanup|lootcleanup)"
     exit (1)
 
 if len(sys.argv) < 2:
@@ -176,6 +185,8 @@ if sys.argv[1] == "start":
     Start()
 elif sys.argv[1] == "cleanup":
     CleanUp()
+elif sys.argv[1] == "lootcleanup":
+    deleteloots()
 elif sys.argv[1] == "stop":
     Stop()
 elif sys.argv[1] == "restart":
