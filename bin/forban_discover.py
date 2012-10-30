@@ -30,6 +30,11 @@ def guesspath():
 config = ConfigParser.RawConfigParser()
 config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
+try: 
+    disable_ipv6 =  config.get('global','disabled_ipv6')
+except ConfigParser.NoOptionError:
+    disable_ipv6 = 0
+
 try:
     forbanpath = config.get('global','path')
 except ConfigParser.NoSectionError:
@@ -51,5 +56,9 @@ if __name__ == "__main__":
     while 1:
         HOST, PORT = ("", 12555)
         server = discover.UDPServer((HOST, PORT), discover.MyUDPHandler)
+	if disable_ipv6 == "1":
+              server.setIPv6 ( 0 )
+	else:
+              server.setIPv6 ( 1 )
         server.serve_forever()
 

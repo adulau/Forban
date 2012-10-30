@@ -45,9 +45,23 @@ class MyUDPHandler(SocketServer.BaseRequestHandler):
             print "debug : not a forban message"
 
 class UDPServer(SocketServer.UDPServer):
+    
+    def setIPv6 (self, ipv6 = 1 ):
+        if  ipv6 == 0 :
+	    self.disable_ipv6 = 1
+	else:
+	    self.disable_ipv6 = 0
+
+    def useIPv6 (self ):
+        return True
+
+        if self.disable_ipv6 == 1 :
+	     return False
+	else:
+	     return True
 
 
-    if socket.has_ipv6:
+    if socket.has_ipv6 :
         try:
             socktest = socket.socket(socket.AF_INET6)
             socktest.close()
@@ -57,20 +71,22 @@ class UDPServer(SocketServer.UDPServer):
 
     def server_bind(self):
 
-        self.v6success = True
+        if self.useIPv6():
 
-        try:
-            socktest = socket.socket(socket.AF_INET6)
-            socktest.close()
-        except:
-            self.v6success = False
+             self.v6success = True
+             try:
+                 socktest = socket.socket(socket.AF_INET6)
+                 socktest.close()
+             except:
+                 self.v6success = False
 
-        if socket.has_ipv6 and self.v6success:
-            address_family = socket.AF_INET6
+             if socket.has_ipv6 and self.v6success:
+                 address_family = socket.AF_INET6
 
-        #allowing to work in dual-stack when IPv6 is used
-        if socket.has_ipv6 and self.v6success:
-            self.socket.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 0)
+             #allowing to work in dual-stack when IPv6 is used
+             if socket.has_ipv6 and self.v6success:
+                 self.socket.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 0)
+          
         self.socket.bind(self.server_address)
 
 if __name__ == "__main__":

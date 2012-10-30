@@ -34,6 +34,8 @@ import sys
 sys.path.append('.')
 import fid
 
+debug = 0
+
 class message:
 
     def __init__(self,name="notset", uuid=None, port="12555", timestamp=None,
@@ -44,6 +46,11 @@ class message:
             self.count      = 0
             self.destination = destination
             self.dynpath    = dynpath
+	    self.ipv6_disabled = 0
+
+    def disableIpv6(self):
+            self.ipv6_disabled = 1
+	    self.destination   = ["255.255.255.255", ] 
 
     def gen (self):
             self.payload    = "forban;name;" + self.name + ";"
@@ -62,7 +69,11 @@ class message:
 
     def send(self):
         for destination in self.destination:
-            if socket.has_ipv6 and re.search(":", destination):
+            if socket.has_ipv6 and re.search(":", destination) and not  self.ipv6_disabled == 1:
+               
+	        if debug == 1:
+		   print "woring in ipv6 part on destination " + destination 
+	        
 
                 # Even if Python is compiled with IPv6, it doesn't mean that the os
                 # is supporting IPv6. (like the Nokia N900)
@@ -75,6 +86,9 @@ class message:
                     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 
             else:
+	        if debug == 1:
+		   print "open ipv4 socket on destination" + destination 
+
                 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 

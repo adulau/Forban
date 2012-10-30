@@ -96,7 +96,17 @@ if __name__ == "__main__":
     except ConfigParser.Error:
         forbanname = tools.guesshostname()
 
+    try:
+        ipv6_disabled =  config.get('global' , 'disabled_ipv6')
+	flogger.debug ( "Read ipv6_disabled")
+    except  ConfigParser.Error:
+        ipv6_disabled = 0
+
     msg = announce.message(name=forbanname, dynpath=os.path.join(forbanpath,"var"))
+
+    if  ipv6_disabled == "1": 
+        flogger.info("forban_announce without ipv6")
+        msg.disableIpv6()
 
     forbanindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
     flogger.info("forban_announce starting...")
