@@ -51,6 +51,12 @@ try:
 except ConfigParser.Error:
     forbanshareroot = os.path.join(forbanpath,"var","share/")
 
+
+try:
+    disable_ipv6 = config.get('global' , 'ipv6_disabled' ) 
+except ConfigParser.Error:
+    disable_ipv6 = "0"
+
 forbanpathlib = os.path.join (forbanpath,"lib")
 sys.path.append(forbanpathlib)
 
@@ -82,7 +88,7 @@ if not os.path.exists(forbanpathlog):
 forbanpathlogfile=os.path.join(forbanpathlog,"forban_share_access.log")
 forbanpathlogfilee=os.path.join(forbanpathlog,"forban_share_error.log")
 
-if socket.has_ipv6:
+if socket.has_ipv6 and disable_ipv6 == "0" :
     try:
         socktest = socket.socket(socket.AF_INET6)
         bindhost = "::"
