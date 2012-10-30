@@ -108,8 +108,18 @@ if __name__ == "__main__":
         flogger.info("forban_announce without ipv6")
         msg.disableIpv6()
 
+    try:
+        destination =  config.get('global' , 'destination')
+        flogger.debug ( "Read custom destinations: >"+ destination + "< ")
+	msg.setDestination ( eval ( destination ) )
+    except  ConfigParser.Error:
+        continue 
+
+
     forbanindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
     flogger.info("forban_announce starting...")
+
+    announce.flogger = flogger 
 
 intervalcounter = 1
 while 1:

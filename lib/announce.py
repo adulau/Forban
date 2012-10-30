@@ -30,11 +30,14 @@ import hmac
 import re
 import sys
 
+
+flogger = None
+
 # forban internal junk
 sys.path.append('.')
 import fid
 
-debug = 0
+debug = 0 
 
 class message:
 
@@ -52,6 +55,9 @@ class message:
             self.ipv6_disabled = 1
 	    self.destination   = ["255.255.255.255", ] 
 
+    def setDestination(self, destination=["ff02::1","255.255.255.255", ] ):
+             self.destination = destination
+
     def gen (self):
             self.payload    = "forban;name;" + self.name + ";"
             myid = fid.manage(dynpath=self.dynpath)
@@ -67,13 +73,24 @@ class message:
     def get (self):
             return self.payload
 
+    def __debugMessage (self, msg ):
+        if  flogger != None:
+	     flogger.debug ( msg )
+	elif debug == 1:
+	     print msg
+
+    def __errorMessage (self, msg):
+        if flogger != None:
+	     flogger.error ( msg )
+	elif debug == 1:
+	     print msg 
+
+
     def send(self):
         for destination in self.destination:
             if socket.has_ipv6 and re.search(":", destination) and not  self.ipv6_disabled == 1:
                
-	        if debug == 1:
-		   print "woring in ipv6 part on destination " + destination 
-	        
+		self.__debugMessage(  "working in ipv6 part on destination " + destination )
 
                 # Even if Python is compiled with IPv6, it doesn't mean that the os
                 # is supporting IPv6. (like the Nokia N900)
@@ -86,8 +103,7 @@ class message:
                     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 
             else:
-	        if debug == 1:
-		   print "open ipv4 socket on destination" + destination 
+	        self.__debugMessage (  "open ipv4 socket on destination " + destination )
 
                 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -95,6 +111,7 @@ class message:
             try:
                 sock.sendto(self.payload, (destination, int(self.port)))
             except socket.error, msg:
+	        self.__errorMessage ( "Error sending to "+ destination + " : " + msg.strerror  )
                 continue
         sock.close()
 

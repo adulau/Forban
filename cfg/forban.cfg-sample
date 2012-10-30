@@ -6,8 +6,22 @@ version = 0.0.33
 logging = DEBUG
 loggingsizemax = 1000000
 
-#disable ipv6
-disabled_ipv6 = 0
+# Disables the IPv6 Handling in the Discover-Part and the Announcing Parts of Forban.
+#   This can be usful if you run a multiple network environment without a properly setup
+#   IPv6 configuration.
+
+#disabled_ipv6 = 1
+
+# Modify the addresses used for announcing forban
+#   In a IPv4 Multi-NiC-Network environment, it is possible, that 255.255.255.255 only takes
+#   the default gateway NIC, so you can't serve both Networks with broadcasts
+#   You can uncomment the line and add additional valid broadcast addresses like described
+#   below.
+# Default used without a set parameter
+#destination = [ "255.255.255.255", "ff02::1" ]
+
+#destination = [ "255.255.255.255", "ff02::1" , "10.255.255.255" ]
+
 
 # available mode :
 #
