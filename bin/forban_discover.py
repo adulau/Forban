@@ -30,7 +30,7 @@ def guesspath():
 config = ConfigParser.RawConfigParser()
 config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
-try: 
+try:
     disable_ipv6 =  config.get('global','disabled_ipv6')
 except ConfigParser.NoOptionError:
     disable_ipv6 = 0

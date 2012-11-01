@@ -48,17 +48,17 @@ class UDPServer(SocketServer.UDPServer):
     
     def setIPv6 (self, ipv6 = 1 ):
         if  ipv6 == 0 :
-	    self.disable_ipv6 = 1
-	else:
-	    self.disable_ipv6 = 0
+            self.disable_ipv6 = 1
+        else:
+            self.disable_ipv6 = 0
 
     def useIPv6 (self ):
         return True
 
         if self.disable_ipv6 == 1 :
-	     return False
-	else:
-	     return True
+            return False
+        else:
+            return True
 
 
     if socket.has_ipv6 :

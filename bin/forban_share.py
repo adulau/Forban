@@ -53,7 +53,7 @@ except ConfigParser.Error:
 
 
 try:
-    disable_ipv6 = config.get('global' , 'ipv6_disabled' ) 
+    disable_ipv6 = config.get('global' , 'ipv6_disabled')
 except ConfigParser.Error:
     disable_ipv6 = "0"
 
