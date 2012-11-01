@@ -29,7 +29,7 @@ import tools
 
 def urlheadinfo(url):
     request = urllib2.Request(url)
-    request.add_header('User-Agent','Forban +http://www.gitorious.org/forban/')
+    request.add_header('User-Agent','Forban +http://www.foo.be/forban/')
     request.get_method = lambda: "HEAD"
 
     try:
@@ -45,7 +45,7 @@ def urlheadinfo(url):
 
 def urlget(url, localfile="testurlget"):
     httpreq = urllib2.Request(url)
-    httpreq.add_header('User-Agent','Forban +http://www.gitorious.org/forban/')
+    httpreq.add_header('User-Agent','Forban +http://www.foo.be/forban/')
 
     try:
         r = urllib2.urlopen(httpreq)
