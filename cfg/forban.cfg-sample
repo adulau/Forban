@@ -12,12 +12,16 @@ loggingsizemax = 1000000
 
 #disabled_ipv6 = 1
 
-# Modify the addresses used for announcing forban
-#   In a IPv4 Multi-NiC-Network environment, it is possible, that 255.255.255.255 only takes
-#   the default gateway NIC, so you can't serve both Networks with broadcasts
-#   You can uncomment the line and add additional valid broadcast addresses like described
-#   below.
-# Default used without a set parameter
+# Modify the destination addresses used to send forban announces.
+#
+# In an IPv4 Multi-NiC-Network environment, it is possible, that 255.255.255.255 only takes
+# the default gateway NIC, so you can't serve both networks with broadcasts
+# You can uncomment the line and add additional valid broadcast addresses like described
+# below.
+#
+# Maybe in a future version, calculating the possible broadcast networks would be more easy.
+
+# default broadcast/multicast values if none set 
 #destination = [ "255.255.255.255", "ff02::1" ]
 
 #destination = [ "255.255.255.255", "ff02::1" , "10.255.255.255" ]
