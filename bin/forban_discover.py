@@ -34,6 +34,8 @@ try:
     disable_ipv6 =  config.get('global','disabled_ipv6')
 except ConfigParser.NoOptionError:
     disable_ipv6 = 0
+except ConfigParser.NoSectionError:
+    disable_ipv6 = 0
 
 try:
     forbanpath = config.get('global','path')
