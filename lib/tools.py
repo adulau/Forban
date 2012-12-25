@@ -2,7 +2,7 @@
 #
 # For more information : http://www.foo.be/forban/
 #
-# Copyright (C) 2009-2011 Alexandre Dulaunoy - http://www.foo.be/
+# Copyright (C) 2009-2012 Alexandre Dulaunoy - http://www.foo.be/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -77,7 +77,7 @@ def guesshostname():
 #
 
 def dirtree(rootdir=None):
-    if rootdir==None:
+    if rootdir is None:
         return False
     if not os.path.exists(rootdir):
         return False
@@ -100,7 +100,7 @@ def dirtree(rootdir=None):
 #
 
 def finddir(rootdir=None, dirmatch="forban"):
-    if rootdir==None:
+    if rootdir is None:
         return False
     if not os.path.exists(rootdir):
         return False
