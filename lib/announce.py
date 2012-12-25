@@ -2,7 +2,7 @@
 #
 # For more information : http://www.foo.be/forban/
 #
-# Copyright (C) 2009-2010 Alexandre Dulaunoy - http://www.foo.be/
+# Copyright (C) 2009-2012 Alexandre Dulaunoy - http://www.foo.be/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -74,13 +74,13 @@ class message:
             return self.payload
 
     def __debugMessage (self, msg ):
-        if  flogger != None:
+        if  flogger is not None:
             flogger.debug ( msg )
         elif debug == 1:
             print msg
 
     def __errorMessage (self, msg):
-        if flogger != None:
+        if flogger is not None:
             flogger.error ( msg )
         elif debug == 1:
             print msg
