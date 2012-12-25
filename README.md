@@ -17,7 +17,8 @@ Forban is free software licensed under
 the GNU Affero General Public License version 3.
 http://www.fsf.org/licensing/licenses/agpl-3.0.html
 
-[Forban presentation](http://www.foo.be/forban/pres/2011-FOSDEM-Forban-Intro.pdf) given at FOSDEM 2011.
+[Forban presentation](http://www.foo.be/forban/pres/2011-FOSDEM-Forban-Intro.pdf) given at FOSDEM 2011
+or another [Forban presentation](http://www.foo.be/haxogreen2012/forban-general.pdf) given at HAXOGREEN 2012.
 
 Installation
 ------------
