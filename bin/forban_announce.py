@@ -120,6 +120,14 @@ if __name__ == "__main__":
 
     announce.flogger = flogger
 
+forbansharebundle = os.path.join(forbanshareroot,"forban")
+
+# bundle directory includes static pages but also index from the
+# Forban itself.
+
+if not os.path.exists(forbansharebundle):
+    os.mkdir(forbansharebundle)
+
 intervalcounter = 1
 while 1:
     # rebuild forban index (at startup always rebuild)
