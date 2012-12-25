@@ -42,6 +42,11 @@ Now you can open your favorite browser at the following location:
 
 To share some files, you'll just need to copy them in ./var/share/ 
 
+And if you want to use another share directory don't forget
+to copy the ./var/share/forban directory containing CSS and images
+for the website. It can work without it but it's more handy for
+users browsing directly your Forban in passive mode.
+
 Forban protocol
 --------------- 
 
