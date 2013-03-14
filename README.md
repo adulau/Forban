@@ -1,24 +1,24 @@
 Forban
 ======
 
-[Forban](http://www.foo.be/forban/) is a p2p application for link-local and local area network.
+[Forban](http://www.foo.be/forban/) is a p2p application for link-local and local area networks.
 
-Forban works independently from Internet and use only the local 
+Forban works independently from the Internet and uses only the local 
 area capabilities to announce, discover, search or share files. 
-Forban relies on HTTP and he is opportunistic.
+Forban relies on HTTP and it is "opportunistic".
 
-The name took his origins from the old French word : 
+The name takes its origins from an old French word: 
 http://fr.wiktionary.org/wiki/forban 
 
-Forban name can be also a playword in English
-for banning an unwanted software or services on Internet.
+Forban name can also be a playword in English
+for banning unwanted software or services on the Internet.
 
 Forban is free software licensed under 
 the GNU Affero General Public License version 3.
 http://www.fsf.org/licensing/licenses/agpl-3.0.html
 
-[Forban presentation](http://www.foo.be/forban/pres/2011-FOSDEM-Forban-Intro.pdf) given at FOSDEM 2011
-or another [Forban presentation](http://www.foo.be/haxogreen2012/forban-general.pdf) given at HAXOGREEN 2012.
+A [Forban presentation](http://www.foo.be/forban/pres/2011-FOSDEM-Forban-Intro.pdf) was given at FOSDEM 2011
+and another [Forban presentation](http://www.foo.be/haxogreen2012/forban-general.pdf) was given at HAXOGREEN 2012.
 
 Installation
 ------------
@@ -33,20 +33,20 @@ Go to the cloned directory:
 
     cd Forban
 
-and starts Forban processes:
+and start the Forban processes:
 
     ./bin/forbanctl start
 
-Now you can open your favorite browser at the following location:
+Now you can open your favorite browser and go to the following location:
 
     http://127.0.0.1:12555
 
-To share some files, you'll just need to copy them in ./var/share/ 
+To share some files, you just need to copy them into ./var/share/ 
 
-And if you want to use another share directory don't forget
-to copy the ./var/share/forban directory containing CSS and images
-for the website. It can work without it but it's more handy for
-users browsing directly your Forban in passive mode.
+If you want to use another share directory don't forget
+to copy the ./var/share/forban directory, which contains CSS and images
+for the website. It can work without these, but it's more handy for
+users browsing directly to your Forban in passive mode.
 
 Forban protocol
 --------------- 
@@ -55,29 +55,29 @@ Forban protocol
 
 ### announce message
 
-ASCII encoded message using UDP on port 12555 with
+ASCII encoded message use UDP on port 12555 with
 the following format: 
 
     forban;name;<nameoftheforban>;uuid;<identityoftheforban>;hmac;<hmacvaluecofindex>
 
-The messages are flooded in broadcast (IPv4) and using
+The messages are flooded in broadcast (IPv4) and use
 ff02::1 (IPv6) at a regular interval.
 
 Based on the source IP and the destination port used,
-a HTTP URL is build to get to default forban service.
+a HTTP URL is built to get to default forban service.
 
 ### HTTP services for Forban
 
-The UDP port 12555 is there for announcing forban services.
-The TCP port 12555 is the HTTP server running for forban services.
+The UDP port 12555 is for announcing forban services.
+The TCP port 12555 is the HTTP server running forban services.
 
 base URL: [REQUIRED]
     http://<ip>:<destport>/
 
-index URL where Forban stored his index: [REQUIRED]
+index URL where Forban stores its index: [REQUIRED]
     http://<ip>:<destport>/s/?g=forban/index
 
-store URL where Forban stored his loot and how to get a file: [REQUIRED]
+store URL where Forban stores its files and how to get a file: [REQUIRED]
     http://<ip>:<destport>/s/?g=base64_urlsafe(<filenamefromindex>)&f=b64e
 
 search URL: [OPTIONAL]
@@ -94,7 +94,7 @@ for machine-to-machine interaction but used to ease the life of the users.
 '=' is replaced by '!'.
 
 This is following the same approach of MIME::Base64::URLSafe
-or the python base64.urlsafe_b64encode with an addition to
+or the python base64.urlsafe_b64encode with an addition of
 the equal sign being replaced by an exclamation mark.
 
 ### Forban mode available
@@ -102,12 +102,12 @@ the equal sign being replaced by an exclamation mark.
 * Opportunistic mode
 * Shared mode
 
-The opportunistic mode and shared used all the REQUIRED components of
+The opportunistic mode and shared mode use all the REQUIRED components of
 the protocol. The only difference is the lack of automatic file fetching
-in the shared mode. The shared mode is usally used on fixed node content
+in the shared mode. The shared mode is usally used in a fixed node content
 where the opportunistic fetching is not desired (e.g. a fixed bookshelf).
 
-The opportunistic mode is working as a simple gossip (or epidemic) protocol
+The opportunistic mode works as a simple gossip (or epidemic) protocol
 to replicate the information from one local to another local Forban.
 
 ### message format - notes about HMAC
@@ -125,5 +125,5 @@ want.
 ### software required
 
 * Python (tested successfully with 2.5, 2.6 and 2.7) - 2.5 is required for the uuid library
-* There is no additional Python libraries required
+* There are no additional Python libraries required
 
