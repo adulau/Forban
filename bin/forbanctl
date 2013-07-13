@@ -46,10 +46,13 @@ except ConfigParser.NoOptionError:
     forbanpath = os.path.join(guesspath())
 
 def service_start(servicename = None):
+    python_executable = sys.executable
+    if python_executable is None:
+        python_executable = 'python'
     if servicename is not None:
         service = servicename+".py"
         servicepath = os.path.join(guesspath(),"bin",service)
-        proc =  subprocess.Popen(["python",servicepath])
+        proc =  subprocess.Popen([python_executable,servicepath])
         time.sleep(0.15)
         return proc.pid
     return False
