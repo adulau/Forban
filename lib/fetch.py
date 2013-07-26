@@ -2,7 +2,7 @@
 #
 # For more information : http://www.foo.be/forban/
 #
-# Copyright (C) 2009-2010 Alexandre Dulaunoy - http://www.foo.be/
+# Copyright (C) 2009-2013 Alexandre Dulaunoy - http://www.foo.be/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -87,8 +87,7 @@ def urlget(url, localfile="testurlget"):
         return False
 
 def managetest():
-    #urlget("http://192.168.154.199:12555/s/?g=forban/index")
-    print urlget("http://192.168.1.4:12555/s/?g=forban/index")
+    print urlget("http://127.0.0.1:12555/s/?g=forban/index")
 
 if __name__ == "__main__":
     managetest()
