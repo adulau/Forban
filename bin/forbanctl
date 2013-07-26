@@ -41,6 +41,8 @@ try:
 except ConfigParser.NoSectionError:
     print "Forban config file is missing or incorrect"
     print "You should go into ../cfg/ and cp forban.cfg-sample forban.cfg"
+    print "Even without configuration, Forban should run out-of-the-box."
+    print "Start your browser on http://127.0.0.1:12555/"
     forbanpath = os.path.join(guesspath())
 except ConfigParser.NoOptionError:
     forbanpath = os.path.join(guesspath())
