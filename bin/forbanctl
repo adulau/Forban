@@ -3,7 +3,7 @@
 #
 # For more information : http://www.foo.be/forban/
 #
-# Copyright (C) 2009-2012 Alexandre Dulaunoy - http://www.foo.be/
+# Copyright (C) 2009-2013 Alexandre Dulaunoy - http://www.foo.be/
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -112,7 +112,7 @@ def deleteloots():
         shutil.rmtree(lootdir)
 
 def usage():
-    print "forbanctl (start|stop|restart|cleanup|lootcleanup)"
+    print "forbanctl (start|stop|restart|cleanup|lootcleanup|status)"
     exit (1)
 
 if len(sys.argv) < 2:
@@ -126,6 +126,16 @@ except ConfigParser.NoOptionError:
     forbanmode = "opportunistic"
 except ConfigParser.NoSectionError:
     forbanmode = "opportunistic"
+
+def Status():
+    print "Status check for Forban services..."
+    for service in forban_services:
+        print service,
+        print "PID:"+str(pidof(processname=service)),
+        if processexists(pidof(processname=service)) is None:
+            print "exists"
+        else:
+            print "is dead"
 
 def Start():
     print "Starting Forban services..."
@@ -196,5 +206,7 @@ elif sys.argv[1] == "stop":
 elif sys.argv[1] == "restart":
     Stop()
     Start()
+elif sys.argv[1] == "status":
+    Status()
 else:
     usage()
