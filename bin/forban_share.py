@@ -100,8 +100,10 @@ else:
 
 cherrypy.config.update({ 'log.screen': False, 'server.socket_port': 12555 , 'server.socket_host': bindhost, 'tools.static.root':forbanshareroot, 'log.access_file':forbanpathlogfile, 'log.error_file':forbanpathlogfilee, 'request.show_tracebacks': False})
 
-forbanpathcherry = { '/css/style.css': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/css/x.css'},
-               '/img/forban-small.png': {'tools.staticfile.on': True, 'tools.staticfile.filename':forbanshareroot+'forban/img/forban-small.png'}
+forbanpathcherry = { '/css/style.css': {'tools.staticfile.on': True,
+'tools.staticfile.filename':os.path.join(forbanshareroot,'forban/css/x.css')},
+               '/img/forban-small.png': {'tools.staticfile.on': True,
+               'tools.staticfile.filename':os.path.join(forbanshareroot,'forban/img/forban-small.png')}
              }
 
 htmlheader = """<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
