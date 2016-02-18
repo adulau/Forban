@@ -104,7 +104,7 @@ the equal sign being replaced by an exclamation mark.
 
 The opportunistic mode and shared mode use all the REQUIRED components of
 the protocol. The only difference is the lack of automatic file fetching
-in the shared mode. The shared mode is usally used in a fixed node content
+in the shared mode. The shared mode is usually used in a fixed node content
 where the opportunistic fetching is not desired (e.g. a fixed bookshelf).
 
 The opportunistic mode works as a simple gossip (or epidemic) protocol
