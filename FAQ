@@ -59,7 +59,7 @@ Q3. Why can't I see any Forban while using the Wireless network?
     To discover Forban, there is a simple discovery service looking
     for specific broadcast packet in IPv4 and multicast packet in IPv6.
     Some Wireless network are blocking those packets between wireless
-    clients. You must allow broadcast and/or multicast paquet on your
+    clients. You must allow broadcast and/or multicast packets on your
     Wireless access-point.
 
 Q4. I can see Forban in the interface but it can't copy any files?
