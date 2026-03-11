@@ -117,7 +117,7 @@ def finddir(rootdir=None, dirmatch="forban"):
     return dirfound
 
 if __name__ == "__main__":
-   print convertbytes (1234567)
-   print guesshostname()
-   print finddir("/media")
+   print(convertbytes (1234567))
+   print(guesshostname())
+   print(finddir("/media"))
    # print rename("x","xy")

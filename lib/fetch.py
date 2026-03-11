@@ -19,7 +19,7 @@
 
 import os
 import socket
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import shutil
 
 socket.setdefaulttimeout(10)
@@ -28,15 +28,15 @@ import tmpname
 import tools
 
 def urlheadinfo(url):
-    request = urllib2.Request(url)
+    request = urllib.request.Request(url)
     request.add_header('User-Agent','Forban +http://www.foo.be/forban/')
     request.get_method = lambda: "HEAD"
 
     try:
-        httphead = urllib2.urlopen(request)
-    except urllib2.HTTPError, e:
+        httphead = urllib.request.urlopen(request)
+    except urllib.error.HTTPError as e:
         return False
-    except urllib2.URLError, e:
+    except urllib.error.URLError as e:
         return False
     else:
         pass
@@ -44,16 +44,16 @@ def urlheadinfo(url):
     return (httphead.headers["last-modified"],httphead.headers["content-length"])
 
 def urlget(url, localfile="testurlget"):
-    httpreq = urllib2.Request(url)
+    httpreq = urllib.request.Request(url)
     httpreq.add_header('User-Agent','Forban +http://www.foo.be/forban/')
 
     try:
-        r = urllib2.urlopen(httpreq)
-    except urllib2.HTTPError, e:
+        r = urllib.request.urlopen(httpreq)
+    except urllib.error.HTTPError as e:
         return False
-    except urllib2.URLError, e:
+    except urllib.error.URLError as e:
         return False
-    except socket.error,e:
+    except socket.error as e:
         return False
     except socket.timeout:
         return False
@@ -73,10 +73,10 @@ def urlget(url, localfile="testurlget"):
 
     tlocalfile = tmpname.get(localfile)
 
-    if r.info().has_key('Content-Disposition'):
-        f = open (tlocalfile[1], "w")
+    if 'Content-Disposition' in r.info():
+        f = open(tlocalfile[1], "wb")
         try:
-            shutil.copyfileobj(r.fp,f)
+            shutil.copyfileobj(r, f)
         except:
             return False
         f.close()
@@ -87,7 +87,7 @@ def urlget(url, localfile="testurlget"):
         return False
 
 def managetest():
-    print urlget("http://127.0.0.1:12555/s/?g=forban/index")
+    print((urlget("http://127.0.0.1:12555/s/?g=forban/index")))
 
 if __name__ == "__main__":
     managetest()

@@ -19,18 +19,19 @@
 
 import base64
 
-def encode( istring ):
-    b64s = base64.urlsafe_b64encode(istring)
-    b64s = b64s.replace("=","!")
-    return b64s
+def encode(istring):
+    if isinstance(istring, str):
+        istring = istring.encode("utf-8")
+    b64s = base64.urlsafe_b64encode(istring).decode("ascii")
+    return b64s.replace("=", "!")
 
-def decode( istring ):
-    istring = istring.replace("!","=")
-    b64s = base64.urlsafe_b64decode(istring.encode("utf-8"))
-    return b64s
+def decode(istring):
+    istring = istring.replace("!", "=")
+    b64s = base64.urlsafe_b64decode(istring.encode("ascii"))
+    return b64s.decode("utf-8")
 
 if __name__ == "__main__":
     encodedone = encode("some string with")
-    print encodedone
+    print(encodedone)
     decodedone = decode(encodedone)
-    print decodedone
+    print(decodedone)

@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import SocketServer
+import socketserver
 import socket
 import sys
 import os
@@ -33,18 +33,20 @@ def guesspath():
 
 forbanpath = os.path.join(guesspath())
 
-class MyUDPHandler(SocketServer.BaseRequestHandler):
+class MyUDPHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         data = self.request[0].strip()
+        if isinstance(data, bytes):
+            data = data.decode("utf-8", errors="ignore")
         socket = self.request[1]
         if data[:6] == "forban":
             myloot = loot.loot(dynpath=os.path.join(forbanpath,"var"))
             myloot.add(data, self.client_address[0])
         else:
-            print "debug : not a forban message"
+            print("debug : not a forban message")
 
-class UDPServer(SocketServer.UDPServer):
+class UDPServer(socketserver.UDPServer):
     
     def setIPv6 (self, ipv6 = 1 ):
         if  ipv6 == 0 :

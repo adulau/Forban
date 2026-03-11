@@ -274,13 +274,13 @@ def loottest():
 
         myloot = loot()
         if not myloot.exist("1234"):
-            print "not existing -> ok"
+            print("not existing -> ok")
         #myloot.add("forban;name;notset;uuid;cb001bf2-1497-443c-9675-74de7027ecf9;hmac;59753cbda00f8c605aff6c4ceacd3f12caedddea","127.0.0.1")
-        print myloot.getindexurl("cb001bf2-1497-443c-9675-74de7027ecf9")
-        print myloot.getlastseen("cb001bf2-1497-443c-9675-74de7027ecf9")
-        print myloot.lastannounced("cb001bf2-1497-443c-9675-74de7027ecf9")
-        print myloot.listall()
-        print myloot.gethmac("cb001bf2-1497-443c-9675-74de7027ecf9")
+        print((myloot.getindexurl("cb001bf2-1497-443c-9675-74de7027ecf9")))
+        print((myloot.getlastseen("cb001bf2-1497-443c-9675-74de7027ecf9")))
+        print((myloot.lastannounced("cb001bf2-1497-443c-9675-74de7027ecf9")))
+        print((myloot.listall()))
+        print((myloot.gethmac("cb001bf2-1497-443c-9675-74de7027ecf9")))
 
 if __name__ == "__main__":
 

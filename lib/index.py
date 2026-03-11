@@ -90,9 +90,8 @@ class manage:
 
         if not os.path.exists(filepath):
             return False
-        f = open (filepath,"r")
-        auth = hmac.new(key, f.read(), sha1)
-        f.close()
+        with open(filepath, "rb") as f:
+            auth = hmac.new(key.encode("utf-8"), f.read(), sha1)
 
         return auth.hexdigest()
 
@@ -203,14 +202,14 @@ class manage:
 def test ():
     testindex = manage()
     testindex.build()
-    print testindex.gethmac()
+    print((testindex.gethmac()))
 
     testindex.cache("8d63025e-2f11-4c08-837a-08c44b122150")
     #print testindex.howfar("e2f05993-eba1-4b94-8e56-d2157d1ce552")
     #print testindex.search("^((?!forban).)*$","e2f05993-eba1-4b94-8e56-d2157d1ce552");
-    print testindex.getfilesize(filename="forban/index")
-    print testindex.getfilesize(filename="forban//index",uuid="8d63025e-2f11-4c08-837a-08c44b122150")
-    print testindex.totalfilesize(uuid="d55727ed-5c6a-49a8-9d8d-28b4004aee0c")
+    print((testindex.getfilesize(filename="forban/index")))
+    print((testindex.getfilesize(filename="forban//index",uuid="8d63025e-2f11-4c08-837a-08c44b122150")))
+    print((testindex.totalfilesize(uuid="d55727ed-5c6a-49a8-9d8d-28b4004aee0c")))
 
 if __name__ == "__main__":
 
