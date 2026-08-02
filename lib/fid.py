@@ -54,9 +54,9 @@ class manage:
 
 def managetest():
         fid = manage()
-        print fid.get()
+        print(fid.get())
         fid.regen()
-        print fid.get()
+        print(fid.get())
 
 if __name__ == "__main__":
 

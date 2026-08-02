@@ -90,9 +90,8 @@ class manage:
 
         if not os.path.exists(filepath):
             return False
-        f = open (filepath,"r")
-        auth = hmac.new(key, f.read(), sha1)
-        f.close()
+        with open(filepath, "rb") as f:
+            auth = hmac.new(key.encode("utf-8"), f.read(), sha1)
 
         return auth.hexdigest()
 
@@ -119,9 +118,9 @@ class manage:
         f = open(location, "r")
         for cacheline in f.readlines():
             if pmatch.search(cacheline):
-                if re.search('/\.',cacheline):
+                if re.search(r'/\.',cacheline):
                     continue
-                if re.search('^\+\.',cacheline):
+                if re.search(r'^\+\.',cacheline):
                     continue
                 queryresult.append(cacheline)
         f.close()
@@ -186,14 +185,14 @@ class manage:
         mydiff = '\n'.join(list(difflib.unified_diff(f1vs,f2vs, lineterm="")))
         lmodified = []
         for l in mydiff.splitlines():
-            if re.search("(^\+)",l) and not re.search("^\+\+",l) and not re.search("forban",l):
+            if re.search(r"(^\+)",l) and not re.search(r"^\+\+",l) and not re.search("forban",l):
                 #exclude temporary files or dot files
-                if re.search('/\.',l):
+                if re.search(r'/\.',l):
                     continue
-                if re.search('^\+\.',l):
+                if re.search(r'^\+\.',l):
                     continue
                 missingfile = l.rsplit(",",1)[0]
-                missingfile = re.sub("^(\+)","",missingfile)
+                missingfile = re.sub(r"^(\+)","",missingfile)
                 lmodified.append(missingfile)
         if lmodified:
             return lmodified
@@ -203,14 +202,14 @@ class manage:
 def test ():
     testindex = manage()
     testindex.build()
-    print testindex.gethmac()
+    print((testindex.gethmac()))
 
     testindex.cache("8d63025e-2f11-4c08-837a-08c44b122150")
     #print testindex.howfar("e2f05993-eba1-4b94-8e56-d2157d1ce552")
     #print testindex.search("^((?!forban).)*$","e2f05993-eba1-4b94-8e56-d2157d1ce552");
-    print testindex.getfilesize(filename="forban/index")
-    print testindex.getfilesize(filename="forban//index",uuid="8d63025e-2f11-4c08-837a-08c44b122150")
-    print testindex.totalfilesize(uuid="d55727ed-5c6a-49a8-9d8d-28b4004aee0c")
+    print((testindex.getfilesize(filename="forban/index")))
+    print((testindex.getfilesize(filename="forban//index",uuid="8d63025e-2f11-4c08-837a-08c44b122150")))
+    print((testindex.totalfilesize(uuid="d55727ed-5c6a-49a8-9d8d-28b4004aee0c")))
 
 if __name__ == "__main__":
 

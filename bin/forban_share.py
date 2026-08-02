@@ -21,7 +21,7 @@ import glob
 import os.path
 import sys
 import string
-import ConfigParser
+import configparser
 import socket
 import re
 
@@ -31,30 +31,30 @@ def guesspath():
     bis = os.path.split(lpath[0])
     return bis[0]
 
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
 try:
     forbanpath = config.get('global','path')
-except ConfigParser.Error:
+except configparser.Error:
     forbanpath = os.path.join(guesspath())
 
 forbandiscoveredloots = os.path.join(forbanpath,"var","loot")
 
 try:
     forbanmode = config.get('global','mode')
-except ConfigParser.Error:
+except configparser.Error:
     forbanmode = "opportunistic"
 
 try:
     forbanshareroot = config.get('forban','share')
-except ConfigParser.Error:
+except configparser.Error:
     forbanshareroot = os.path.join(forbanpath,"var","share/")
 
 
 try:
     disable_ipv6 = config.get('global' , 'ipv6_disabled')
-except ConfigParser.Error:
+except configparser.Error:
     disable_ipv6 = "0"
 
 forbanpathlib = os.path.join (forbanpath,"lib")
@@ -67,17 +67,11 @@ import tools
 
 try:
     forbanname = config.get('global','name')
-except ConfigParser.Error:
+except configparser.Error:
     forbanname = tools.guesshostname()
 
-try:
-    import cherrypy
-    from cherrypy.lib.static import serve_file
-except ImportError:
-    libexternal = os.path.join(forbanpath,"lib","ext")
-    sys.path.append(libexternal)
-    import cherrypy
-    from cherrypy.lib.static import serve_file
+import cherrypy
+from cherrypy.lib.static import serve_file
 
 import mimetypes
 
@@ -289,12 +283,12 @@ class Root:
         html += "<table>"
         html += "<tr><td>Filename</td><td>Fetch</td></tr>"
         tempindex = mindex.search("^((?!forban).)*$", uuid)
-        tempindex.sort(key=string.lower)
+        tempindex.sort(key=str.lower)
         for fileinindex in tempindex:
             filei = fileinindex.rsplit(",",1)[0]
-            if re.search('/\.',filei):
+            if re.search(r'/\.',filei):
                 continue
-            if re.search('^\+\.',filei):
+            if re.search(r'^\+\.',filei):
                 continue
             html += "<tr>"
             sourcev4 = dloot.getipv4(uuid)
@@ -316,7 +310,7 @@ class Download:
     def index(self, g=None, f=None):
         if f is not None:
             g = base64e.decode(g)
-        gs = string.replace(g, "..", "")
+        gs = g.replace("..", "")
         gs = forbanshareroot + gs
         mimetypeguessed = mime_type(gs)
         return serve_file(gs, content_type=mimetypeguessed,disposition=True, name=os.path.basename(gs))
@@ -331,4 +325,3 @@ if __name__ == '__main__':
     root.favicon_ico = cherrypy.tools.staticfile.handler(filename=favicon_path)
     root.s = Download()
     cherrypy.quickstart(root, config=forbanpathcherry)
-

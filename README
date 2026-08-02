@@ -88,4 +88,5 @@ want.
 
 === software required ===
 
-* Python (tested successfully with 2.5, 2.6 and 2.7) - 2.5 is required for the uuid library
+* Python 3.10 or newer
+* CherryPy 18 (`python3 -m pip install -r requirements.txt`)
