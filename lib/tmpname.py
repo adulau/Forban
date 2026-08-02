@@ -38,7 +38,7 @@ def get(filename=None, suff=None):
 
     if suff is None:
         h = sha1()
-        h.update(lfile)
+        h.update(lfile.encode("utf-8"))
         hv = h.hexdigest()[:8]
         lfile = "."+lfile+"-"+hv
     else :
@@ -48,5 +48,5 @@ def get(filename=None, suff=None):
 
 if __name__ == "__main__":
     
-    print get("aest")[1]
-    print get("/a/b/aestb")
+    print(get("aest")[1])
+    print(get("/a/b/aestb"))

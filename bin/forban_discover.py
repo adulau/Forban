@@ -19,7 +19,7 @@
 
 import sys
 import os
-import ConfigParser
+import configparser
 
 def guesspath():
     pp = os.path.realpath(sys.argv[0])
@@ -27,24 +27,24 @@ def guesspath():
     bis = os.path.split(lpath[0])
     return bis[0]
 
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
 try:
     disable_ipv6 =  config.get('global','disabled_ipv6')
-except ConfigParser.NoOptionError:
+except configparser.NoOptionError:
     disable_ipv6 = 0
-except ConfigParser.NoSectionError:
+except configparser.NoSectionError:
     disable_ipv6 = 0
 
 try:
     forbanpath = config.get('global','path')
-except ConfigParser.NoSectionError:
-    print "Forban config file is missing or incorrect"
-    print "You should go into ../cfg/ and cp forban.cfg-sample forban.cfg"
-    print "In any case, Forban should be able to work even without the config file"
+except configparser.NoSectionError:
+    print("Forban config file is missing or incorrect")
+    print("You should go into ../cfg/ and cp forban.cfg-sample forban.cfg")
+    print("In any case, Forban should be able to work even without the config file")
     forbanpath = os.path.join(guesspath())
-except ConfigParser.NoOptionError:
+except configparser.NoOptionError:
     forbanpath = os.path.join(guesspath())
 
 forbanpathlib = os.path.join(forbanpath,"lib")
@@ -58,9 +58,9 @@ if __name__ == "__main__":
     while 1:
         HOST, PORT = ("", 12555)
         server = discover.UDPServer((HOST, PORT), discover.MyUDPHandler)
-	if disable_ipv6 == "1":
-              server.setIPv6 ( 0 )
-	else:
-              server.setIPv6 ( 1 )
+        if disable_ipv6 == "1":
+            server.setIPv6(0)
+        else:
+            server.setIPv6(1)
         server.serve_forever()
 

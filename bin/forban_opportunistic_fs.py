@@ -22,7 +22,7 @@ import os.path
 import sys
 import string
 import time
-import ConfigParser
+import configparser
 import re
 import logging
 import logging.handlers
@@ -33,20 +33,20 @@ def guesspath():
     bis = os.path.split(lpath[0])
     return bis[0]
 
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
 
 try:
     forbanpath = config.get('global','path')
-except ConfigParser.Error:
+except configparser.Error:
     forbanpath = os.path.join(guesspath())
 
 try:
     forbanshareroot = config.get('forban','share')
-except ConfigParser.Error:
+except configparser.Error:
     forbanshareroot = os.path.join(forbanpath,"var","share/")
-except ConfigParser.NoOptionError:
+except configparser.NoOptionError:
     forbanpath = os.path.join(guesspath())
     forbanshareroot = os.path.join(forbanpath,"var","share/")
 
@@ -59,18 +59,18 @@ import base64e
 
 try:
     forbanmode = config.get('global','mode')
-except ConfigParser.Error:
+except configparser.Error:
     forbanmode = "opportunistic"
 
 
 try:
     forbanlogginglevel = config.get('global','logging')
-except ConfigParser.Error:
+except configparser.Error:
     forbanlogginglevel = "INFO"
 
 try:
     forbanloggingsize = config.get('global','loggingmaxsize')
-except ConfigParser.Error:
+except configparser.Error:
     forbanloggingsize = 100000
 
 forbanpathlog=os.path.join(forbanpath,"var","log")
@@ -93,7 +93,7 @@ flogger.addHandler(handler)
 
 try:
     forbanopportunisticfsdir = config.get('opportunistic_fs','directory')
-except ConfigParser.Error:
+except configparser.Error:
     flogger.info("not started / no configuration present")
     exit(1)
 

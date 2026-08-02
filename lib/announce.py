@@ -77,20 +77,20 @@ class message:
         if  flogger is not None:
             flogger.debug ( msg )
         elif debug == 1:
-            print msg
+            print(msg)
 
     def __errorMessage (self, msg):
         if flogger is not None:
             flogger.error ( msg )
         elif debug == 1:
-            print msg
+            print(msg)
 
 
     def send(self):
         for destination in self.destination:
             if socket.has_ipv6 and re.search(":", destination) and not  self.ipv6_disabled == 1:
                
-		self.__debugMessage(  "working in ipv6 part on destination " + destination )
+                self.__debugMessage("working in ipv6 part on destination " + destination)
 
                 # Even if Python is compiled with IPv6, it doesn't mean that the os
                 # is supporting IPv6. (like the Nokia N900)
@@ -108,8 +108,8 @@ class message:
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
             try:
-                sock.sendto(self.payload, (destination, int(self.port)))
-            except socket.error, msg:
+                sock.sendto(self.payload.encode("utf-8"), (destination, int(self.port)))
+            except socket.error as msg:
                 self.__errorMessage ( "Error sending to "+ destination + " : " + msg.strerror  )
                 continue
         sock.close()
@@ -120,10 +120,10 @@ def managetest():
     msg = message()
     msg.gen()
     msg.auth()
-    print msg.get()
+    print((msg.get()))
     msg.send()
     msg.auth("forbankey")
-    print msg.get()
+    print((msg.get()))
 
 if __name__ == "__main__":
     managetest()

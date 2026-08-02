@@ -22,7 +22,7 @@ import time
 import os
 import logging
 import logging.handlers
-import ConfigParser
+import configparser
 
 def guesspath():
     pp = os.path.realpath(sys.argv[0])
@@ -30,37 +30,37 @@ def guesspath():
     bis = os.path.split(lpath[0])
     return bis[0]
 
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read(os.path.join(guesspath(),"cfg","forban.cfg"))
 
 try:
     forbanpath = config.get('global','path')
-except ConfigParser.Error:
+except configparser.Error:
     forbanpath = os.path.join(guesspath())
 
 try:
     announceinterval = config.getint('global','announceinterval')
-except ConfigParser.Error:
+except configparser.Error:
     announceinterval = 10
 
 try:
     indexrebuild = config.getint('global','indexrebuild')
-except ConfigParser.Error:
+except configparser.Error:
     indexrebuild = 1
 
 try:
     forbanshareroot = config.get('forban','share')
-except ConfigParser.Error:
+except configparser.Error:
     forbanshareroot = os.path.join(forbanpath,"var","share/")
 
 try:
     forbanlogginglevel = config.get('global','logging')
-except ConfigParser.Error:
+except configparser.Error:
     forbanlogginglevel = "INFO"
 
 try:
     forbanloggingsize = config.get('global','loggingmaxsize')
-except ConfigParser.Error:
+except configparser.Error:
     forbanloggingsize = 100000
 
 
@@ -93,13 +93,13 @@ if __name__ == "__main__":
 
     try:
         forbanname = config.get('global','name')
-    except ConfigParser.Error:
+    except configparser.Error:
         forbanname = tools.guesshostname()
 
     try:
         ipv6_disabled =  config.get('global' , 'disabled_ipv6')
-	flogger.debug ( "Read ipv6_disabled")
-    except  ConfigParser.Error:
+        flogger.debug("Read ipv6_disabled")
+    except  configparser.Error:
         ipv6_disabled = 0
 
     msg = announce.message(name=forbanname, dynpath=os.path.join(forbanpath,"var"))
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         destination =  config.get('global' , 'destination')
         flogger.debug( "Read custom destinations: >"+ destination + "< ")
         msg.setDestination( eval ( destination ) )
-    except  ConfigParser.Error:
+    except  configparser.Error:
         msg.setDestination()
 
     forbanindex = index.manage(sharedir=forbanshareroot, forbanglobal=forbanpath)
