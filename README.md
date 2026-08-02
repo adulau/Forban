@@ -1,128 +1,140 @@
-Forban
-======
+# Forban
 
-[Forban](http://www.foo.be/forban/) is a p2p application for link-local and local area networks.
+[Forban](https://www.foo.be/forban/) is a peer-to-peer (P2P) file-sharing
+application designed for link-local and local area networks. It works without
+an Internet connection: nodes use the local network to announce themselves,
+discover one another, search for files, and share files over HTTP.
 
-Forban works independently from the Internet and uses only the local 
-area capabilities to announce, discover, search or share files. 
-Forban relies on HTTP and it is "opportunistic".
+Forban is *opportunistic*: in its default mode, a node automatically retrieves
+files advertised by other Forban nodes and makes them available to the rest of
+the network. This gossip-style replication helps files spread between nearby
+nodes without requiring a central server.
 
-The name takes its origins from an old French word: 
-http://fr.wiktionary.org/wiki/forban 
+The name comes from the old French word
+[*forban*](https://fr.wiktionary.org/wiki/forban). It can also be read as the
+English phrase "for ban," suggesting software that can keep sharing files even
+when Internet services are blocked or unavailable.
 
-Forban name can also be a playword in English
-for banning unwanted software or services on the Internet.
+Forban is free software licensed under version 3 of the
+[GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.html).
+Presentations about Forban were given at
+[FOSDEM 2011](https://www.foo.be/forban/pres/2011-FOSDEM-Forban-Intro.pdf) and
+[HAXOGREEN 2012](https://www.foo.be/haxogreen2012/forban-general.pdf).
 
-Forban is free software licensed under 
-the GNU Affero General Public License version 3.
-http://www.fsf.org/licensing/licenses/agpl-3.0.html
+## Requirements
 
-A [Forban presentation](http://www.foo.be/forban/pres/2011-FOSDEM-Forban-Intro.pdf) was given at FOSDEM 2011
-and another [Forban presentation](http://www.foo.be/haxogreen2012/forban-general.pdf) was given at HAXOGREEN 2012.
+- Python 3.10 or newer
+- CherryPy 18
 
-Installation
-------------
+Install the Python dependency with:
 
-The setup is quite easy :                             
+```console
+python3 -m pip install -r requirements.txt
+```
 
-Clone the repository:
+## Installation and use
 
-    git clone git@github.com:adulau/Forban.git
+Clone the repository and enter its directory:
 
-Go to the cloned directory:
+```console
+git clone https://github.com/adulau/Forban.git
+cd Forban
+```
 
-    cd Forban
+Start the Forban services:
 
-and start the Forban processes:
+```console
+./bin/forbanctl start
+```
 
-    ./bin/forbanctl start
+Then open <http://127.0.0.1:12555> in a web browser. To share files, copy them
+into `./var/share/`.
 
-Now you can open your favorite browser and go to the following location:
+Forban works without a configuration file. To customize its mode, shared
+directory, network destinations, or other settings, copy the sample
+configuration and edit it before starting the services:
 
-    http://127.0.0.1:12555
+```console
+cp cfg/forban.cfg-sample cfg/forban.cfg
+```
 
-To share some files, you just need to copy them into ./var/share/ 
+If you configure a different shared directory, copy the `./var/share/forban/`
+directory into it as well. That directory contains the CSS and images used by
+the web interface. Forban can serve files without these assets, but the browsing
+experience will be less polished.
 
-If you want to use another share directory don't forget
-to copy the ./var/share/forban directory, which contains CSS and images
-for the website. It can work without these, but it's more handy for
-users browsing directly to your Forban in passive mode.
+To stop the services, run:
 
-Forban protocol
---------------- 
+```console
+./bin/forbanctl stop
+```
 
-### message format used for announce/discovery
+## Operating modes
 
-### announce message
+Forban supports two modes. Both modes implement all required parts of the
+protocol:
 
-ASCII encoded message use UDP on port 12555 with
-the following format: 
+- **Opportunistic mode** (the default) automatically retrieves files discovered
+  on other nodes. It behaves like a gossip, or epidemic, protocol and replicates
+  files from one local Forban node to another.
+- **Shared mode** advertises local files but does not automatically retrieve
+  files from other nodes. It is useful for a node that hosts a fixed collection,
+  such as a curated digital bookshelf.
 
-    forban;name;<nameoftheforban>;uuid;<identityoftheforban>;hmac;<hmacvaluecofindex>
+Select a mode with the `mode` setting in `cfg/forban.cfg`.
 
-The messages are flooded in broadcast (IPv4) and use
-ff02::1 (IPv6) at a regular interval.
+## Forban protocol
 
-Based on the source IP and the destination port used,
-a HTTP URL is built to get to default forban service.
+### Announcements and discovery
 
-### HTTP services for Forban
+Each node periodically broadcasts an ASCII-encoded announcement over UDP port
+12555. IPv4 uses broadcast traffic, while IPv6 uses the `ff02::1` all-nodes
+multicast address. An announcement has the following format:
 
-The UDP port 12555 is for announcing forban services.
-The TCP port 12555 is the HTTP server running forban services.
+```text
+forban;name;<nameoftheforban>;uuid;<identityoftheforban>;hmac;<hmacvalueofindex>
+```
 
-base URL: [REQUIRED]
-    http://<ip>:<destport>/
+The receiving node combines the announcement's source IP address with the
+service port to construct the URL of the sender's HTTP service.
 
-index URL where Forban stores its index: [REQUIRED]
-    http://<ip>:<destport>/s/?g=forban/index
+### HTTP services
 
-store URL where Forban stores its files and how to get a file: [REQUIRED]
-    http://<ip>:<destport>/s/?g=base64_urlsafe(<filenamefromindex>)&f=b64e
+Forban uses UDP port 12555 for announcements and TCP port 12555 for its HTTP
+service. The protocol defines the following endpoints:
 
-search URL: [OPTIONAL]
-    http://<ip>:<destport>/q/?v=<yoursearch>&r=<refreshtimeinsec>
+| Endpoint | Requirement | URL |
+| --- | --- | --- |
+| Base service | Required | `http://<ip>:<port>/` |
+| File index | Required | `http://<ip>:<port>/s/?g=forban/index` |
+| Stored file | Required | `http://<ip>:<port>/s/?g=base64_urlsafe(<filename-from-index>)&f=b64e` |
+| Search | Optional | `http://<ip>:<port>/q/?v=<search-term>&r=<refresh-time-in-seconds>` |
 
-REQUIRED interfaces are required to have a full operational Forban
-protocol in all the modes. The OPTIONAL interfaces are not required
-for machine-to-machine interaction but used to ease the life of the users.
+A node must implement all required endpoints to be fully compatible with the
+Forban protocol in either operating mode. The optional search endpoint is
+intended for people using the web interface and is not needed for communication
+between nodes.
 
-### base64_urlsafe function (b64e)
+### URL-safe Base64 encoding (`b64e`)
 
-'+' is replaced by '-'.
-'/' is replaced by '_'(underscore).
-'=' is replaced by '!'.
+Forban encodes file names using an adapted URL-safe Base64 scheme:
 
-This is following the same approach of MIME::Base64::URLSafe
-or the python base64.urlsafe_b64encode with an addition of
-the equal sign being replaced by an exclamation mark.
+- `+` is replaced with `-`.
+- `/` is replaced with `_` (underscore).
+- `=` is replaced with `!` (exclamation mark).
 
-### Forban mode available
+This scheme follows the approach used by `MIME::Base64::URLSafe` and Python's
+`base64.urlsafe_b64encode`, with the additional replacement of padding (`=`)
+with an exclamation mark.
 
-* Opportunistic mode
-* Shared mode
+### HMAC field
 
-The opportunistic mode and shared mode use all the REQUIRED components of
-the protocol. The only difference is the lack of automatic file fetching
-in the shared mode. The shared mode is usually used in a fixed node content
-where the opportunistic fetching is not desired (e.g. a fixed bookshelf).
+The optional HMAC value in an announcement serves two purposes:
 
-The opportunistic mode works as a simple gossip (or epidemic) protocol
-to replicate the information from one local to another local Forban.
+1. It lets another node determine whether the advertised index has changed.
+2. When a pre-shared key (PSK) is configured, it lets the node check whether the
+   index was modified in transit.
 
-### message format - notes about HMAC
-
-The optional HMAC value has two purposes :
-
-* To know if the index has been updated
-* and to verify (if a PSK is set) if the index has been tampered.
-
-When a PSK is not set, the default PSK value is 'Forban'.
-
-The value is optional as other Forban can download any index when they
-want.
-
-### software required
-
-* Python 3.10 or newer
-* CherryPy 18 (`python3 -m pip install -r requirements.txt`)
+If no PSK is configured, Forban uses `Forban` as the default value. The HMAC
+field is optional because a node can retrieve an index whenever needed instead
+of relying on the announcement value to detect changes.
